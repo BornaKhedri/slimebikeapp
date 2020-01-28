@@ -1,49 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Material Design for Bootstrap</title>
-  <!-- MDB icon -->
-  <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <!-- Material Design Bootstrap -->
-  <link rel="stylesheet" href="css/mdb.min.css">
-  <!-- Your custom styles (optional) -->
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>UI</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
 </head>
-<body>
 
-  <!-- Start your project here-->  
-  <div style="height: 100vh">
-    <div class="flex-center flex-column">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Mis-parked vehicle reporter</h5>
-          <p class="card-text">Allow access to:</p>          
-          <button type="button" class="btn btn-danger">Location</button>
-          <br/>
-          <button type="button" class="btn btn-warning">Camera</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End your project here-->
-
-  <!-- jQuery -->
-  <script type="text/javascript" src="js/jquery.min.js"></script>
-  <!-- Bootstrap tooltips -->
-  <script type="text/javascript" src="js/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="js/mdb.min.js"></script>
-  <!-- Your custom scripts (optional) -->
-  <script type="text/javascript"></script>
-
+<body class="text-left">
+    <h1 class="text-capitalize text-center" style="font-size: 25px;"><br>Slimebike Reporter 1.0<br></h1>
+    <ul class="nav nav-pills text-center justify-content-center">
+        <li class="nav-item"><a class="nav-link active" href="index.html">Classification</a></li>
+        <li class="nav-item"><a class="nav-link" href="location.html">Location</a></li>
+        <li class="nav-item"><a class="nav-link" href="identification.html">Identification</a></li>
+    </ul>
+    <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
+        <h1 style="font-size: 20px;"><br>Select all the appropriate parking infractions</h1>
+        <ul class="list-group">
+            <li class="list-group-item"><span>Parked in the middle of the sidewalk</span></li>
+            <li class="list-group-item"><span>Parked in the middle of a driveway</span></li>
+            <li class="list-group-item"><span>Parked blocking handicap access</span></li>
+            <li class="list-group-item"><span>Toppled sideways</span></li>
+            <li class="list-group-item"><span>Abandonded</span></li>
+            <li class="list-group-item"><span>Damaged</span></li>
+        </ul><br/><a class="btn btn-primary text-center d-flex align-items-center mx-auto" role="button" href="location.html" style="width: 88px;">Continue</a></div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
+
 </html>

@@ -15,7 +15,12 @@
         <li class="nav-item"><a class="nav-link" href="location.html">Location</a></li>
         <li class="nav-item"><a class="nav-link" href="identification.html">Identification</a></li>
     </ul>
-    <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
+    <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;"><br/>
+<input type="file" accept="image/*" id="file-input">
+<script>
+    const fileInput = document.getElementById('file-input');
+    fileInput.addEventListener('change', (e) => doSomethingWithFiles(e.target.files);
+</script>
         <h1 style="font-size: 20px;"><br>Select all the appropriate parking infractions</h1>
         <ul class="list-group">
             <li class="list-group-item"><span>Parked in the middle of the sidewalk</span></li>

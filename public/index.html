@@ -1,38 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>UI</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <script src="./js/jquery.min.js"></script>
-    <script src="./js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/xstate@4.7.7/dist/xstate.js"></script>
-    <script src="./js/statecontroller.js"></script>
-</head>
-
-<body class="text-left">
-    <h1 class="text-capitalize text-center" style="font-size: 25px;"><br>Slimebike Reporter 1.0<br></h1>
-    <ul class="nav nav-pills text-center justify-content-center">
-        <li class="nav-item"><a class="nav-link active" href="index.html">Classification</a></li>
-        <li class="nav-item"><a class="nav-link" href="./html/location.html">Location</a></li>
-        <li class="nav-item"><a class="nav-link" href="./html/identification.html">Identification</a></li>
-    </ul>
-    <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
-        <h1 style="font-size: 20px;"><br>Select all the appropriate parking infractions</h1>
-        <ul class="list-group">
-            <li class="list-group-item"><span>Parked in the middle of the sidewalk</span></li>
-            <li class="list-group-item"><span>Parked in the middle of a driveway</span></li>
-            <li class="list-group-item"><span>Parked blocking handicap access</span></li>
-            <li class="list-group-item"><span>Toppled sideways</span></li>
-            <li class="list-group-item"><span>Abandonded</span></li>
-            <li class="list-group-item"><span>Damaged</span></li>
-        </ul><br/><a class="btn btn-primary text-center d-flex align-items-center mx-auto" role="button" href="./html/location.html" style="width: 88px;">Continue</a></div>
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html>
 
@@ -41,50 +6,230 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Slimebike Reporter</title>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+       .items-collection {
+            margin: 20px 0 0 0;
+        }
+
+        .items-collection label.btn-default.active {
+            background-color: #007ba7;
+            color: #FFF;
+        }
+
+        .items-collection label.btn-default {
+            width: 90%;
+            border: 1px solid #305891;
+            margin: 5px;
+            border-radius: 17px;
+            color: #305891;
+        }
+
+        .items-collection label .itemcontent {
+            width: 100%;
+        }
+
+        .items-collection .btn-group {
+            width: 90%
+        }
+
+        .visually-hidden {
+            position: absolute;
+            left: -100vw;
+
+            /* Note, you may want to position the checkbox over top the label and set the opacity to zero instead. It can be better for accessibilty on some touch devices for discoverability. */
+
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #fit {
+            display: block;
+            position: relative;
+            margin: 0px auto;
+            width: 50%;
+            height: 40px;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            text-align: center;
+            color: #fff;
+            background: #ee8a65;
+        }
+    </style>
+    <!-- Local - vendor -->
     <script src="./js/jquery.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <!-- Remote - vendor -->
     <script src="https://unpkg.com/xstate@4.7.7/dist/xstate.js"></script>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+
     <script src="./js/statecontroller.js"></script>
 
+    <script type="text/javascript">
+        $(function () {
+            // This function is called when continue button on the "classification" is clicked
+            $('#classification_continue').click(function (e) {
+                e.preventDefault();
+                // Select the 'a' element of the "location" tab
+                var next_tab = $(
+                    'a[href="#tab_location"]'); //$('.nav-tabs > .active').next('li').find('a');
+                // console.log(next_tab);
+                // If a location tab 'a' is found, then trigger its click event
+                if (next_tab.length > 0) {
+                    next_tab.trigger('click');
+                } else {
+                    $('.nav-tabs li:eq(0) a').trigger('click');
+                }
+            });
+            // This function is called when continue button on the "location" is clicked
+            $('#location_continue').click(function (e) {
+                e.preventDefault();
+                var next_tab = $('a[href="#tab_identification"]');
+                console.log(next_tab);
+                if (next_tab.length > 0) {
+                    next_tab.trigger('click');
+                } else {
+                    $('.nav-tabs li:eq(0) a').trigger('click');
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
 
     <h1 class="text-capitalize text-center" style="font-size: 25px;"><br>Slimebike Reporter 1.0<br></h1>
 
-    <ul class="nav nav-tabs nav nav-pills text-center justify-content-center">
-        <li class="nav-item"><a class="nav-link active" href="#tab_classification" role="tab"
+    <ul class="nav nav-tabs nav nav-pills text-center justify-content-center" id="nav_tabs" role="tablist">
+        <li class="nav-item active"><a class="active nav-link" href="#tab_classification" role="tab"
                 data-toggle="tab">Classification</a>
         </li>
         <li class="nav-item"><a class="nav-link" href="#tab_location" role="tab" data-toggle="tab">Location</a></li>
         <li class="nav-item"><a class="nav-link" href="#tab_identification" role="tab"
                 data-toggle="tab">Identification</a></li>
     </ul>
-    <br><br>
+
     <div class="tab-content">
         <div class="tab-pane show active" role="tabpanel" id="tab_classification">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
                 <h1 style="font-size: 20px;"><br>Select all the appropriate parking infractions</h1>
-                <ul class="list-group">
-                    <li class="list-group-item"><span>Parked in the middle of the sidewalk</span></li>
-                    <li class="list-group-item"><span>Parked in the middle of a driveway</span></li>
-                    <li class="list-group-item"><span>Parked blocking handicap access</span></li>
-                    <li class="list-group-item"><span>Toppled sideways</span></li>
-                    <li class="list-group-item"><span>Abandonded</span></li>
-                    <li class="list-group-item"><span>Damaged</span></li>
-                </ul><br /><a class="btn btn-primary text-center d-flex align-items-center mx-auto" role="button"
-                    href="#tab_location" style="width: 88px;">Continue</a>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="items-collection">
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group bizmoduleselect">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+                                                <h5>Parked in the middle of the sidewalk</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+                                                <h5>Parked in the middle of a driveway</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+
+                                                <h5>Parked blocking handicap access</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+
+                                                <h5>Toppled sideways</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+
+                                                <h5>Abandonded</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+
+                                                <h5>Damaged</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <video id="player" controls autoplay></video>
+                <button id="capture"
+                    class="btn btn-primary text-center d-flex align-items-center mx-auto">Capture</button>
+                <canvas id="canvas" width=320 height=240></canvas>
+
+                <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto"
+                    id="classification_continue" style="width: 88px; visibility: hidden;">Continue</button>
+
             </div>
         </div>
         <div class="tab-pane" role="tabpanel" id="tab_location">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
-                <h1 class="text-center" style="font-size: 20px;"><br>Select the location of bike/scooter</h1><iframe
-                    allowfullscreen="" frameborder="0"
-                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDaEw6o8OhJvRQnTF3gI_tibMejtfasOlY&amp;q=University+of+Washington&amp;zoom=14"
-                    width="100%" height="400"></iframe><br />
+                <h1 class="text-center" style="font-size: 20px;"><br>Select the location of bike/scooter</h1>
 
-                <a class="btn btn-primary text-center d-flex align-items-center mx-auto" role="button"
-                    href="#tab_identification" style="width: 88px;">Continue</a>
+                <div id="map"></div>
+
+                <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto fit"
+                    id="location_continue" style="width: 88px;">Continue</button>
             </div>
         </div>
         <div class="tab-pane" role="tabpanel" id="tab_identification">
@@ -107,6 +252,58 @@
         </div>
 
     </div>
+
+
+    <script>
+        const player = document.getElementById('player');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const captureButton = document.getElementById('capture');
+
+        const constraints = {
+            video: true,
+        };
+
+        captureButton.addEventListener('click', () => {
+            context.drawImage(player, 0, 0, canvas.width, canvas.height);
+            var video_element = document.getElementById("player");
+            video_element.parentNode.removeChild(video_element);
+            var cont_btn_element = document.getElementById("classification_continue");
+            cont_btn_element.style.visibility = 'visible';
+            var capture_btn_element = document.getElementById('capture');
+            capture_btn_element.style.visibility = 'hidden';
+            // Stop all video streams.
+            player.srcObject.getVideoTracks().forEach(track => track.stop());
+        });
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                // Attach the video stream to the video element and autoplay.
+                player.srcObject = stream;
+            });
+
+        // var map = L.map('map').setView([38.912753, -77.032194], 15);
+
+        // L.marker([38.912753, -77.032194])
+        //     .bindPopup("Hello <b>Leaflet GL</b>!<br>Whoa, it works!")
+        //     .addTo(map)
+        //     .openPopup();
+
+        // var gl = L.mapboxGL({
+        //     accessToken: 'pk.eyJ1IjoiY2hpbnRhbnAiLCJhIjoiY2ppYXU1anVuMThqazNwcDB2cGtneDdkYyJ9.TL6RTyRRFCbvJWyFa4P0Ow',
+        //     // get your own MapTiler token at https://cloud.maptiler.com/ or use MapBox style
+        //     style: 'https://api.maptiler.com/maps/topo/style.json?key=gbetYLSD5vR8MdtZ88AQ'
+        // }).addTo(map);
+        mapboxgl.accessToken =
+            ''
+        var map = new mapboxgl.Map({
+            container: 'map', // HTML container ID
+            style: 'mapbox://styles/mapbox/streets-v9', // style URL
+            center: [-21.9270884, 64.1436456], // starting position as [lng, lat]
+            zoom: 13
+        });
+    </script>
+
 </body>
 
 </html>

@@ -17,20 +17,20 @@ var certOptions = {
 const healthcheckController = require('./controllers/controller-healthcheck');
 const sampleController = require('./controllers/controller-sample');
 
-if (cluster.isMaster) {
-    // create a worker for each CPU
-    for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
-    cluster.on('online', (worker) => {
-        logger.info(`worker online, worker id: ${worker.id}`);
-    });
-    //if worker dies, create another one
-    cluster.on('exit', (worker, code, signal) => {
-        logger.error(`worker died, worker id: ${worker.id} | signal: ${signal} | code: ${code}`);
-        cluster.fork();
-    });
-} else {
+// if (cluster.isMaster) {
+//     // create a worker for each CPU
+//     // for (let i = 0; i < numCPUs; i++) {
+//     //     cluster.fork();
+//     // }
+//     // cluster.on('online', (worker) => {
+//     //     logger.info(`worker online, worker id: ${worker.id}`);
+//     // });
+//     // //if worker dies, create another one
+//     // cluster.on('exit', (worker, code, signal) => {
+//     //     logger.error(`worker died, worker id: ${worker.id} | signal: ${signal} | code: ${code}`);
+//     //     cluster.fork();
+//     // });
+// } else {
     //create express app
     const app = express();
     // var server = require('http').Server(app);
@@ -54,8 +54,8 @@ if (cluster.isMaster) {
     io.on('connection', function (socket) {
         console.log("Connected to a client");
         socket.emit('news', { hello: 'world' });
-        socket.on('my other event', function (data) {
-          console.log(data);
+        socket.on('case_report', function (data) {
+          // console.log(data);
         });
       });
 
@@ -65,6 +65,6 @@ if (cluster.isMaster) {
     router.get('/transaction', sampleController.sampleTransaction);
 
     server.listen(config.port, '128.95.204.113', function () {
-        logger.info(`worker started: ${cluster.worker.id} | server listening on port: ${config.port}`);
+        logger.info(` server listening on port: ${config.port}`);
     });
-}
+//}

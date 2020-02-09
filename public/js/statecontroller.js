@@ -37,8 +37,8 @@ const slimeBikeService = XState.interpret(slimebikeMachine)
     .start();
 // => 'inactive'
 slimeBikeService.send('PERMITTING');
-slimeBikeService.send('IMAGING');
+
 // => 'active'
 
-slimeBikeService.send('PINPOINTING');
+
 // => 'inactive'

@@ -1,0 +1,51 @@
+.items-collection {
+    margin: 20px 0 0 0;
+}
+
+.items-collection label.btn-default.active {
+    background-color: #007ba7;
+    color: #FFF;
+}
+
+.items-collection label.btn-default {
+    width: 90%;
+    border: 1px solid #305891;
+    margin: 5px;
+    border-radius: 17px;
+    color: #305891;
+}
+
+.items-collection label .itemcontent {
+    width: 100%;
+}
+
+.items-collection .btn-group {
+    width: 90%
+}
+
+.visually-hidden {
+    position: absolute;
+    left: -100vw;
+
+    /* Note, you may want to position the checkbox over top the label and set the opacity to zero instead. It can be better for accessibilty on some touch devices for discoverability. */
+
+}
+
+#map {
+    height: 300px;
+}
+
+#fit {
+    display: block;
+    position: relative;
+    margin: 0px auto;
+    width: 50%;
+    height: 40px;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    background: #ee8a65;
+}

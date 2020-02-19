@@ -6,11 +6,13 @@ const slimebikeMachine = XState.Machine({
     initial: 'start',
     states: {
         start: {
+            entry: ['getCity'], // Get the city in which the app was used
             on: {
                 PERMITTING: 'classification'
             }
         },
         classification: {
+            entry: ['populateCompanies', 'populateInfractions'], // for the city, get the companies, infractions etc.
             on: {
                 IMAGING: 'location'
             }
@@ -28,6 +30,11 @@ const slimebikeMachine = XState.Machine({
         done: {
 
         }
+    }, 
+    actions: {
+        getCity: getCity(), 
+        populateCompanies: populateCompanies(), 
+        populateInfractions: populateInfractions()
     }
 });
 
@@ -36,7 +43,7 @@ const slimeBikeService = XState.interpret(slimebikeMachine)
     .onTransition(state => console.log(state.value))
     .start();
 // => 'inactive'
-slimeBikeService.send('PERMITTING');
+
 
 // => 'active'
 

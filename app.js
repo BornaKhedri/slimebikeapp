@@ -1,4 +1,4 @@
-const config = require( './config' );
+const config = require('./config');
 const path = require('path');
 const express = require('express');
 const cluster = require('cluster');
@@ -31,40 +31,54 @@ const sampleController = require('./controllers/controller-sample');
 //     //     cluster.fork();
 //     // });
 // } else {
-    //create express app
-    const app = express();
-    // var server = require('http').Server(app);
+//create express app
+const app = express();
+// var server = require('http').Server(app);
 
-    var server = https.createServer(certOptions, app)
+var server = https.createServer(certOptions, app)
 
-    var io = require('socket.io')(server);
-    const router = express.Router();
-    var publicPath = path.join(__dirname, 'public');
+var io = require('socket.io')(server);
+const router = express.Router();
+var publicPath = path.join(__dirname, 'public');
 
-    app.use(bodyParser.json());
-    app.use(router);  // tell the app this is the router we are using
-    //healthcheck routes
-    //router.get('/', healthcheckController.healthcheck);
 
-    app.use(express.static(publicPath));
-    app.get('/', function(req, res) {
-        res.sendFile(path.join(publicPath + '/index.html'));
-    });
+app.use(bodyParser.json());
+app.use(router); // tell the app this is the router we are using
+//healthcheck routes
+//router.get('/', healthcheckController.healthcheck);
 
-    io.on('connection', function (socket) {
-        console.log("Connected to a client");
-        socket.emit('news', { hello: 'world' });
-        socket.on('case_report', function (data) {
-          // console.log(data);
-        });
-      });
+app.use(express.static(publicPath));
+app.get('/', function (req, res) {
+  res.sendFile(path.join(publicPath + '/index.html'));
+});
 
-    router.get('/healthcheck', healthcheckController.healthcheck);
-    // sampleController routes
-    router.get('/servertime', sampleController.getTime);
-    router.get('/transaction', sampleController.sampleTransaction);
+io.on('connection', function (socket) {
+  console.log("Connected to a client");
 
-    server.listen(config.port, '128.95.204.113', function () {
-        logger.info(` server listening on port: ${config.port}`);
-    });
+  socket.on('city_sensed', function (data) {
+    console.log("CIty:" + data.city);
+    sampleController.getCompanies(data.city).then(res => socket.emit('cityCompanies', {
+      companies: res
+    }));
+    sampleController.getInfractions(data.city).then(res => socket.emit('cityInfractions', {
+      infractions: res
+    }));
+
+  })
+
+
+
+  socket.on('case_report', function (data) {
+    // console.log(data);
+  });
+});
+
+router.get('/healthcheck', healthcheckController.healthcheck);
+// sampleController routes
+router.get('/servertime', sampleController.getTime);
+router.get('/transaction', sampleController.sampleTransaction);
+// start the server
+server.listen(config.port, config.server.host, function () {
+  logger.info(`server listening on port: ${config.port}`);
+});
 //}

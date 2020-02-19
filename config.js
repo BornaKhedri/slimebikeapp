@@ -12,6 +12,9 @@ config = {
         port: parseInt(process.env.DB_PORT) || 5432,
         max: parseInt(process.env.DB_MAX_CLIENTS) || 20,
         idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT_MS) || 30000
+    }, 
+    server: {
+        host: process.env.SERVER_HOST
     }    
 }
 

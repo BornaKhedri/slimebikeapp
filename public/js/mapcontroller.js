@@ -1,32 +1,32 @@
-// Code for controlling the map display 
-
 // Get Location
+function ipLookUp() {
+    $.ajax('https://ipapi.co/json')
+        .then(
+            function success(response) {
+                console.log('User\'s Location Data is ', response);
+                console.log('User\'s Country', response.country);
+                // alert(`From IP Latitude : ${response.latitude}` + `, Longitude: ${response.longitude}`)
+                latitude = response.latitude;
+                longitude = response.longitude;
+                city = response.city;
+                resolve();
+            },
+
+            function fail(data, status) {
+                console.log('Request failed.  Returned status of',
+                    status);
+                alert('Request failed.  Returned status of',
+                    status);
+            }
+        );
+}
 
 var latitude = '';
 var longitude = '';
- // Using promises to ensure this part executes before map is drawn
- // From here: https://stackoverflow.com/a/55698897/1328232
+// Using promises to ensure this part executes before map is drawn
+// From here: https://stackoverflow.com/a/55698897/1328232
 let get_location = new Promise(function (resolve, reject) {
-    function ipLookUp() {
-        $.ajax('https://ipapi.co/json')
-            .then(
-                function success(response) {
-                    console.log('User\'s Location Data is ', response);
-                    console.log('User\'s Country', response.country);
-                    // alert(`From IP Latitude : ${response.latitude}` + `, Longitude: ${response.longitude}`)
-                    latitude = response.latitude;
-                    longitude = response.longitude;
-                    resolve();
-                },
 
-                function fail(data, status) {
-                    console.log('Request failed.  Returned status of',
-                        status);
-                    alert('Request failed.  Returned status of',
-                        status);
-                }
-            );
-    }
     var options = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -63,7 +63,7 @@ let get_location = new Promise(function (resolve, reject) {
         // alert('geolocation is not enabled on this browser')
         ipLookUp()
     }
-    
+
 });
 
 // Map

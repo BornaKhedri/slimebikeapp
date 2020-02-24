@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Slimebike Reporter</title>
+
+    <!-- CSS -->
+    <!-- Local - vendor -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <!-- Local - custom -->
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- Remote - vendor -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+
+    <!-- Javascript -->
+    <!-- Local - vendor -->
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <!-- Remote - vendor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
+    <script src="https://unpkg.com/xstate@4.7.7/dist/xstate.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+   
+    <!-- Local - custom -->
+
+      
+      
+    <script src="./js/initializationcontroller.js"></script>
+    <script src="./js/navigationcontroller.js"></script>
+    <script src="./js/statecontroller.js"></script>
+    <script src="./js/socketcontroller.js"></script>
+
+    
+</head>
+
+<body>
+
+    <h1 class="text-capitalize text-center" style="font-size: 25px;"><br>Slimebike Reporter 1.0<br></h1>
+
+    <ul class="nav nav-tabs nav nav-pills text-center justify-content-center" id="nav_tabs" role="tablist">
+        <li class="nav-item active"><a class="active nav-link" href="#tab_classification" role="tab"
+                data-toggle="tab">Classification</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#tab_location" role="tab" data-toggle="tab">Location</a></li>
+        <li class="nav-item"><a class="nav-link" href="#tab_identification" role="tab"
+                data-toggle="tab">Identification</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane show active" role="tabpanel" id="tab_classification">
+            <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
+                <video id="player" controls autoplay style="width: 100%"></video>
+                <button id="capture"
+                    class="btn btn-primary text-center d-flex align-items-center mx-auto">Capture</button>
+                <canvas id="canvas" width="100%" height=150></canvas>
+
+                <h1 style="font-size: 20px;">Select all the appropriate parking infractions</h1>
+                <div class="row" id="infraction_list">
+                    <div class="form-group d-flex align-items-center mx-auto">
+                        <div class="items-collection">
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width: 100%">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+                                                <h5>Parked in the middle of the sidewalk</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent" style="width: 100%">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+                                                <h5>Parked in the middle of a driveway</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent" style="width: 100%">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+
+                                                <h5>Parked blocking handicap access</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent" style="width: 100%">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+
+                                                <h5>Toppled sideways</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent" style="width: 100%">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+
+                                                <h5>Abandonded</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items ">
+                                <div class="info-block block-info clearfix">
+                                    <div data-toggle="buttons" class="btn-group itemcontent" style="width: 100%">
+                                        <label class="btn btn-light">
+                                            <div class="itemcontent">
+                                                <input type="checkbox" class="visually-hidden" autocomplete="off"
+                                                    value="">
+
+                                                <h5>Damaged</h5>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group d-flex align-items-center mx-auto" role="group" style="width: 300px;" id="company_names">
+                    <input type="radio" class="btn btn-primary " style="width: 100px;" name="company">Lime</input>
+                    <input type="radio" class="btn btn-primary " style="width: 100px;" name="company">Jump</input>
+                    <input type="radio" class="btn btn-primary " style="width: 100px;" name="company">Lyft</input>
+                    <input type="radio" class="btn btn-primary " style="width: 100px;" name="company">Spin</input>
+                    <input type="radio" class="btn btn-primary " style="width: 100px;" name="company">Ofo</input>
+                    <input type="radio" class="btn btn-primary " style="width: 100px;" name="company">Other</input>
+                </div>
+                <br />
+
+                <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto"
+                    id="classification_continue" style="width: 88px; visibility: hidden;">Continue</button>
+
+            </div>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="tab_location">
+            <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
+                <h1 class="text-center" style="font-size: 20px;"><br>Select the location of bike/scooter</h1>
+
+                <div id="map"></div>
+
+                <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto fit"
+                    id="location_continue" style="width: 88px;">Continue</button>
+            </div>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="tab_identification">
+            <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
+                <h1 class="text-center" style="font-size: 20px;"><br>Optionally, please also scan the vehicle's QR code
+                </h1>
+                <div>
+                    <a class="button" id="startButton">Start</a>
+                    <a class="button" id="resetButton">Reset</a>
+                </div>
+                <div id="sourceSelectPanel" style="display:none">
+                    <label for="sourceSelect">Change video source:</label>
+                    <select id="sourceSelect" style="max-width:400px">
+                    </select>
+                </div>
+
+                <label>Result:</label>
+                <pre><code id="result"></code></pre>
+                <video id="video" class="d-flex align-items-center mx-auto" width="300" height="200" style="border: 1px solid gray"></video>
+                <a class="btn btn-primary text-center d-flex align-items-center mx-auto" role="button"
+                    onclick="socket_submit();" style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
+            </div>
+        </div>
+    </div>
+    <script src="./js/qrcodecontroller.js"></script>
+    <script src="./js/videocontroller.js"></script>
+    <script src="./js/mapcontroller.js"></script>
+</body>
+
+</html>

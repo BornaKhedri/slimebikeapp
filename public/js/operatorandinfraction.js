@@ -2,7 +2,6 @@ $( document ).ready(function() {
      ipLookUp();
      console.log(city);
      console.log(cityToOperator[city]);
-     //console.log(getCityToOperator()[city]);
      cityToOperator[city].forEach(operator=>{
         $('#company_names').append('<input type="radio" class="btn btn-primary " style="width: 100px;" name="company">'+operator+'</input>');
      })

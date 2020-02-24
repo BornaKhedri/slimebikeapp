@@ -72,7 +72,7 @@ io.on('connection', function (socket) {
     // console.log(data);
     sampleController.insertReport(data.case_data).then( res =>
 
-      console.log(res + "Inserted successfully")
+      console.log(res + " Inserted successfully")
     )
   })
 });

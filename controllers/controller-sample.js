@@ -47,3 +47,15 @@ module.exports.getInfractions = async (city) => {
         res.status(500).json({status:'error', message: error.message, statusCode: 500});
     }
 }
+
+module.exports.insertReport = async (report) => {
+    try {
+        let result = await sampleModel.insertReport(report);
+        console.log(result)
+        return result;
+        // res.status(200).json(result.rows);
+    } catch (error) {
+        logger.error(`getTime error: ${error.message}`);
+        // res.status(500).json({status:'error', message: error.message, statusCode: 500});
+    }
+}

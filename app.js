@@ -70,7 +70,11 @@ io.on('connection', function (socket) {
 
   socket.on('case_report', function (data) {
     // console.log(data);
-  });
+    sampleController.insertReport(data.case_data).then( res =>
+
+      console.log(res + "Inserted successfully")
+    )
+  })
 });
 
 router.get('/healthcheck', healthcheckController.healthcheck);

@@ -12,9 +12,10 @@ var socket_submit = function() {
     case_data: {
       img: dataURL, 
       location: [longitude, latitude], 
-      infraction_types: infraction_types, 
-      company: company_name, 
-      vehicle_id: vehicle_id
+      infraction_ids: infraction_ids, 
+      company_ids: company_ids, 
+      vehicle_id: vehicle_id, 
+      city: city
     }
   });
 

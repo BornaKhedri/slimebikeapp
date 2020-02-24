@@ -1,7 +1,7 @@
 // Code related to managing navigation around the app
 
-var infraction_types = [];
-var company_name = [];
+var infraction_ids = [];
+var company_ids = [];
 
 $(function () {
     // This function is called when continue button on the "classification" is clicked
@@ -17,11 +17,11 @@ $(function () {
                 // Atleast one of the checkbox is clicked and radio buttons are clicked
                 
                 $('#infraction_list input:checked').each(function () {
-                    infraction_types.push($(this).parent().children().eq(1)[0].innerHTML);
+                    infraction_ids.push($(this).parent().children().eq(0)[0].id);
                 });
 
-                $('#company_names input:checked').each(function () {
-                    company_name.push($(this)[0].nextSibling.data.trim());
+                $('#company_list input:checked').each(function () {
+                    company_ids.push($(this)[0].id);
                 });
                 slimeBikeService.send('IMAGING');
                 next_tab.trigger('click');

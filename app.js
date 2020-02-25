@@ -17,20 +17,6 @@ var certOptions = {
 const healthcheckController = require('./controllers/controller-healthcheck');
 const sampleController = require('./controllers/controller-sample');
 
-// if (cluster.isMaster) {
-//     // create a worker for each CPU
-//     // for (let i = 0; i < numCPUs; i++) {
-//     //     cluster.fork();
-//     // }
-//     // cluster.on('online', (worker) => {
-//     //     logger.info(`worker online, worker id: ${worker.id}`);
-//     // });
-//     // //if worker dies, create another one
-//     // cluster.on('exit', (worker, code, signal) => {
-//     //     logger.error(`worker died, worker id: ${worker.id} | signal: ${signal} | code: ${code}`);
-//     //     cluster.fork();
-//     // });
-// } else {
 //create express app
 const app = express();
 // var server = require('http').Server(app);
@@ -44,8 +30,6 @@ var publicPath = path.join(__dirname, 'public');
 
 app.use(bodyParser.json());
 app.use(router); // tell the app this is the router we are using
-//healthcheck routes
-//router.get('/', healthcheckController.healthcheck);
 
 app.use(express.static(publicPath));
 app.get('/', function (req, res) {
@@ -66,8 +50,6 @@ io.on('connection', function (socket) {
 
   })
 
-
-
   socket.on('case_report', function (data) {
     // console.log(data);
     sampleController.insertReport(data.case_data).then( res =>
@@ -77,10 +59,6 @@ io.on('connection', function (socket) {
   })
 });
 
-router.get('/healthcheck', healthcheckController.healthcheck);
-// sampleController routes
-router.get('/servertime', sampleController.getTime);
-router.get('/transaction', sampleController.sampleTransaction);
 // start the server
 server.listen(config.port, config.server.host, function () {
   logger.info(`server listening on port: ${config.port}`);

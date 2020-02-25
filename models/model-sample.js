@@ -3,21 +3,6 @@ const dbUtil = require('../utils/dbUtil');
 const transactionSuccess = 'transaction success';
 
 /* 
- * sample query
- * @return server time
- */
-module.exports.getTime = async () => {
-    let sql = "SELECT NOW()";
-    let data = [];
-    try {
-        result = await dbUtil.sqlToDB(sql, data);
-        return result;
-    } catch (error) {
-        throw new Error(error.message);
-    }
-}
-
-/* 
  * sample query using transactions
  * @return transaction success
  */

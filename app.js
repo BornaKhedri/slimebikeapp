@@ -1,8 +1,6 @@
 const config = require('./config');
 const path = require('path');
 const express = require('express');
-const cluster = require('cluster');
-const numCPUs = require('os').cpus().length;
 const logger = require('./utils/logger');
 const bodyParser = require('body-parser');
 var fs = require('fs')
@@ -14,7 +12,6 @@ var certOptions = {
 }
 
 //import controllers
-const healthcheckController = require('./controllers/controller-healthcheck');
 const sampleController = require('./controllers/controller-sample');
 
 //create express app

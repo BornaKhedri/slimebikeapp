@@ -22,5 +22,15 @@
     "license": "MIT",
     "scripts": {
         "start": "nodemon app.js"
+    },
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "chai-http": "^4.3.0",
+        "grunt": "^1.0.4",
+        "grunt-contrib-watch": "^1.1.0",
+        "grunt-mocha-test": "^0.13.3",
+        "mocha": "^7.1.0",
+        "request": "^2.88.2",
+        "supertest": "^4.0.2"
     }
 }

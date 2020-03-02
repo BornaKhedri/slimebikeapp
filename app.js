@@ -30,6 +30,7 @@ app.use(router); // tell the app this is the router we are using
 
 app.use(express.static(publicPath));
 app.get('/', function (req, res) {
+  // res.sendStatus(200) 
   res.sendFile(path.join(publicPath + '/index.html'));
 });
 
@@ -61,3 +62,5 @@ server.listen(config.port, config.server.host, function () {
   logger.info(`server listening on port: ${config.port}`);
 });
 //}
+
+module.exports = server

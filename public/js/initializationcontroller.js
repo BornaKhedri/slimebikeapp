@@ -32,6 +32,8 @@ function getCity() {
 
         });
         slimeBikeService.send('PERMITTING');
+        
+        
 
     });
 }
@@ -39,9 +41,16 @@ function getCity() {
 function populateCompanies() {
     for (let i = 0; i < companies.length; i++) {
         $(`
-        <input type="radio" class="card-input-element form-check-input d-none" style="width: 100px;" name="${companies[i].company_id}" id="${companies[i].company_id}">
-        <label for="${companies[i].company_id}"><div class="card card-body d-flex flex-row justify-content-between align-items-center">${companies[i].company_name}</div></label>
-            
+        
+         <div class="form-check abc-checkbox">
+  <input class="form-check-input" type="radio" name="${companies[i].company_id}" id="${companies[i].company_id}" checked/>
+
+
+    <label for="${companies[i].company_id}" class="form-check-label">
+      ${companies[i].company_name}
+    </label>
+
+</div>    
             
         `).appendTo("#company_list");
     }
@@ -51,12 +60,16 @@ function populateCompanies() {
 function populateInfractions() {
 
     for (let i = 0; i < infractions.length; i++) {
-        $(`                                 <input type="checkbox" class="card-input-element form-check-input d-none" autocomplete="off" \
-        value="" id="${infractions[i].infractiontype_id}" name="${infractions[i].infractiontype_id}">
-        <label for="${infractions[i].infractiontype_id}">
-                                <div class="card card-body d-flex flex-row justify-content-between align-items-center">${infractions[i].infraction_description}</div> \
-                                </label>
- \
+        $(`                                 
+ <div class="form-check abc-checkbox">
+  <input class="form-check-input" type="checkbox" name="${infractions[i].infractiontype_id}" id="${infractions[i].infractiontype_id}" />
+
+
+    <label for="${infractions[i].infractiontype_id}" class="form-check-label">
+      ${infractions[i].infraction_description}
+    </label>
+
+</div>
                             `).appendTo("#infraction_list");
     }
 

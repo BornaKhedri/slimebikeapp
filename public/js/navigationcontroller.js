@@ -3,9 +3,13 @@
 var infraction_ids = [];
 var company_ids = [];
 
-$(function () {
+$(function() {
+
+
+
+
     // This function is called when continue button on the "classification" is clicked
-    $('#classification_continue').click(function (e) {
+    $('#classification_continue').click(function(e) {
         e.preventDefault();
         // Select the 'a' element of the "location" tab
         var next_tab = $(
@@ -15,24 +19,25 @@ $(function () {
         if (next_tab.length > 0) {
             if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length) {
                 // Atleast one of the checkbox is clicked and radio buttons are clicked
-                
-                $('#infraction_list input:checked').each(function () {
+
+                $('#infraction_list input:checked').each(function() {
                     infraction_ids.push($(this).parent().children().eq(0)[0].id);
                 });
 
-                $('#company_list input:checked').each(function () {
+                $('#company_list input:checked').each(function() {
                     company_ids.push($(this)[0].id);
                 });
                 slimeBikeService.send('IMAGING');
                 next_tab.trigger('click');
             }
 
-        } else {
+        }
+        else {
             $('.nav-tabs li:eq(0) a').trigger('click');
         }
     });
     // This function is called when continue button on the "location" is clicked
-    $('#location_continue').click(function (e) {
+    $('#location_continue').click(function(e) {
         e.preventDefault();
         var next_tab = $('a[href="#tab_identification"]');
         console.log(next_tab);
@@ -42,7 +47,8 @@ $(function () {
                 slimeBikeService.send('PINPOINTING');
             }
 
-        } else {
+        }
+        else {
             $('.nav-tabs li:eq(0) a').trigger('click');
         }
     });

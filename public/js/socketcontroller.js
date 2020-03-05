@@ -1,6 +1,6 @@
 // Code related to creating and managing the socket connection etc. 
-var socket = io.connect('https://128.95.204.113:3000');
-
+// var socket = io.connect('https://misplacedwheels.com:443');
+const socket = io();
 socket.on('news', function (data) {
   console.log(data);
 

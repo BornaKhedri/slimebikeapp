@@ -34,17 +34,20 @@ var server = http.createServer( app)
 
 var io = require('socket.io')(server);
 const router = express.Router();
-var publicPath = path.join(__dirname, 'public');
-
+var publicPath = path.join(__dirname, 'client/public');
 
 app.use(bodyParser.json());
 app.use(router); // tell the app this is the router we are using
 
 app.use(express.static(publicPath));
+
 app.get('/', function(req, res) {
-  // res.sendStatus(200) 
-  res.sendFile(path.join(publicPath + '/index.html'));
+  // res.send('this') 
+  res.send({ response: "I am alive" }).status(200);
+  // res.sendFile(path.join(publicPath + '/index.html'));
 });
+
+// app.get('/', (req, res) => res.send('Hello World!'))
 
 io.on('connection', function(socket) {
   console.log("Connected to a client");
@@ -78,9 +81,17 @@ io.on('disconnect', function(socket) {
 });
 
 // start the server
-server.listen(config.port, config.server.host, function() {
+server.listen(config.port,  function() {
   logger.info(`server listening on port: ${config.port}`);
 });
 //}
 
-module.exports = server
+// process.once('SIGHUP', function () {
+//   server.close(function () {
+//     process.kill(process.pid, 'SIGHUP')
+//   })
+// })
+
+process.on('SIGINT', () => { console.log("Bye bye!"); process.exit(); })
+
+// module.exports = server

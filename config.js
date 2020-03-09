@@ -2,7 +2,7 @@ require('dotenv').config()
 
 config = {
     serviceName: process.env.SERVICENAME || 'boilerplate node express postgress app',
-    port: process.env.PORT || 3000,
+    port: process.env.PORT || 3006,
     loggerLevel: process.env.LOGGERLEVEL || 'debug',
     db: {
         user: process.env.DB_USER || '',

@@ -1,52 +1,86 @@
-  const imageInput = document.getElementById('wheel_image');
-  const imageControl = document.getElementById('image_control');
-  var dataURL = '';
-  const canvas = document.getElementById('canvas');
-  const context = canvas.getContext('2d');
+// This file handles the image related tasks in the classification tab 
 
-  imageInput.addEventListener('change', handleFileSelect, false);
+// TODO: Ensure the canvas displays a smaller than actual one and 
+//          that still looks good and saves the full reslution image to the database.
 
+const imageInput = document.getElementById('wheel_image');
+const imageControl = document.getElementById('image_control');
+var dataURL = '';
+// imageInput.addEventListener('change', handleFileSelect, false);
+// window.onload = getExif;
+$("#wheel_image").change(function () {
 
-  function handleFileSelect(event) {
-      // Get the FileList object from the file select event
-      var files = event.target.files;
+    var file = this.files[0];  // file
+       
+    // Make sure the orientation of the displayed image is appropriate
+    EXIF.getData(file, function () {
 
-      // Check if there are files in the FileList
-      if (files.length === 0) {
-          return;
-      }
+        var orientation = EXIF.getTag(this, "Orientation");
+        var can = document.getElementById("canvas");
+        var ctx = can.getContext('2d');
+        var thisImage = new Image;
 
-      // For this example we only want one image. We'll take the first.
-      var file = files[0];
+        thisImage.onload = function () {
+           
+            // can.width = thisImage.width;
+            // can.height = thisImage.height;
+            ctx.save();
+            var width = can.width; var styleWidth = can.style.width;
+            var height = can.height; var styleHeight = can.style.height;
+            if (orientation) {
+                if (orientation > 4) {
+                    // can.width = height; can.style.width = styleHeight;
+                    // can.height = width; can.style.height = styleWidth;
+                }
+                switch (orientation) {
+                    case 2: 
+                        ctx.translate(width, 0); 
+                        ctx.scale(-1, 1); 
+                        break;
+                    case 3: 
+                        ctx.translate(width, height); 
+                        ctx.rotate(Math.PI); 
+                        break;
+                    case 4: 
+                        ctx.translate(0, height); 
+                        ctx.scale(1, -1); 
+                        break;
+                    case 5: 
+                        ctx.rotate(0.5 * Math.PI); 
+                        ctx.scale(1, -1); 
+                        break;
+                    case 6: 
+                        ctx.rotate(0.5 * Math.PI); 
+                        ctx.translate(0, -height); 
+                        break;
+                    case 7: 
+                        ctx.rotate(0.5 * Math.PI); 
+                        ctx.translate(width, -height); 
+                        ctx.scale(-1, 1); 
+                        break;
+                    case 8: 
+                        ctx.rotate(-0.5 * Math.PI); 
+                        ctx.translate(-width, 0); 
+                        break;
+                }
+            }
 
-      // Check that the file is an image
-      if (file.type !== '' && !file.type.match('image.*')) {
-          return;
-      }
-      // The URL API is vendor prefixed in Chrome
-      window.URL = window.URL || window.webkitURL;
+            ctx.drawImage(thisImage, 0, 0, width, height);
+            ctx.restore();
+            dataURL = can.toDataURL();
+            imageControl.parentNode.removeChild(imageControl);
+            var cont_btn_element = document.getElementById("classification_continue");
+            cont_btn_element.style.visibility = 'visible';
+            // at this point you can save the image away to your back-end using 'dataURL'
+        }
+        // The URL API is vendor prefixed in Chrome
+        window.URL = window.URL || window.webkitURL;
 
-      // Create a data URL from the image file
-      var imageURL = window.URL.createObjectURL(file);
+        // Create a data URL from the image file
+        thisImage.src = window.URL.createObjectURL(file);
 
-      loadAndDrawImage(imageURL);
-  }
+        // // now trigger the onload function by setting the src to your HTML5 file object (called 'file' here)
+        // thisImage.src = URL.createObjectURL(file);
 
-  function loadAndDrawImage(url) {
-      // Create an image object. This is not attached to the DOM and is not part of the page.
-      var image = new Image();
-
-      // When the image has loaded, draw it to the canvas
-      image.onload = function() {
-          // draw image...
-          context.drawImage(image, 0, 0, canvas.width, canvas.height);
-          dataURL = canvas.toDataURL();
-          imageControl.parentNode.removeChild(imageControl);
-          var cont_btn_element = document.getElementById("classification_continue");
-          cont_btn_element.style.visibility = 'visible';
-      }
-
-      // Now set the source of the image that we want to load
-      image.src = url;
-  }
-  
+    });
+})

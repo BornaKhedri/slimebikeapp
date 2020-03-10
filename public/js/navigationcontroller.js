@@ -1,12 +1,13 @@
 // Code related to managing navigation around the app
 
+// TODO: Ensure that clicking on the navbar does not allow going to the next stage 
+//          unless the page has been completely filled. One shortcut is make the 
+//          tab links in-active until they have been traversed. 
+
 var infraction_ids = [];
 var company_ids = [];
 
 $(function() {
-
-
-
 
     // This function is called when continue button on the "classification" is clicked
     $('#classification_continue').click(function(e) {
@@ -21,16 +22,17 @@ $(function() {
                 // Atleast one of the checkbox is clicked and radio buttons are clicked
 
                 $('#infraction_list input:checked').each(function() {
-                    infraction_ids.push($(this).parent().children().eq(0)[0].id);
+                    var infraction_id = ($(this).parent().children().eq(0)[0].id).substring(11);
+                    infraction_ids.push(infraction_id);
                 });
 
                 $('#company_list input:checked').each(function() {
-                    company_ids.push($(this)[0].id);
+                    var company_id = ($(this)[0].id).substring(8)
+                    company_ids.push(company_id);
                 });
                 slimeBikeService.send('IMAGING');
                 next_tab.trigger('click');
             }
-
         }
         else {
             $('.nav-tabs li:eq(0) a').trigger('click');
@@ -46,7 +48,6 @@ $(function() {
                 next_tab.trigger('click');
                 slimeBikeService.send('PINPOINTING');
             }
-
         }
         else {
             $('.nav-tabs li:eq(0) a').trigger('click');

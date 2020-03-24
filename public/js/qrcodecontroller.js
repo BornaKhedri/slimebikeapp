@@ -1,4 +1,12 @@
 var vehicle_id = '';
+const constraints = window.constraints = {
+  audio: false, 
+  video: {
+    facingMode: {
+      exact: "environment"
+    }
+  },
+};
 
 window.addEventListener('load', function () {
   let selectedDeviceId;
@@ -6,29 +14,15 @@ window.addEventListener('load', function () {
   console.log('ZXing code reader initialized')
   codeReader.getVideoInputDevices()
     .then((videoInputDevices) => {
-      const sourceSelect = document.getElementById('sourceSelect')
-      selectedDeviceId = videoInputDevices[0].deviceId
-      if (videoInputDevices.length >= 1) {
-        videoInputDevices.forEach((element) => {
-          const sourceOption = document.createElement('option')
-          sourceOption.text = element.label
-          sourceOption.value = element.deviceId
-          sourceSelect.appendChild(sourceOption)
-        })
+      console.log(videoInputDevices);
 
-        sourceSelect.onchange = () => {
-          selectedDeviceId = sourceSelect.value;
-        };
-
-        const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-        sourceSelectPanel.style.display = 'block'
-      }
-
-      codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+      codeReader.decodeFromConstraints(constraints, 'video', (result, err) => {
         if (result) {
-          vehicle_id = result
+          vehicle_id = result.text
           console.log(result)
-          document.getElementById('result').textContent = result.text
+          document.getElementById('result').textContent = vehicle_id
+          codeReader.stopContinuousDecode()
+          jQuery('#video').remove();
         }
         if (err && !(err instanceof ZXing.NotFoundException)) {
           console.error(err)

@@ -1,24 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="Description"
+        content="A website to report misplaced wheels - report misparked shared bikes and scooters.">
     <title>Misplaced Wheels</title>
     <link rel="icon" type="image/png" href="./icon/favicon.ico">
     <!-- CSS -->
     <!-- Local - vendor -->
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <!-- Local - custom -->
-    <link rel="stylesheet" href="./css/style.css">
+
+
     <!-- Remote - vendor -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Local - custom -->
+    <link rel="stylesheet" href="./css/style.css">
     <!-- Javascript -->
     <!-- Local - vendor -->
-    <script src="./js/jquery.min.js"></script>
-    <script src="./js/bootstrap.min.js"></script>
+
     <!-- Remote - vendor -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
     <script src="https://unpkg.com/xstate@4.7.7/dist/xstate.js"></script>
@@ -27,25 +37,25 @@
     <!-- Local - custom -->
 
 
-
-    <script src="./js/initializationcontroller.js"></script>
-    <script src="./js/navigationcontroller.js"></script>
     <script src="./js/statecontroller.js"></script>
-    <script src="./js/socketcontroller.js"></script>
 
 
 </head>
 
 <body>
 
-    <h1 class="text-capitalize text-center" style="font-size: 25px;"><br>Misplaced Wheels Reporter 1.0<br></h1>
-<br>
+    <h1 class="text-capitalize text-center" style="font-size: 25px;"><br>Misplaced Wheels Reporter<br></h1>
+    <br>
 
-    <ul class="nav nav-tabs nav nav-pills text-center justify-content-center" id="nav_tabs" role="tablist">
-        <li class="nav-item active"><a class="active nav-link" href="#tab_classification" role="tab" data-toggle="tab">Classification</a>
+    <ul class="nav nav-tabs nav nav-pills text-center justify-content-center text-body font-weight-bold" id="nav_tabs"
+        role="tablist">
+        <li class="nav-item active" id="li_classification"><a class="darktext nav-link active  font-weight-bold"
+                href="#tab_classification" role="tab" data-toggle="tab">Classification</a>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#tab_location" role="tab" data-toggle="tab">Location</a></li>
-        <li class="nav-item"><a class="nav-link" href="#tab_identification" role="tab" data-toggle="tab">Identification</a></li>
+        <li class="nav-item disabled" id="li_location"><a class="darktext nav-link  font-weight-bold"
+                href="#tab_location" role="tab" data-toggle="">Location</a></li>
+        <li class="nav-item disabled" id="li_identification"><a class="darktext nav-link  font-weight-bold"
+                href="#tab_identification" role="tab" data-toggle="">Identification</a></li>
     </ul>
 
     <div class="tab-content">
@@ -58,20 +68,21 @@
                             <div class="col-md-6 col-md-offset-3 center">
                                 <div class="btn-container">
                                     <!--the three icons: default, ok file (img), error file (not an img)-->
-                                    <h1 class="imgupload"><i class="fa fa-file-image-o"></i></h1>
+                                    <h3 for="wheel_image"> Upload a picture </h3>
+                                    <h1 class="imgupload" > <i class="fa fa-file-image-o"></i></h1>
                                     <!--this field changes dinamically displaying the filename we are trying to upload-->
                                     <p id="namefile">Only pics allowed! (jpg,jpeg,bmp,png)</p>
                                     <!--our custom btn which which stays under the actual one-->
-                                    <button type="button" id="btnup" class="btn btn-primary btn-lg">Browse for your pic!</button>
+                                    <button type="button" id="btnup" class="darktext btn btn-primary btn-lg">Browse for
+                                        your pic!</button>
                                     <!--this is the actual file input, is set with opacity=0 beacause we wanna see our custom one-->
-                                    <input type="file" accept="image/*" capture="environment" id="wheel_image" name="wheel_image" value="">
+                                    <input type="file" accept="image/*"
+                                            capture="environment" id="wheel_image" name="wheel_image" value="">
+                                    
                                 </div>
                             </div>
                         </div>
 
-                        <!--                    <video id="player" controls autoplay class="card-img-top"></video>
-                    <button id="capture"
-                        class="btn btn-primary text-center d-flex align-items-center mx-auto">Capture</button>-->
                         <canvas id="canvas"></canvas>
                     </div>
                     <div class="card-body">
@@ -89,7 +100,8 @@
                     </div>
                     <br />
 
-                    <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto" id="classification_continue" style="width: 88px; visibility: hidden;">Continue</button>
+                    <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto"
+                        id="classification_continue" style="width: 88px; visibility: hidden;">Continue</button>
 
                 </div>
 
@@ -101,33 +113,29 @@
 
                 <div id="map"></div>
 
-                <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto fit" id="location_continue" style="width: 88px;">Continue</button>
+                <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto fit"
+                    id="location_continue" style="width: 88px;">Continue</button>
             </div>
         </div>
         <div class="tab-pane" role="tabpanel" id="tab_identification">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
                 <h1 class="text-center" style="font-size: 20px;"><br>Optionally, please also scan the vehicle's QR code
                 </h1>
-                <div>
-                    <a class="button" id="startButton">Start</a>
-                    <a class="button" id="resetButton">Reset</a>
-                </div>
-                <div id="sourceSelectPanel" style="display:none">
-                    <label for="sourceSelect">Change video source:</label>
-                    <select id="sourceSelect" style="max-width:400px">
-                    </select>
-                </div>
 
                 <label>Result:</label>
                 <pre><code id="result"></code></pre>
-                <video id="video" class="d-flex align-items-center mx-auto" width="300" height="200" style="border: 1px solid gray"></video>
-                <a class="btn btn-primary text-center d-flex align-items-center mx-auto" role="button" onclick="socket_submit();" style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
+                <video id="video" class="d-flex align-items-center mx-auto" width="300" height="200"
+                    style="border: 1px solid gray"></video>
+                <a class="btn btn-primary text-center d-flex align-items-center mx-auto" role="button"
+                    onclick="socket_submit();" style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
             </div>
         </div>
     </div>
+    <script src="./js/initializationcontroller.js"></script>
+    <script src="./js/navigationcontroller.js"></script>
     <script src="./js/qrcodecontroller.js"></script>
     <script src="./js/imagecontroller.js"></script>
-    <script src="./js/mapcontroller.js"></script>
+
 </body>
 
 </html>

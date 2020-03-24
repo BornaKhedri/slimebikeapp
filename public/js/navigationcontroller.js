@@ -7,50 +7,63 @@
 var infraction_ids = [];
 var company_ids = [];
 
-$(function() {
-
+jQuery(function() {
+    var $tabs = jQuery('#nav_tabs li');
     // This function is called when continue button on the "classification" is clicked
-    $('#classification_continue').click(function(e) {
+    jQuery('#classification_continue').click(function(e) {
         e.preventDefault();
+        $tabs.filter('.active').next('li').removeClass("disabled");
+        $tabs.filter('.active').next('li').find('a[data-toggle]').each(function () {
+            jQuery(this).attr("data-toggle", "tab");
+        });
+        // $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
         // Select the 'a' element of the "location" tab
-        var next_tab = $(
+        var next_tab = jQuery(
             'a[href="#tab_location"]'); //$('.nav-tabs > .active').next('li').find('a');
         // console.log(next_tab);
         // If a location tab 'a' is found, then trigger its click event
         if (next_tab.length > 0) {
-            if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length) {
+            if (jQuery("input[type='checkbox']:checked").length > 0 && jQuery("input[type='radio']:checked").length) {
                 // Atleast one of the checkbox is clicked and radio buttons are clicked
 
-                $('#infraction_list input:checked').each(function() {
-                    var infraction_id = ($(this).parent().children().eq(0)[0].id).substring(11);
+                jQuery('#infraction_list input:checked').each(function() {
+                    var infraction_id = (jQuery(this).parent().children().eq(0)[0].id).substring(11);
                     infraction_ids.push(infraction_id);
                 });
 
-                $('#company_list input:checked').each(function() {
-                    var company_id = ($(this)[0].id).substring(8)
+                jQuery('#company_list input:checked').each(function() {
+                    var company_id = (jQuery(this)[0].id).substring(8)
                     company_ids.push(company_id);
                 });
-                slimeBikeService.send('IMAGING');
-                next_tab.trigger('click');
+                // slimeBikeService.send('IMAGING');
+                // next_tab.trigger('click');
+                $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+                draw_map();
             }
         }
         else {
-            $('.nav-tabs li:eq(0) a').trigger('click');
+            jQuery('.nav-tabs li:eq(0) a').trigger('click');
         }
     });
     // This function is called when continue button on the "location" is clicked
-    $('#location_continue').click(function(e) {
+    jQuery('#location_continue').click(function(e) {
         e.preventDefault();
-        var next_tab = $('a[href="#tab_identification"]');
+        $ident_li = jQuery('#li_identification')
+        $ident_li.removeClass("disabled");
+        $ident_li.find('a[data-toggle]').each(function () {
+            jQuery(this).attr("data-toggle", "tab");
+        });
+        var next_tab = jQuery('a[href="#tab_identification"]');
         console.log(next_tab);
         if (next_tab.length > 0) {
             if (latitude != "" && longitude != "") {
-                next_tab.trigger('click');
-                slimeBikeService.send('PINPOINTING');
+                // next_tab.trigger('click');
+                next_tab.tab('show');
+                // slimeBikeService.send('PINPOINTING');
             }
         }
         else {
-            $('.nav-tabs li:eq(0) a').trigger('click');
+            jQuery('.nav-tabs li:eq(0) a').trigger('click');
         }
     });
 });

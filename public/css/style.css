@@ -513,3 +513,8 @@ label .form-check-input.is-invalid .abc-checkbox:before,
 label .form-check-input.is-invalid .abc-radio:before {
     border-color: #dc3545;
 }
+
+
+.darktext {
+    color: #000000 !important;
+}

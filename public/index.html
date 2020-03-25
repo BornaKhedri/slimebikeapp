@@ -7,6 +7,7 @@
     <meta name="Description"
         content="A website to report misplaced wheels - report misparked shared bikes and scooters.">
     <title>Misplaced Wheels</title>
+    <script type="text/javascript">window.performance.mark('begin_head_load');</script>
     <link rel="icon" type="image/png" href="./icon/favicon.ico">
     <!-- CSS -->
     <!-- Local - vendor -->
@@ -14,12 +15,14 @@
 
     <!-- Remote - vendor -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <!-- Local - custom -->
     <link rel="stylesheet" href="./css/style.css">
+    <script type="text/javascript">window.performance.mark('end_head_load_css');
+        window.performance.measure('head_css_load_time', 'begin_head_load', 'end_head_load_css');</script>
     <!-- Javascript -->
     <!-- Local - vendor -->
 
@@ -31,30 +34,38 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
-    <script src="https://unpkg.com/xstate@4.7.7/dist/xstate.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+    <script src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">window.performance.mark('end_head_load_js');
+        window.performance.measure('head_js_load_time', 'end_head_load_css', 'end_head_load_js');</script>
     <!-- Local - custom -->
-
-
-    <script src="./js/statecontroller.js"></script>
-
 
 </head>
 
 <body>
+    <script type="text/javascript">window.performance.mark('begin_body_load');</script>
+    <div class="row">
+        
+        <div class="col-xs-offset-2 col-xs-8">
+            <img class="mx-auto d-block" src="./images/logo.svg" alt="misplaced wheels logo" id="logo" />
+        </div>
+        <div class="col-xs-2">
+            <div id="city_name"></div>
+        </div>
+        <br />
+        <br />
+    </div>
 
-    <h1 class="text-capitalize text-center" style="font-size: 25px;"><br>Misplaced Wheels Reporter<br></h1>
-    <br>
 
     <ul class="nav nav-tabs nav nav-pills text-center justify-content-center text-body font-weight-bold" id="nav_tabs"
         role="tablist">
-        <li class="nav-item active" id="li_classification"><a class="darktext nav-link active  font-weight-bold"
+        <li class="nav-item" id="li_classification"><a class="navbar-active lighttext nav-link active  font-weight-bold"
                 href="#tab_classification" role="tab" data-toggle="tab">Classification</a>
         </li>
-        <li class="nav-item disabled" id="li_location"><a class="darktext nav-link  font-weight-bold"
+        <li class="nav-item disabled" id="li_location"><a class="lighttext nav-link  font-weight-bold"
                 href="#tab_location" role="tab" data-toggle="">Location</a></li>
-        <li class="nav-item disabled" id="li_identification"><a class="darktext nav-link  font-weight-bold"
+        <li class="nav-item disabled" id="li_identification"><a class="lighttext nav-link  font-weight-bold"
                 href="#tab_identification" role="tab" data-toggle="">Identification</a></li>
     </ul>
 
@@ -62,49 +73,49 @@
         <div class="tab-pane show active" role="tabpanel" id="tab_classification">
             <div class="container-fluid">
 
-                <div class="card">
-                    <div class="center">
-                        <div class="row" id="image_control">
-                            <div class="col-md-6 col-md-offset-3 center">
-                                <div class="btn-container">
-                                    <!--the three icons: default, ok file (img), error file (not an img)-->
-                                    <h3 for="wheel_image"> Upload a picture </h3>
-                                    <h1 class="imgupload" > <i class="fa fa-file-image-o"></i></h1>
-                                    <!--this field changes dinamically displaying the filename we are trying to upload-->
-                                    <p id="namefile">Only pics allowed! (jpg,jpeg,bmp,png)</p>
-                                    <!--our custom btn which which stays under the actual one-->
-                                    <button type="button" id="btnup" class="darktext btn btn-primary btn-lg">Browse for
-                                        your pic!</button>
-                                    <!--this is the actual file input, is set with opacity=0 beacause we wanna see our custom one-->
-                                    <input type="file" accept="image/*"
-                                            capture="environment" id="wheel_image" name="wheel_image" value="">
-                                    
+                <div class="card choose_file h-20 d-inline-block">
+                    <div class="container h-80">
+                        <div class="row justify-content-center ">
+                            <i class="fas fa-camera fa-7x"></i>
+                            <button type="button" style="opacity: 0;"></button>
+                            <input capture="environment" id="wheel_image" name="wheel_image" value="" type="file"
+                                accept="image/*" />
+
+                            <canvas id="canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card-body">
+                    <p class="card-text">Select all parking infractions that apply</p>
+                    <div class="row">
+                        <div class="col-sm-4 col-xs-12">
+                            <div data-toggle="buttons" id="infraction_list">
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="" id="infraction_list">
+
+                    </div> -->
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Choose the company</p>
+                    <div class="card-text" id="company_list">
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-12">
+                                <div data-toggle="radiobuttons" id="infraction_list">
+    
                                 </div>
                             </div>
                         </div>
-
-                        <canvas id="canvas"></canvas>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text">Select all parking infractions that apply</p>
-
-                        <div class="" id="infraction_list">
-
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Choose the company</p>
-                        <div class="card-text" id="company_list">
-
-                        </div>
-                    </div>
-                    <br />
-
-                    <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto"
-                        id="classification_continue" style="width: 88px; visibility: hidden;">Continue</button>
-
                 </div>
+                <br />
 
+                <button type="button" class="btn text-center d-flex align-items-center mx-auto navbar-active"
+                    id="classification_continue" style="width: 88px; visibility: hidden;">Continue</button>
             </div>
         </div>
         <div class="tab-pane" role="tabpanel" id="tab_location">
@@ -112,9 +123,14 @@
                 <h1 class="text-center" style="font-size: 20px;"><br>Select the location of bike/scooter</h1>
 
                 <div id="map"></div>
+                <div class="row">
+                    <button type="button" class="btn text-center d-flex align-items-center mx-auto back-button darktext"
+                        id="location_back" style="width: 88px;">Back</button>
+                    <button type="button"
+                        class="btn text-center d-flex align-items-center mx-auto fit navbar-active darktext"
+                        id="location_continue" style="width: 88px;">Continue</button>
+                </div>
 
-                <button type="button" class="btn btn-primary text-center d-flex align-items-center mx-auto fit"
-                    id="location_continue" style="width: 88px;">Continue</button>
             </div>
         </div>
         <div class="tab-pane" role="tabpanel" id="tab_identification">
@@ -126,16 +142,29 @@
                 <pre><code id="result"></code></pre>
                 <video id="video" class="d-flex align-items-center mx-auto" width="300" height="200"
                     style="border: 1px solid gray"></video>
-                <a class="btn btn-primary text-center d-flex align-items-center mx-auto" role="button"
-                    onclick="socket_submit();" style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
+                <div class="row">
+                    <button type="button" class="btn back-button text-center d-flex align-items-center mx-auto darktext"
+                        id="identification_back" style="width: 88px;">Back</button>
+                    <a class="btn navbar-active text-center d-flex align-items-center mx-auto darktext" role="button"
+                        onclick="socketSubmit();" style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
+                </div>
+
             </div>
         </div>
     </div>
+    <script type="text/javascript">window.performance.mark('end_body_load_html');
+        window.performance.measure('body_html_load_time', 'begin_body_load', 'end_body_load_html');</script>
     <script src="./js/initializationcontroller.js"></script>
     <script src="./js/navigationcontroller.js"></script>
     <script src="./js/qrcodecontroller.js"></script>
     <script src="./js/imagecontroller.js"></script>
-
+    <script type="text/javascript">window.performance.mark('end_body_load_js');
+        window.performance.measure('body_js_load_time', 'end_body_load_html', 'end_body_load_js');
+        var items = window.performance.getEntriesByType('measure');
+        for (var i = 0; i < items.length; ++i) {
+            var req = items[i];
+            console.log(' ' + req.name + ' took ' + req.duration + 'ms');
+        }</script>
 </body>
 
 </html>

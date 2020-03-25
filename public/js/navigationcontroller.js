@@ -7,53 +7,68 @@
 var infraction_ids = [];
 var company_ids = [];
 
-jQuery(function() {
-    var $tabs = jQuery('#nav_tabs li');
+$(function() {
+    var $tabs = $('#nav_tabs li');
+    $classfication_li = $('#li_classification');
+    $location_li = $('#li_location');
+    $identification_li = $('#li_identification');
     // This function is called when continue button on the "classification" is clicked
-    jQuery('#classification_continue').click(function(e) {
+    $('#classification_continue').click(function(e) {
         e.preventDefault();
-        $tabs.filter('.active').next('li').removeClass("disabled");
-        $tabs.filter('.active').next('li').find('a[data-toggle]').each(function () {
-            jQuery(this).attr("data-toggle", "tab");
+        $classfication_li.addClass('disabled');
+        $classfication_li.find('a').removeClass("navbar-active");
+        $classfication_li.find('a').addClass("donetext");
+        $classfication_li.find('a').removeClass("active");
+        $location_li.removeClass("disabled");
+        $location_li.find('a').addClass("navbar-active");
+        $location_li.find('a[data-toggle]').each(function () {
+            $(this).attr("data-toggle", "tab");
         });
         // $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
         // Select the 'a' element of the "location" tab
-        var next_tab = jQuery(
+        var next_tab = $(
             'a[href="#tab_location"]'); //$('.nav-tabs > .active').next('li').find('a');
         // console.log(next_tab);
         // If a location tab 'a' is found, then trigger its click event
         if (next_tab.length > 0) {
-            if (jQuery("input[type='checkbox']:checked").length > 0 && jQuery("input[type='radio']:checked").length) {
+            if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length) {
                 // Atleast one of the checkbox is clicked and radio buttons are clicked
 
-                jQuery('#infraction_list input:checked').each(function() {
-                    var infraction_id = (jQuery(this).parent().children().eq(0)[0].id).substring(11);
+                $('#infraction_list input:checked').each(function() {
+                    var infraction_id = ($(this).parent().children().eq(0)[0].id).substring(11);
                     infraction_ids.push(infraction_id);
                 });
 
-                jQuery('#company_list input:checked').each(function() {
-                    var company_id = (jQuery(this)[0].id).substring(8)
+                $('#company_list input:checked').each(function() {
+                    var company_id = ($(this)[0].id).substring(8)
                     company_ids.push(company_id);
                 });
                 // slimeBikeService.send('IMAGING');
                 // next_tab.trigger('click');
-                $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
-                draw_map();
+                next_tab.tab('show');
+                window.performance.mark('before_drawMap');
+                drawMap();
+                window.performance.mark('after_drawMap');
+                window.performance.measure('get_drawMap_exec', 'before_drawMap', 'after_drawMap');
             }
         }
         else {
-            jQuery('.nav-tabs li:eq(0) a').trigger('click');
+            $('.nav-tabs li:eq(0) a').trigger('click');
         }
     });
     // This function is called when continue button on the "location" is clicked
-    jQuery('#location_continue').click(function(e) {
+    $('#location_continue').click(function(e) {
         e.preventDefault();
-        $ident_li = jQuery('#li_identification')
-        $ident_li.removeClass("disabled");
-        $ident_li.find('a[data-toggle]').each(function () {
-            jQuery(this).attr("data-toggle", "tab");
+        $location_li.addClass('disabled');
+        $location_li.find('a').removeClass("navbar-active");
+        $location_li.find('a').addClass("donetext");
+        $location_li.find('a').removeClass("active");
+        $identification_li.find('a').addClass("navbar-active");
+        $identification_li.removeClass("disabled");
+        $identification_li.find('a[data-toggle]').each(function () {
+            $(this).attr("data-toggle", "tab");
         });
-        var next_tab = jQuery('a[href="#tab_identification"]');
+        var next_tab = $('a[href="#tab_identification"]');
         console.log(next_tab);
         if (next_tab.length > 0) {
             if (latitude != "" && longitude != "") {
@@ -63,7 +78,7 @@ jQuery(function() {
             }
         }
         else {
-            jQuery('.nav-tabs li:eq(0) a').trigger('click');
+            $('.nav-tabs li:eq(0) a').trigger('click');
         }
     });
 });

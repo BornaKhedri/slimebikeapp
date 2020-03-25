@@ -9,19 +9,19 @@ var dataURL = '';
 // imageInput.addEventListener('change', handleFileSelect, false);
 // window.onload = getExif;
 $("#wheel_image").change(function () {
-
+    window.performance.mark('start_imageChange');
     var file = this.files[0];  // file
        
     // Make sure the orientation of the displayed image is appropriate
     EXIF.getData(file, function () {
-
+        window.performance.mark('start_exifGetData');
         var orientation = EXIF.getTag(this, "Orientation");
         var can = document.getElementById("canvas");
         var ctx = can.getContext('2d');
         var thisImage = new Image;
 
         thisImage.onload = function () {
-           
+            window.performance.mark('start_exifOnLoad');
             // can.width = thisImage.width;
             // can.height = thisImage.height;
             ctx.save();
@@ -68,10 +68,13 @@ $("#wheel_image").change(function () {
             ctx.drawImage(thisImage, 0, 0, width, height);
             ctx.restore();
             dataURL = can.toDataURL();
-            imageControl.parentNode.removeChild(imageControl);
+            // imageControl.parentNode.removeChild(imageControl);
             var cont_btn_element = document.getElementById("classification_continue");
             cont_btn_element.style.visibility = 'visible';
             // at this point you can save the image away to your back-end using 'dataURL'
+
+            window.performance.mark('end_exifOnLoad');
+            window.performance.measure('get_exifOnLoad_exec', 'start_exifOnLoad', 'end_exifOnLoad');
         }
         // The URL API is vendor prefixed in Chrome
         window.URL = window.URL || window.webkitURL;
@@ -81,6 +84,11 @@ $("#wheel_image").change(function () {
 
         // // now trigger the onload function by setting the src to your HTML5 file object (called 'file' here)
         // thisImage.src = URL.createObjectURL(file);
+        window.performance.mark('end_exifGetData');
+        window.performance.measure('get_exifGetData_exec', 'start_exifGetData', 'end_exifGetData');
 
     });
+
+    window.performance.mark('end_imageChange');
+    window.performance.measure('get_imageChange_exec', 'start_imageChange', 'end_imageChange');
 })

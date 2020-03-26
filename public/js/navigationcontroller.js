@@ -5,7 +5,7 @@
 //          tab links in-active until they have been traversed. 
 
 var infraction_ids = [];
-var company_ids = [];
+var micromobilityservice_id = '';
 
 $(function() {
     var $tabs = $('#nav_tabs li');
@@ -40,8 +40,8 @@ $(function() {
                 });
 
                 $('#company_list input:checked').each(function() {
-                    var company_id = ($(this)[0].id).substring(8)
-                    company_ids.push(company_id);
+                    micromobilityservice_id = ($(this)[0].id).substring(8)
+                    
                 });
                 // slimeBikeService.send('IMAGING');
                 // next_tab.trigger('click');

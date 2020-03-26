@@ -94,20 +94,19 @@ function populateCompanies() {
     companies.forEach((company) => {
         // create the company name html element
         $company_name = $('<label/>')
-        .addClass("btn active light-background darktext")
+        .addClass("btn active light-background darktext margin-company")
         .append(
             $('<input/>')
-                .attr("id", 'company_' + company.company_id)
+                .attr("id", 'company_' + company.micromobilityservice_id)
                 .attr("type", "radio")
-                .attr("name", 'company_' + company.company_id)
-                .attr('checked', true)
+                .attr("name", 'company_' + company.micromobilityservice_id)
                 .attr("autocomplete", "off")
                 )
         .append(
             $('<img/>')
-                .attr("src", "./images/jump.jpg")
-                .attr("width", "100px")
-                .attr("height", "100px")
+                .attr("src", "data:image/png;base64, " + company.vehicle_image)
+                .attr("width", "80px")
+                .attr("height", "80px")
         )
         .append(company.company_name)
 
@@ -118,11 +117,13 @@ function populateCompanies() {
     $('[data-toggle="radiobuttons"] .btn').on('click', function () {
         // toggle style
         // $(this).removeClass('light-background');
-        $(this).toggleClass('blue-background light-background active');
-        
+        $(this).addClass('dark-border');
+        $(this).siblings().removeClass('dark-border')
+        // $('[data-toggle="radiobuttons"]').find(label)
         // toggle checkbox
-        var $chk = $(this).find('[type=radio]');
-        $chk.prop('checked',!$chk.prop('checked'));
+        var $chk = $(this).find('input:radio');
+        $chk.prop('checked', true);
+        $('input:radio').not($chk).prop('checked', false);
         
         return false;
     });
@@ -222,11 +223,18 @@ async function drawMap() {
         zoom: 13
     });
 
+    // create the popup
+    var popup = new mapboxgl.Popup({ offset: 25, closeOnClick: false, closeButton: false }).setText(
+    'Move the marker to wheel location.'
+    );
+
     var marker = new mapboxgl.Marker({
         draggable: true
     })
         .setLngLat([longitude, latitude])
-        .addTo(map);
+        .setPopup(popup)
+        .addTo(map)
+        .togglePopup();
 
     function onDragEnd() {
         var lngLat = marker.getLngLat();
@@ -247,7 +255,7 @@ var socketSubmit = function () {
             img: dataURL,
             location: [longitude, latitude],
             infraction_ids: infraction_ids,
-            company_ids: company_ids,
+            micromobilityservice_id: micromobilityservice_id,
             vehicle_id: vehicle_id,
             city: city
         }

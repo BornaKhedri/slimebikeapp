@@ -1,3 +1,22 @@
+body {
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+}
+
+.navbar {
+    flex-grow:0;
+}
+
+#map {
+    flex-grow:1;
+    position: 'relative';
+    top: 0;
+    bottom: 0;
+    width: '100%';
+    height: calc(100vh - 300px);
+}
+
 .items-collection {
     margin: 20px 0 0 0;
 }
@@ -30,9 +49,9 @@
     /* Note, you may want to position the checkbox over top the label and set the opacity to zero instead. It can be better for accessibilty on some touch devices for discoverability. */
 }
 
-#map {
+/* #map {
     height: 300px;
-}
+} */
 
 #fit {
     display: block;
@@ -144,6 +163,10 @@ input[type="checkbox"] {
 
 input[type="radio"] {
     display: none;
+}
+
+.margin-company {
+    margin: 5px;
 }
 /* body {
     padding: 20px;
@@ -565,4 +588,14 @@ label .form-check-input.is-invalid .abc-radio:before {
 
 .blue-background {
     background-color: #2e86ab;
+}
+
+.dark-border {
+    border-width: 3px;
+    border-color: #373f51;
+
+}
+
+.footer-buttons {
+    margin: 5px;
 }

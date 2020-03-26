@@ -46,7 +46,7 @@
 <body>
     <script type="text/javascript">window.performance.mark('begin_body_load');</script>
     <div class="row">
-        
+
         <div class="col-xs-offset-2 col-xs-8">
             <img class="mx-auto d-block" src="./images/logo.svg" alt="misplaced wheels logo" id="logo" />
         </div>
@@ -58,8 +58,8 @@
     </div>
 
 
-    <ul class="nav nav-tabs nav nav-pills text-center justify-content-center text-body font-weight-bold" id="nav_tabs"
-        role="tablist">
+    <ul class="nav nav-tabs nav nav-pills navbar text-center justify-content-center text-body font-weight-bold"
+        id="nav_tabs" role="tablist">
         <li class="nav-item" id="li_classification"><a class="navbar-active lighttext nav-link active  font-weight-bold"
                 href="#tab_classification" role="tab" data-toggle="tab">Classification</a>
         </li>
@@ -102,11 +102,11 @@
                 </div>
                 <div class="card-body">
                     <p class="card-text">Choose the company</p>
-                    <div class="card-text" id="company_list">
+                    <div class="card-text">
                         <div class="row">
                             <div class="col-sm-4 col-xs-12">
-                                <div data-toggle="radiobuttons" id="infraction_list">
-    
+                                <div data-toggle="radiobuttons" id="company_list">
+
                                 </div>
                             </div>
                         </div>
@@ -123,12 +123,16 @@
                 <h1 class="text-center" style="font-size: 20px;"><br>Select the location of bike/scooter</h1>
 
                 <div id="map"></div>
-                <div class="row">
-                    <button type="button" class="btn text-center d-flex align-items-center mx-auto back-button darktext"
-                        id="location_back" style="width: 88px;">Back</button>
-                    <button type="button"
-                        class="btn text-center d-flex align-items-center mx-auto fit navbar-active darktext"
-                        id="location_continue" style="width: 88px;">Continue</button>
+                <div class="d-flex">
+                   
+                        <button type="button"
+                            class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
+                            id="location_back"> <i class="fas fa-chevron-left"></i> Back</button>
+                  
+                        <button type="button"
+                            class="btn btn-block text-center d-flex align-items-center mx-auto navbar-active darktext flex-fill"
+                            id="location_continue">Continue <i class="fas fa-chevron-right"></i></button>
+                 
                 </div>
 
             </div>
@@ -143,9 +147,9 @@
                 <video id="video" class="d-flex align-items-center mx-auto" width="300" height="200"
                     style="border: 1px solid gray"></video>
                 <div class="row">
-                    <button type="button" class="btn back-button text-center d-flex align-items-center mx-auto darktext"
+                    <button type="button" class="btn back-button text-center d-flex align-items-center mx-auto darktext footer-buttons"
                         id="identification_back" style="width: 88px;">Back</button>
-                    <a class="btn navbar-active text-center d-flex align-items-center mx-auto darktext" role="button"
+                    <a class="btn navbar-active text-center d-flex align-items-center mx-auto darktext footer-buttons" role="button"
                         onclick="socketSubmit();" style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
                 </div>
 

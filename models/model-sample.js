@@ -34,10 +34,11 @@ module.exports.sampleTransaction = async () => {
  * @return server time
  */
 module.exports.getCompanies = async (city) => {
-    let sql = `select company_id, company_name from micromobility_company 
-                    where company_id IN (select company_id from micromobility_services 
-                        where micromobilityservice_id IN (select micromobilityservice_id from micromobility_city_xref 
-                            where city_id = (select city_id from city_info where city = '${city}'))); `;
+    let sql = `select ms.micromobilityservice_id, mt.vehicle_image, mc.company_name from micromobility_type mt
+	join micromobility_company mc on mc.company_id = mt.company_id
+	join micromobility_services ms on mt.micromobilitytype_id = ms.micromobilitytype_id
+		where micromobilityservice_id IN (select micromobilityservice_id from micromobility_city_xref 
+                            where city_id = (select city_id from city_info where city = '${city}'));`;
     let data = [];
     try {
         result = await dbUtil.sqlToDB(sql, data);
@@ -66,10 +67,7 @@ module.exports.insertReport = async (report) => {
     let client = await dbUtil.getTransaction();
     
     let sql = `with mispark_report as (insert into misparking_report (micromobilityservice_id, report_datetime, 
-        report_location, report_image, report_uid) values ((select micromobilityservice_id from 
-                micromobility_city_xref where city_id = (select city_id from city_info 
-                    where city ='${report.city}') intersect select micromobilityservice_id from 
-                    micromobility_services where company_id = ${parseInt(report.company_ids)}), 
+        report_location, report_image, report_uid) values (${parseInt(report.micromobilityservice_id)}, 
                     '${datetime}', ST_SetSRID(ST_MakePoint(${report.location}),4326), '${report.img}', 
                     '${report.vehicle_id}') returning mispark_id)
                         insert into misparking_report_infraction_xref (infractiontype_id, mispark_id) 

@@ -10,6 +10,8 @@ var longitude = '';
 var gps_coords = false;
 const socket = io();
 
+// This disables the click on the navbar elements - 
+// navigation is purely handled by the back and continue buttons
 $(document).ready(function () {
     $(".nav li.disabled a").click(function () {
         return false;
@@ -22,6 +24,15 @@ $('body').on('click', '.disabled', function(e) {
 });
 
 
+$(function(){
+
+    $.fn.filepond.registerPlugin(FilePondPluginFileValidateSize);
+
+    $.fn.filepond.setDefaults({
+        maxFileSize: '3MB'
+    });
+
+});
 
 
 // Get the city in which this app is opened 

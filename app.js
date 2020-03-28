@@ -2,10 +2,11 @@ const config = require('./config');
 const path = require('path');
 const express = require('express');
 const logger = require('./utils/logger');
-const bodyParser = require('body-parser');
+var multer = require("multer");
+// const bodyParser = require('body-parser');
 var fs = require('fs')
 var http = require('http')
-
+var upload = multer({ dest: "./download/" });
 /*var certOptions = {
   key: fs.readFileSync(path.resolve('cert/server.key')),
   cert: fs.readFileSync(path.resolve('cert/server.crt'))
@@ -36,14 +37,27 @@ var io = require('socket.io')(server);
 const router = express.Router();
 var publicPath = path.join(__dirname, 'public');
 
-
-app.use(bodyParser.json());
+// app.use(bodyParser.json({limit: '50mb'}));
+// app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+// app.use(bodyParser.json());
 app.use(router); // tell the app this is the router we are using
 
 app.use(express.static(publicPath));
 app.get('/', function(req, res) {
   // res.sendStatus(200) 
   res.sendFile(path.join(publicPath + '/index.html'));
+});
+
+// Hndle file upload and temp storage
+app.post('/upload', upload.single('filepond'), (req, res, next) => {
+
+  console.log("upload initiated");
+  console.log(req.file);
+  res.send([req.file.filename]);
+});
+
+app.delete('/upload', (req, res, next) => {
+  console.log(req);
 });
 
 io.on('connection', function(socket) {

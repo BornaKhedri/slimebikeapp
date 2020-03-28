@@ -18,7 +18,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
+    <!-- Filepond stylesheet -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet">
     <!-- Local - custom -->
     <link rel="stylesheet" href="./css/style.css">
     <script type="text/javascript">window.performance.mark('end_head_load_css');
@@ -33,6 +36,17 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+
+    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+    <script
+        src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
+    <script
+        src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+    <script
+        src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
@@ -50,7 +64,7 @@
         <div class="col-xs-offset-2 col-xs-8">
             <img class="mx-auto d-block" src="./images/logo.svg" alt="misplaced wheels logo" id="logo" />
         </div>
-        <div class="col-xs-2">
+        <div class="d-flex align-items-end col-xs-2">
             <div id="city_name"></div>
         </div>
         <br />
@@ -73,7 +87,7 @@
         <div class="tab-pane show active" role="tabpanel" id="tab_classification">
             <div class="container-fluid">
 
-                <div class="card choose_file h-20 d-inline-block">
+                <!-- <div class="card choose_file h-20 d-inline-block">
                     <div class="container h-80">
                         <div class="row justify-content-center ">
                             <i class="fas fa-camera fa-7x"></i>
@@ -84,8 +98,11 @@
                             <canvas id="canvas"></canvas>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
+                <!-- We'll transform this input into a pond -->
+                <input type="file" class="filepond" name="filepond" data-allow-reorder="true" data-max-file-size="10MB"
+                    data-max-files="1">
 
                 <div class="card-body">
                     <p class="card-text">Select all parking infractions that apply</p>
@@ -124,15 +141,15 @@
 
                 <div id="map"></div>
                 <div class="d-flex">
-                   
-                        <button type="button"
-                            class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
-                            id="location_back"> <i class="fas fa-chevron-left"></i> Back</button>
-                  
-                        <button type="button"
-                            class="btn btn-block text-center d-flex align-items-center mx-auto navbar-active darktext flex-fill"
-                            id="location_continue">Continue <i class="fas fa-chevron-right"></i></button>
-                 
+
+                    <button type="button"
+                        class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
+                        id="location_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
+
+                    <button type="button"
+                        class="btn btn-block text-center d-flex align-items-center mx-auto navbar-active darktext flex-fill"
+                        id="location_continue">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
+
                 </div>
 
             </div>
@@ -146,11 +163,26 @@
                 <pre><code id="result"></code></pre>
                 <video id="video" class="d-flex align-items-center mx-auto" width="300" height="200"
                     style="border: 1px solid gray"></video>
+
+                <div class="d-flex">
+
+                    <button type="button"
+                        class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
+                        id="identification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
+
+                    <button type="button"
+                        class="btn btn-block text-center d-flex align-items-center mx-auto navbar-active darktext flex-fill"
+                        id="identification_continue" onclick="socketSubmit();">Submit &nbsp;<i
+                            class="fas fa-check"></i></button>
+
+                </div>
                 <div class="row">
-                    <button type="button" class="btn back-button text-center d-flex align-items-center mx-auto darktext footer-buttons"
+                    <button type="button"
+                        class="btn back-button text-center d-flex align-items-center mx-auto darktext footer-buttons"
                         id="identification_back" style="width: 88px;">Back</button>
-                    <a class="btn navbar-active text-center d-flex align-items-center mx-auto darktext footer-buttons" role="button"
-                        onclick="socketSubmit();" style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
+                    <a class="btn navbar-active text-center d-flex align-items-center mx-auto darktext footer-buttons"
+                        role="button" onclick="socketSubmit();"
+                        style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
                 </div>
 
             </div>
@@ -159,6 +191,7 @@
     <script type="text/javascript">window.performance.mark('end_body_load_html');
         window.performance.measure('body_html_load_time', 'begin_body_load', 'end_body_load_html');</script>
     <script src="./js/initializationcontroller.js"></script>
+    <script src="./js/filepond_jq.js"></script>
     <script src="./js/navigationcontroller.js"></script>
     <script src="./js/qrcodecontroller.js"></script>
     <script src="./js/imagecontroller.js"></script>

@@ -53,11 +53,8 @@ app.post('/upload', upload.single('filepond'), (req, res, next) => {
 
   console.log("upload initiated");
   console.log(req.file);
+  // send back the filename so that filepond knows the file has been transferred
   res.send([req.file.filename]);
-});
-
-app.delete('/upload', (req, res, next) => {
-  console.log(req);
 });
 
 io.on('connection', function(socket) {
@@ -74,8 +71,20 @@ io.on('connection', function(socket) {
 
   });
 
+  socket.on('delete_image', function(data) {
+    console.log(data);
+    var filepath = path.join(__dirname, 'download', data.imageId);
+    fs.unlink(filepath, (err) => {
+      if (err) throw err;
+      console.log(filepath + ' was deleted');
+    });
+  });
+
   socket.on('case_report', function(data) {
+    var filepath = path.join(__dirname, 'download', data.case_data.imageId);
     // console.log(data);
+    data.case_data.img = fs.readFileSync(filepath, 'base64');
+    // data.img = imageAsBase64;
     sampleController.insertReport(data.case_data).then(res =>
 
       console.log(res + " Inserted successfully")

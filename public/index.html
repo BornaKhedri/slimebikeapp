@@ -36,9 +36,9 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
 
-    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+
+    <!-- <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> -->
     <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
     <script
         src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
@@ -47,6 +47,8 @@
     <script
         src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
@@ -101,10 +103,10 @@
                 </div> -->
 
                 <!-- We'll transform this input into a pond -->
-                <input type="file" class="filepond" name="filepond" data-allow-reorder="true" data-max-file-size="10MB"
+                <input type="file" class="filepond" name="filepond" data-max-file-size="10MB"
                     data-max-files="1">
 
-                <div class="card-body">
+                <div class="card-body low-opacity" id="infraction_div">
                     <p class="card-text">Select all parking infractions that apply</p>
                     <div class="row">
                         <div class="col-sm-4 col-xs-12">
@@ -117,8 +119,8 @@
 
                     </div> -->
                 </div>
-                <div class="card-body">
-                    <p class="card-text">Choose the company</p>
+                <div class="card-body low-opacity" id="company_div">
+                    <p class="card-text">Please select the wheel type</p>
                     <div class="card-text">
                         <div class="row">
                             <div class="col-sm-4 col-xs-12">
@@ -129,10 +131,13 @@
                         </div>
                     </div>
                 </div>
-                <br />
 
-                <button type="button" class="btn text-center d-flex align-items-center mx-auto navbar-active"
-                    id="classification_continue" style="width: 88px; visibility: hidden;">Continue</button>
+                <p id="classification_continue_warning" class="text-danger d-flex justify-content-around"> &nbsp; </p>
+                <div class="d-flex">
+                    <button type="button"
+                        class="btn text-center d-flex flex-grow-1 flex-lg-grow-0 btn-continue"
+                        id="classification_continue" style="width: 88px; visibility: hidden;">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
+                </div>
             </div>
         </div>
         <div class="tab-pane" role="tabpanel" id="tab_location">
@@ -147,7 +152,7 @@
                         id="location_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
 
                     <button type="button"
-                        class="btn btn-block text-center d-flex align-items-center mx-auto navbar-active darktext flex-fill"
+                        class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
                         id="location_continue">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
 
                 </div>
@@ -171,20 +176,11 @@
                         id="identification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
 
                     <button type="button"
-                        class="btn btn-block text-center d-flex align-items-center mx-auto navbar-active darktext flex-fill"
+                        class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
                         id="identification_continue" onclick="socketSubmit();">Submit &nbsp;<i
                             class="fas fa-check"></i></button>
 
                 </div>
-                <div class="row">
-                    <button type="button"
-                        class="btn back-button text-center d-flex align-items-center mx-auto darktext footer-buttons"
-                        id="identification_back" style="width: 88px;">Back</button>
-                    <a class="btn navbar-active text-center d-flex align-items-center mx-auto darktext footer-buttons"
-                        role="button" onclick="socketSubmit();"
-                        style="width: 88px; color: rgb(255, 255, 255)">Submit</a>
-                </div>
-
             </div>
         </div>
     </div>

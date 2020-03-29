@@ -575,7 +575,7 @@ label .form-check-input.is-invalid .abc-radio:before {
 }
 
 .navbar-active {
-    background-color: #a23b72 !important;
+    background-color: #373F51 !important;
 }
 
 .back-button{
@@ -629,7 +629,17 @@ label .form-check-input.is-invalid .abc-radio:before {
 	background-color: #7f8a9a;
 }
 
+.btn-continue {
+    background-color: #A23B72 !important;
+}
 
+.low-opacity {
+    opacity: 0.3;
+}
+
+.full-opacity {
+    opacity: 1;
+}
 /**
  * Page Styles
  */

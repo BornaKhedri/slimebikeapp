@@ -2,8 +2,8 @@
 
 // global variables shared across scripts
 var city = '';
-var companies = [];
-var infractions = [];
+// var companies = [];
+// var infractions = [];
 
 var latitude = '';
 var longitude = '';
@@ -18,20 +18,9 @@ $(document).ready(function () {
     });
 });
 
-$('body').on('click', '.disabled', function(e) {
+$('body').on('click', '.disabled', function (e) {
     e.preventDefault();
     return false;
-});
-
-
-$(function(){
-
-    $.fn.filepond.registerPlugin(FilePondPluginFileValidateSize);
-
-    $.fn.filepond.setDefaults({
-        maxFileSize: '3MB'
-    });
-
 });
 
 
@@ -81,50 +70,76 @@ window.performance.measure('get_getCity_exec', 'before_getCity', 'after_getCity'
 function getCompanies() {
     socket.on('cityCompanies', function (data) {
         console.log(data);
-        companies = data.companies;
-        window.performance.mark('before_populateCompanies');
-        populateCompanies();
-        window.performance.mark('after_populateCompanies');
-        window.performance.measure('get_populateCompanies_exec', 'before_populateCompanies', 'after_populateCompanies');
+        var companies = data.companies;
+        if (companies.length > 0) {
+            window.performance.mark('before_populateCompanies');
+            populateCompanies(companies);
+            window.performance.mark('after_populateCompanies');
+            window.performance.measure('get_populateCompanies_exec', 'before_populateCompanies', 'after_populateCompanies');
+        } else {
+            $('#company_div').empty();
+            $('#company_div').append(
+                $('<p/>')
+                    .addClass('light-background text-danger')
+                    .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
+            )
+        }
     });
 }
 
 function getInfractions() {
     socket.on('cityInfractions', function (data) {
         console.log(data);
-        infractions = data.infractions;
-        window.performance.mark('before_populateInfractions');
-        populateInfractions();
-        window.performance.mark('after_populateInfractions');
-        window.performance.measure('get_populateInfractions_exec', 'before_populateInfractions', 'after_populateInfractions');
+        var infractions = data.infractions;
+        if (infractions.length > 0) {
+            window.performance.mark('before_populateInfractions');
+            populateInfractions(infractions);
+            window.performance.mark('after_populateInfractions');
+            window.performance.measure('get_populateInfractions_exec', 'before_populateInfractions', 'after_populateInfractions');
+        } else {
+            $('#infraction_div').removeClass('low-opacity');
+            $('#infraction_div').addClass('high-opacity');
+            $('#infraction_div').empty();
+            $('#infraction_div').append(
+                $('<p/>')
+                    .addClass('light-background text-danger')
+                    .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
+            )
+        }
+
     });
 }
 
-function populateCompanies() {
+function populateCompanies(companies) {
 
-    companies.forEach((company) => {
-        // create the company name html element
-        $company_name = $('<label/>')
-        .addClass("btn active light-background darktext margin-company")
-        .append(
-            $('<input/>')
-                .attr("id", 'company_' + company.micromobilityservice_id)
-                .attr("type", "radio")
-                .attr("name", 'company_' + company.micromobilityservice_id)
-                .attr("autocomplete", "off")
+    if (companies.length > 0) {
+        companies.forEach((company) => {
+            // create the company name html element
+            $company_name = $('<label/>')
+                .addClass("btn active light-background darktext margin-company")
+                .append(
+                    $('<input/>')
+                        .attr("id", 'company_' + company.micromobilityservice_id)
+                        .attr("type", "radio")
+                        .attr("name", 'company_' + company.micromobilityservice_id)
+                        .attr("autocomplete", "off")
                 )
-        .append(
-            $('<img/>')
-                .attr("src", "data:image/png;base64, " + company.vehicle_image)
-                .attr("width", "80px")
-                .attr("height", "80px")
-        )
-        .append(company.company_name)
+                .append(
+                    $('<img/>')
+                        .attr("src", "data:image/png;base64, " + company.vehicle_image)
+                        .attr("width", "80px")
+                        .attr("height", "80px")
+                )
+                .append(company.company_name)
 
-        // append the element to the company-name list
-        $company_name.appendTo('#company_list');
-    });
- 
+            // append the element to the company-name list
+            $company_name.appendTo('#company_list');
+        });
+    } else {
+
+    }
+
+
     $('[data-toggle="radiobuttons"] .btn').on('click', function () {
         // toggle style
         // $(this).removeClass('light-background');
@@ -135,13 +150,13 @@ function populateCompanies() {
         var $chk = $(this).find('input:radio');
         $chk.prop('checked', true);
         $('input:radio').not($chk).prop('checked', false);
-        
+
         return false;
     });
-    
+
 }
 
-function populateInfractions() {
+function populateInfractions(infractions) {
 
     infractions.forEach((infraction) => {
         // create the infraction description checkbox element
@@ -153,7 +168,7 @@ function populateInfractions() {
                     .attr("type", "checkbox")
                     .attr("name", 'infraction_' + infraction.infractiontype_id)
                     .attr("autocomplete", "off")
-                    )
+            )
             .append(infraction.infraction_description)
         $infraction_description.appendTo('#infraction_list');
     });
@@ -162,11 +177,11 @@ function populateInfractions() {
         // toggle style
         // $(this).removeClass('light-background');
         $(this).toggleClass('blue-background light-background active');
-        
+
         // toggle checkbox
         var $chk = $(this).find('[type=checkbox]');
-        $chk.prop('checked',!$chk.prop('checked'));
-        
+        $chk.prop('checked', !$chk.prop('checked'));
+
         return false;
     });
 
@@ -236,7 +251,7 @@ async function drawMap() {
 
     // create the popup
     var popup = new mapboxgl.Popup({ offset: 25, closeOnClick: false, closeButton: false }).setText(
-    'Move the marker to wheel location.'
+        'Move the marker to wheel location.'
     );
 
     var marker = new mapboxgl.Marker({
@@ -263,7 +278,7 @@ var socketSubmit = function () {
     window.performance.mark('start_socketSubmit');
     socket.emit('case_report', {
         case_data: {
-            img: dataURL,
+            imageId: imageId,
             location: [longitude, latitude],
             infraction_ids: infraction_ids,
             micromobilityservice_id: micromobilityservice_id,

@@ -25,7 +25,7 @@ $(function() {
         if (next_tab.length > 0) {
             if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length) {
                 // Atleast one of the checkbox is clicked and radio buttons are clicked
-
+                $('#classification_continue_warning').html('');
                 $classification_li.addClass('disabled');
                 $classification_li.find('a').removeClass("navbar-active");
                 $classification_li.find('a').addClass("donetext");
@@ -54,6 +54,13 @@ $(function() {
                 window.performance.mark('after_drawMap');
                 window.performance.measure('get_drawMap_exec', 'before_drawMap', 'after_drawMap');
             }
+            else if ($("input[type='radio']:checked").length && $("input[type='checkbox']:checked").length == 0 ) {
+                $('#classification_continue_warning').html('Please select a parking infraction from the list above before continuing');
+            } else if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length == 0) {
+                $('#classification_continue_warning').html('Please select a company from the list above before continuing');
+            } else {
+                $('#classification_continue_warning').html('Please select a company and an infraction from the list above before continuing');
+            }
         }
         else {
             $('.nav-tabs li:eq(0) a').trigger('click');
@@ -67,7 +74,7 @@ $(function() {
         console.log(next_tab);
         if (next_tab.length > 0) {
             if (latitude != "" && longitude != "") {
-
+                
                 $location_li.addClass('disabled');
                 $location_li.find('a').removeClass("navbar-active");
                 $location_li.find('a').addClass("donetext");

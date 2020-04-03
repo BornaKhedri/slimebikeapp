@@ -7,48 +7,28 @@ var multer = require("multer");
 var fs = require('fs')
 var http = require('http')
 var upload = multer({ dest: "./download/" });
-/*var certOptions = {
-  key: fs.readFileSync(path.resolve('cert/server.key')),
-  cert: fs.readFileSync(path.resolve('cert/server.crt'))
-}*/
-
-// Certificate
-/*const privateKey = fs.readFileSync('./cert/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('./cert/cert.pem', 'utf8');
-const ca = fs.readFileSync('./cert/chain.pem', 'utf8');
-
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-  ca: ca
-};*/
 
 //import controllers
 const sampleController = require('./controllers/controller-sample');
 
 //create express app
 const app = express();
-// var server = require('https').Server(app);
 
-/*var server = https.createServer(credentials, app)*/
 var server = http.createServer( app)
 
 var io = require('socket.io')(server);
 const router = express.Router();
 var publicPath = path.join(__dirname, 'public');
+var case_data = '';
 
-// app.use(bodyParser.json({limit: '50mb'}));
-// app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-// app.use(bodyParser.json());
 app.use(router); // tell the app this is the router we are using
 
 app.use(express.static(publicPath));
 app.get('/', function(req, res) {
-  // res.sendStatus(200) 
   res.sendFile(path.join(publicPath + '/index.html'));
 });
 
-// Hndle file upload and temp storage
+// Handle file upload and temp storage
 app.post('/upload', upload.single('filepond'), (req, res, next) => {
 
   console.log("upload initiated");
@@ -82,13 +62,18 @@ io.on('connection', function(socket) {
 
   socket.on('case_report', function(data) {
     var filepath = path.join(__dirname, 'download', data.case_data.imageId);
+    case_data = data.case_data;
     // console.log(data);
-    data.case_data.img = fs.readFileSync(filepath, 'base64');
-    // data.img = imageAsBase64;
-    sampleController.insertReport(data.case_data).then(res =>
-
-      console.log(res + " Inserted successfully")
-    )
+    //data.case_data.img = fs.readFileSync(filepath, 'base64');
+    // asynchronously read the image and then insert into database
+    fs.readFile(filepath, 'base64', (err, data) => {
+      if (err) throw err;
+      case_data.img = data;
+      // data.img = imageAsBase64;
+      sampleController.insertReport(case_data).then(res =>
+        console.log(res + " Inserted successfully")
+      )
+    });
   });
 
   socket.on('disconnect', function() {

@@ -87,8 +87,8 @@ module.exports.insertReport = async (report) => {
     
     let data = [parseInt(report.micromobilityservice_id), datetime, report.location[0], report.location[1], report.img, report.vehicle_id];
     data = data.concat(datai);
-    console.log(datai);
-    console.log(data);
+    // console.log(datai);
+    // console.log(data);
     try {
         await dbUtil.sqlExecSingleRow(client, sql, data);
         // result = await dbUtil.sqlToDB(sql, data);

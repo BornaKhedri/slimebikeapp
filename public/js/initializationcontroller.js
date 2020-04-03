@@ -64,14 +64,10 @@ function getCity() {
         getInfractions()
         window.performance.mark('after_getInfractions');
         window.performance.measure('get_getInfractions_exec', 'before_getInfractions', 'after_getInfractions');
-        // Change the app state from intial to classification
-        // slimeBikeService.send('PERMITTING');
+        
     });
 }
-window.performance.mark('before_getCity');
-getCity()
-window.performance.mark('after_getCity');
-window.performance.measure('get_getCity_exec', 'before_getCity', 'after_getCity');
+
 
 function getCompanies() {
     socket.on('cityCompanies', function (data) {
@@ -192,6 +188,11 @@ function populateInfractions(infractions) {
     });
 
 }
+
+window.performance.mark('before_getCity');
+getCity()
+window.performance.mark('after_getCity');
+window.performance.measure('get_getCity_exec', 'before_getCity', 'after_getCity');
 
 // Using promises to ensure this part executes before map is drawn
 // From here: https://stackoverflow.com/a/55698897/1328232
@@ -331,3 +332,8 @@ var socketSubmit = function () {
     window.performance.measure('get_socketSubmit_exec', 'start_socketSubmit', 'end_socketSubmit');
     window.location.href = "./html/thanks.html";
 }
+
+window.performance.mark('before_drawMap');
+drawMap();
+window.performance.mark('after_drawMap');
+window.performance.measure('get_drawMap_exec', 'before_drawMap', 'after_drawMap');

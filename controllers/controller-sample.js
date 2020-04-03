@@ -28,7 +28,7 @@ module.exports.getCompanies = async (city) => {
 module.exports.getInfractions = async (city) => {
     try {
         let result = await sampleModel.getInfractions(city);
-        console.log(result.rows)
+        // console.log(result.rows)
         return result.rows;
         // res.status(200).json(result.rows);
     } catch (error) {
@@ -40,7 +40,7 @@ module.exports.getInfractions = async (city) => {
 module.exports.insertReport = async (report) => {
     try {
         let result = await sampleModel.insertReport(report);
-        console.log(result)
+        // console.log(result)
         return result;
         // res.status(200).json(result.rows);
     } catch (error) {

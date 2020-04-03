@@ -75,17 +75,39 @@
 
     <ul class="nav nav-tabs nav nav-pills navbar text-center justify-content-center text-body font-weight-bold"
         id="nav_tabs" role="tablist">
-        <li class="nav-item" id="li_classification"><a class="navbar-active lighttext nav-link active  font-weight-bold"
-                href="#tab_classification" role="tab" data-toggle="tab">Classification</a>
+        <li class="nav-item disabled" id="li_location"><a
+                class="navbar-active active lighttext nav-link  font-weight-bold" href="#tab_location" role="tab"
+                data-toggle="tab">Location</a></li>
+
+        <li class="nav-item" id="li_classification"><a class="lighttext nav-link font-weight-bold"
+                href="#tab_classification" role="tab" data-toggle="">Classification</a>
         </li>
-        <li class="nav-item disabled" id="li_location"><a class="lighttext nav-link  font-weight-bold"
-                href="#tab_location" role="tab" data-toggle="">Location</a></li>
+
         <li class="nav-item disabled" id="li_identification"><a class="lighttext nav-link  font-weight-bold"
                 href="#tab_identification" role="tab" data-toggle="">Identification</a></li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane show active" role="tabpanel" id="tab_classification">
+
+        <div class="tab-pane show active" role="tabpanel" id="tab_location">
+            <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
+                <h1 class="text-center" style="font-size: 20px;"><br>Select the location of bike/scooter</h1>
+
+                <div id="map"></div>
+                <div class="d-flex">
+
+
+
+                    <button type="button"
+                        class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
+                        id="location_continue">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="tab-pane" role="tabpanel" id="tab_classification">
             <div class="container-fluid">
 
                 <!-- <div class="card choose_file h-20 d-inline-block">
@@ -102,8 +124,7 @@
                 </div> -->
 
                 <!-- We'll transform this input into a pond -->
-                <input type="file" class="filepond" name="filepond" data-max-file-size="10MB"
-                    data-max-files="1">
+                <input type="file" class="filepond" name="filepond" data-max-file-size="10MB" data-max-files="1">
 
                 <div class="card-body low-opacity" id="infraction_div">
                     <p class="card-text">Select all parking infractions that apply:</p>
@@ -134,30 +155,15 @@
                 <p id="classification_continue_warning" class="text-danger d-flex justify-content-around"> &nbsp; </p>
                 <div class="d-flex">
                     <button type="button"
-                        class="btn text-center d-flex flex-grow-1 flex-lg-grow-0 btn-continue"
-                        id="classification_continue" style="width: 88px; visibility: hidden;">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" role="tabpanel" id="tab_location">
-            <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
-                <h1 class="text-center" style="font-size: 20px;"><br>Select the location of bike/scooter</h1>
-
-                <div id="map"></div>
-                <div class="d-flex">
-
-                    <button type="button"
                         class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
-                        id="location_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
-
-                    <button type="button"
-                        class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
-                        id="location_continue">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
-
+                        id="classification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
+                    <button type="button" class="btn text-center d-flex flex-grow-1 flex-lg-grow-0 btn-continue"
+                        id="classification_continue" style="width: 88px; visibility: hidden;">Continue &nbsp;<i
+                            class="fas fa-chevron-right"></i></button>
                 </div>
-
             </div>
         </div>
+
         <div class="tab-pane" role="tabpanel" id="tab_identification">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
                 <h1 class="text-center" style="font-size: 20px;"><br>Optionally, please also scan the vehicle's QR code

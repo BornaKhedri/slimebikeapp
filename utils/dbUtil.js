@@ -61,7 +61,7 @@ module.exports.sqlExecSingleRow = async (client, sql, data) => {
     logger.debug(`sqlExecSingleRow() sql: ${sql} | data: ${data}`);
     try {
         let result = await client.query(sql, data);
-        logger.debug(`sqlExecSingleRow(): ${result.command} | ${result.rowCount}`);
+        // logger.debug(`sqlExecSingleRow(): ${result.command} | ${result.rowCount}`);
         return result
     } catch (error) {
         logger.error(`sqlExecSingleRow() error: ${error.message} | sql: ${sql} | data: ${data}`);

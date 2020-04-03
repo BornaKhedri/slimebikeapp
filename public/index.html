@@ -37,15 +37,14 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
-
     <!-- <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> -->
     <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
     <script
         src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
     <script
-        src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+        src="https://unpkg.com/filepond-plugin-file-validate-size@2.2.1/dist/filepond-plugin-file-validate-size.js"></script>
     <script
-        src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+        src="https://unpkg.com/filepond-plugin-file-validate-type@1.2.5/dist/filepond-plugin-file-validate-type.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
 
     <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
@@ -107,7 +106,7 @@
                     data-max-files="1">
 
                 <div class="card-body low-opacity" id="infraction_div">
-                    <p class="card-text">Select all parking infractions that apply</p>
+                    <p class="card-text">Select all parking infractions that apply:</p>
                     <div class="row">
                         <div class="col-sm-4 col-xs-12">
                             <div data-toggle="buttons" id="infraction_list">
@@ -120,7 +119,7 @@
                     </div> -->
                 </div>
                 <div class="card-body low-opacity" id="company_div">
-                    <p class="card-text">Please select the wheel type</p>
+                    <p class="card-text">Please select the wheel type:</p>
                     <div class="card-text">
                         <div class="row">
                             <div class="col-sm-4 col-xs-12">
@@ -189,7 +188,6 @@
     <script src="./js/initializationcontroller.js"></script>
     <script src="./js/filepond_jq.js"></script>
     <script src="./js/navigationcontroller.js"></script>
-    <script src="./js/qrcodecontroller.js"></script>
     <script src="./js/imagecontroller.js"></script>
     <script type="text/javascript">window.performance.mark('end_body_load_js');
         window.performance.measure('body_js_load_time', 'end_body_load_html', 'end_body_load_js');

@@ -87,6 +87,7 @@ $(function() {
                 
                 // next_tab.trigger('click');
                 next_tab.tab('show');
+                enableQRCodeReader();
                 // slimeBikeService.send('PINPOINTING');
             }
         }

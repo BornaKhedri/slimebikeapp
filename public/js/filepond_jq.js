@@ -22,7 +22,7 @@ FilePond.create(
     document.querySelector('input[type="file"]'), {
     acceptedFileTypes: ['image/*'],
 
-    allowFileEncode: true,
+    allowFileEncode: false,
     server: {
         process: {
             url: './upload',
@@ -72,9 +72,9 @@ document.addEventListener('FilePond:loaded', e => {
 const pond = document.querySelector('.filepond--root');
 // this is called when a file is added - before it is uploaded
 pond.addEventListener('FilePond:addfile', e => {
-    socket.emit('image_received', {
-        image: e.detail.file.getFileEncodeBase64String()
-    });
+    // socket.emit('image_received', {
+    //     image: e.detail.file.getFileEncodeBase64String()
+    // });
     console.log('File added', e.detail);
     $('#infraction_div').removeClass('low-opacity');
     $('#infraction_div').addClass('high-opacity');

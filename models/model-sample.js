@@ -28,18 +28,19 @@ module.exports.sampleTransaction = async () => {
     }
 }
 
-
 /* 
  * sample query
  * @return server time
  */
-module.exports.getCompanies = async (city) => {
+module.exports.getCompanies = async (lng, lat) => {
     let sql = `select ms.micromobilityservice_id, mt.vehicle_image, mc.company_name from micromobility_type mt
 	join micromobility_company mc on mc.company_id = mt.company_id
 	join micromobility_services ms on mt.micromobilitytype_id = ms.micromobilitytype_id
 		where micromobilityservice_id IN (select micromobilityservice_id from micromobility_city_xref 
-                            where city_id = (select city_id from city_info where city = $1));`;
-    let data = [city];
+                            where city_id = (select city_id from city_info where city = 
+                                (select cityname from city_shape 
+                                    where st_within(ST_SetSRID(ST_MakePoint( $1, $2), 4326), geom))));`;
+    let data = [lng, lat];
     try {
         result = await dbUtil.sqlToDB(sql, data);
         return result;
@@ -48,11 +49,24 @@ module.exports.getCompanies = async (city) => {
     }
 }
 
-module.exports.getInfractions = async (city) => {
+module.exports.getCity = async (lng, lat) => {
+    let sql = `select cityname from city_shape where st_within(ST_SetSRID(ST_MakePoint($1, $2), 4326), geom);`;
+    let data = [lng, lat];
+    try {
+        result = await dbUtil.sqlToDB(sql, data);
+        return result;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+module.exports.getInfractions = async (lng, lat) => {
     let sql = `select infraction_description, infractiontype_id from infraction_type 
-                    where infractiontype_id IN (select infractiontype_id from infraction_city_xref 
-                        where city_id IN (select city_id from city_info where city = $1));`;
-    let data = [city];
+    where infractiontype_id IN (select infractiontype_id from infraction_city_xref 
+        where city_id IN (select city_id from city_info where city = 
+            (select cityname from city_shape 
+                where ST_Within(ST_SetSRID(ST_MakePoint($1, $2), 4326), geom))));`;
+    let data = [lng, lat];
     try {
         result = await dbUtil.sqlToDB(sql, data);
         return result;

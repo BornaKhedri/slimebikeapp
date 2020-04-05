@@ -7,12 +7,12 @@ var longitude = '';
 var gps_coords = false;
 var vehicle_id = '';
 const constraints = window.constraints = {
-  audio: false,
-  video: {
-    facingMode: {
-      exact: "environment"
-    }
-  },
+    audio: false,
+    video: {
+        facingMode: {
+            exact: "environment"
+        }
+    },
 };
 const socket = io();
 
@@ -30,90 +30,43 @@ $('body').on('click', '.disabled', function (e) {
 });
 
 
-// Get the city in which this app is opened 
-// TODO: change this to work in non-city jusrisdictions like 
-//         unincorporated King County and UW
-function getCity() {
-    $.get('https://ipapi.co/json/', function (data) {
-        console.log(data)
+var populateInfractions = function(infractions) {
+    $('#infraction_list').empty();
+    infractions.forEach((infraction) => {
+        // create the infraction description checkbox element
+        $infraction_description = $('<label/>')
+            .addClass("btn btn-block active light-background darktext")
+            .append(
+                $('<input/>')
+                    .attr("id", 'infraction_' + infraction.infractiontype_id)
+                    .attr("type", "checkbox")
+                    .attr("name", 'infraction_' + infraction.infractiontype_id)
+                    .attr("autocomplete", "off")
+            )
+            .append(infraction.infraction_description)
+        $infraction_description.appendTo('#infraction_list');
 
-        city = data.city;
-        if (gps_coords == false) {
-            latitude = data.latitude;
-            longitude = data.longitude;
-        }
-        // DIsplay the city name on the UI
-        $('#city_name').append('<p>' + city + '</p>');
-
-        console.log("coordinates from IP API");
-        console.log(`Latitude : ${latitude}`);
-        console.log(`Longitude: ${longitude}`);
-        if (city != '' && socket != null) {
-
-            socket.emit('city_sensed', {
-                'city': city
-            });
-        }
-
-        // Get the companies and infractions for the city in question 
-        window.performance.mark('before_getCompanies');
-        getCompanies()
-        window.performance.mark('after_getCompanies');
-        window.performance.measure('get_getCompanies_exec', 'before_getCompanies', 'after_getCompanies');
-        window.performance.mark('before_getInfractions');
-        getInfractions()
-        window.performance.mark('after_getInfractions');
-        window.performance.measure('get_getInfractions_exec', 'before_getInfractions', 'after_getInfractions');
         
     });
-}
 
+    $('[data-toggle="buttons"] .btn').on('click', function () {
+        // toggle style
+        // $(this).removeClass('light-background');
+        $(this).toggleClass('blue-background light-background active');
 
-function getCompanies() {
-    socket.on('cityCompanies', function (data) {
-        console.log(data);
-        var companies = data.companies;
-        if (companies.length > 0) {
-            window.performance.mark('before_populateCompanies');
-            populateCompanies(companies);
-            window.performance.mark('after_populateCompanies');
-            window.performance.measure('get_populateCompanies_exec', 'before_populateCompanies', 'after_populateCompanies');
-        } else {
-            $('#company_div').empty();
-            $('#company_div').append(
-                $('<p/>')
-                    .addClass('light-background text-danger')
-                    .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
-            )
-        }
+        // toggle checkbox
+        var $chk = $(this).find('[type=checkbox]');
+        $chk.prop('checked', !$chk.prop('checked'));
+
+        return false;
     });
+
+    // getCompanies();
+
 }
 
-function getInfractions() {
-    socket.on('cityInfractions', function (data) {
-        console.log(data);
-        var infractions = data.infractions;
-        if (infractions.length > 0) {
-            window.performance.mark('before_populateInfractions');
-            populateInfractions(infractions);
-            window.performance.mark('after_populateInfractions');
-            window.performance.measure('get_populateInfractions_exec', 'before_populateInfractions', 'after_populateInfractions');
-        } else {
-            $('#infraction_div').removeClass('low-opacity');
-            $('#infraction_div').addClass('high-opacity');
-            $('#infraction_div').empty();
-            $('#infraction_div').append(
-                $('<p/>')
-                    .addClass('light-background text-danger')
-                    .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
-            )
-        }
-
-    });
-}
-
-function populateCompanies(companies) {
-
+var populateCompanies = function(companies) {
+    $('#company_list').empty();
     if (companies.length > 0) {
         companies.forEach((company) => {
             // create the company name html element
@@ -138,10 +91,7 @@ function populateCompanies(companies) {
             $company_name.appendTo('#company_list');
         });
     } else {
-
     }
-
-
     $('[data-toggle="radiobuttons"] .btn').on('click', function () {
         // toggle style
         // $(this).removeClass('light-background');
@@ -155,44 +105,82 @@ function populateCompanies(companies) {
 
         return false;
     });
-
+    $('a[href="#tab_classification"]').tab('show');
 }
 
-function populateInfractions(infractions) {
-
-    infractions.forEach((infraction) => {
-        // create the infraction description checkbox element
-        $infraction_description = $('<label/>')
-            .addClass("btn btn-block active light-background darktext")
-            .append(
-                $('<input/>')
-                    .attr("id", 'infraction_' + infraction.infractiontype_id)
-                    .attr("type", "checkbox")
-                    .attr("name", 'infraction_' + infraction.infractiontype_id)
-                    .attr("autocomplete", "off")
+var getCompanies = function() {
+    socket.on('cityCompanies', function (data) {
+        console.log(data);
+        var companies = data.companies;
+        if (companies.length > 0) {
+            window.performance.mark('before_populateCompanies');
+            populateCompanies(companies);
+            window.performance.mark('after_populateCompanies');
+            window.performance.measure('get_populateCompanies_exec', 'before_populateCompanies', 'after_populateCompanies');
+        } else {
+            $('#company_div').empty();
+            $('#company_div').append(
+                $('<p/>')
+                    .addClass('light-background text-danger')
+                    .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
             )
-            .append(infraction.infraction_description)
-        $infraction_description.appendTo('#infraction_list');
+        }
     });
-
-    $('[data-toggle="buttons"] .btn').on('click', function () {
-        // toggle style
-        // $(this).removeClass('light-background');
-        $(this).toggleClass('blue-background light-background active');
-
-        // toggle checkbox
-        var $chk = $(this).find('[type=checkbox]');
-        $chk.prop('checked', !$chk.prop('checked'));
-
-        return false;
-    });
-
 }
 
-window.performance.mark('before_getCity');
-getCity()
-window.performance.mark('after_getCity');
-window.performance.measure('get_getCity_exec', 'before_getCity', 'after_getCity');
+var getInfractions = function () {
+    socket.on('cityInfractions', function (data) {
+        console.log(data);
+        var infractions = data.infractions;
+        if (infractions.length > 0) {
+            window.performance.mark('before_populateInfractions');
+            populateInfractions(infractions);
+            window.performance.mark('after_populateInfractions');
+            window.performance.measure('get_populateInfractions_exec', 'before_populateInfractions', 'after_populateInfractions');
+        } else {
+            $('#infraction_div').removeClass('low-opacity');
+            $('#infraction_div').addClass('high-opacity');
+            $('#infraction_div').empty();
+            $('#infraction_div').append(
+                $('<p/>')
+                    .addClass('light-background text-danger')
+                    .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
+            )
+        }
+    });
+}
+
+// Get the city in which this app is opened 
+// TODO: change this to work in non-city jusrisdictions like 
+//         unincorporated King County and UW
+var getCity = function () {
+    if (latitude != "" && longitude != "") {
+        socket.emit("location_sent", {
+            lng: longitude,
+            lat: latitude
+        });
+
+        socket.on('cityName', async function (data) {
+            city = data.cityName[0].cityname;
+            // DIsplay the city name on the UI
+            $('#city_name').empty().append('<p>' + city + '</p>');
+            // Get the companies and infractions for the city in question 
+            window.performance.mark('before_getInfractions');
+            await getInfractions();
+            window.performance.mark('after_getInfractions');
+            window.performance.measure('get_getInfractions_exec', 'before_getInfractions', 'after_getInfractions');
+            window.performance.mark('before_getCompanies');
+            await getCompanies()
+            window.performance.mark('after_getCompanies');
+            window.performance.measure('get_getCompanies_exec', 'before_getCompanies', 'after_getCompanies');
+
+        });
+    }
+}
+
+
+
+
 
 // Using promises to ensure this part executes before map is drawn
 // From here: https://stackoverflow.com/a/55698897/1328232
@@ -215,7 +203,7 @@ let getLocation = new Promise(function (resolve, reject) {
         longitude = crd.longitude;
         gps_coords = true;
         resolve();
-               // alert(`Latitude : ${crd.latitude}` + `, Longitude: ${crd.longitude}`)
+        // alert(`Latitude : ${crd.latitude}` + `, Longitude: ${crd.longitude}`)
         // ipLookUp()
     }
 
@@ -258,11 +246,15 @@ async function drawMap() {
     });
 
     // create the popup
-    var popup = new mapboxgl.Popup({ offset: 25, closeOnClick: false, closeButton: false }).setText(
+    var popup = new mapboxgl.Popup({ offset: 10, closeOnClick: false, closeButton: false }).setText(
         'Move the marker to wheel location.'
     );
 
-    var marker = new mapboxgl.Marker({
+    // create a HTML element for each feature
+    var el = document.createElement('div');
+    el.className = 'marker';
+
+    var marker = new mapboxgl.Marker(el, {
         draggable: true
     })
         .setLngLat([longitude, latitude])
@@ -282,38 +274,38 @@ async function drawMap() {
     marker.on('dragend', onDragEnd);
 }
 
-var enableQRCodeReader = function() {
+var enableQRCodeReader = function () {
     window.performance.mark('start_qrcodeLoad');
-  let selectedDeviceId;
-  const codeReader = new ZXing.BrowserMultiFormatReader()
-  console.log('ZXing code reader initialized')
-  codeReader.getVideoInputDevices()
-    .then((videoInputDevices) => {
-      console.log(videoInputDevices);
+    let selectedDeviceId;
+    const codeReader = new ZXing.BrowserMultiFormatReader()
+    console.log('ZXing code reader initialized')
+    codeReader.getVideoInputDevices()
+        .then((videoInputDevices) => {
+            console.log(videoInputDevices);
 
-      codeReader.decodeFromConstraints(constraints, 'video', (result, err) => {
-        window.performance.mark('start_decodeFromConstraints');
-        if (result) {
-          vehicle_id = result.text
-          console.log(result)
-          document.getElementById('result').textContent = vehicle_id
-          codeReader.stopContinuousDecode()
-          $('#video').remove();
-        }
-        if (err && !(err instanceof ZXing.NotFoundException)) {
-          console.error(err)
-          document.getElementById('result').textContent = err
-        }
-        window.performance.mark('end_decodeFromConstraints');
-        window.performance.measure('get_decodeFromConstraints_exec', 'start_decodeFromConstraints', 'end_decodeFromConstraints');
-      })
-        .catch((err) => {
-          console.error(err)
+            codeReader.decodeFromConstraints(constraints, 'video', (result, err) => {
+                window.performance.mark('start_decodeFromConstraints');
+                if (result) {
+                    vehicle_id = result.text
+                    console.log(result)
+                    document.getElementById('result').textContent = vehicle_id
+                    codeReader.stopContinuousDecode()
+                    $('#video').remove();
+                }
+                if (err && !(err instanceof ZXing.NotFoundException)) {
+                    console.error(err)
+                    document.getElementById('result').textContent = err
+                }
+                window.performance.mark('end_decodeFromConstraints');
+                window.performance.measure('get_decodeFromConstraints_exec', 'start_decodeFromConstraints', 'end_decodeFromConstraints');
+            })
+                .catch((err) => {
+                    console.error(err)
+                })
+
         })
-
-    })
-  window.performance.mark('end_qrcodeLoad');
-  window.performance.measure('get_qrcodeLoad_exec', 'start_qrcodeLoad', 'end_qrcodeLoad');
+    window.performance.mark('end_qrcodeLoad');
+    window.performance.measure('get_qrcodeLoad_exec', 'start_qrcodeLoad', 'end_qrcodeLoad');
 }
 
 var socketSubmit = function () {

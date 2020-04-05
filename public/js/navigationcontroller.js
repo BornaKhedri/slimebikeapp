@@ -33,8 +33,13 @@ $(function () {
                 $classification_li.find('a[data-toggle]').each(function () {
                     $(this).attr("data-toggle", "tab");
                 });
+
+                window.performance.mark('before_getCity');
+                getCity()
+                window.performance.mark('after_getCity');
+                window.performance.measure('get_getCity_exec', 'before_getCity', 'after_getCity');
                 // show the next tab
-                next_tab.tab('show');
+                // next_tab.tab('show');
 
 
             }

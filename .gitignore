@@ -21,3 +21,4 @@ cert/
 *.crt
 download/
 .vscode/
+logs/

@@ -31,28 +31,34 @@ app.get('/', function(req, res) {
 // Handle file upload and temp storage
 app.post('/upload', upload.single('filepond'), (req, res, next) => {
 
-  console.log("upload initiated");
-  console.log(req.file);
+  logger.info("upload initiated");
+  // logger.info(req.file);
   // send back the filename so that filepond knows the file has been transferred
   res.send([req.file.filename]);
 });
 
-io.on('connection', function(socket) {
-  console.log("Connected to a client");
+io.on('connect', function(socket) {
+  // console.log("Connected to a client");
+  logger.info(socket.client.conn.server.clientsCount + ' users connected');
+  // change this to get the city from the geofence
+  socket.on('location_sent', function(data) {
+    logger.info(`Location: ${data.lng}, ${data.lat}`);
 
-  socket.on('city_sensed', function(data) {
-    console.log("CIty:" + data.city);
-    sampleController.getCompanies(data.city).then(res => socket.emit('cityCompanies', {
-      companies: res
+    sampleController.getCity(data.lng, data.lat).then(res => socket.emit('cityName', {
+      cityName: res
     }));
-    sampleController.getInfractions(data.city).then(res => socket.emit('cityInfractions', {
+    sampleController.getInfractions(data.lng, data.lat).then(res => socket.emit('cityInfractions', {
       infractions: res
     }));
+    sampleController.getCompanies(data.lng, data.lat).then(res => socket.emit('cityCompanies', {
+      companies: res
+    }));
+
 
   });
 
   socket.on('delete_image', function(data) {
-    console.log(data);
+    // console.log(data);
     var filepath = path.join(__dirname, 'download', data.imageId);
     fs.unlink(filepath, (err) => {
       if (err) throw err;
@@ -70,19 +76,24 @@ io.on('connection', function(socket) {
       if (err) throw err;
       case_data.img = data;
       // data.img = imageAsBase64;
-      sampleController.insertReport(case_data).then(res =>
-        console.log(res + " Inserted successfully")
-      )
+      sampleController.insertReport(case_data).then(res => {
+        logger.info(res + " Inserted successfully")
+        // delete the file locally after it has been inserted
+        fs.unlink(filepath, (err) => {
+          if (err) throw err;
+          logger.info(filepath + ' was deleted');
+        });
+      });
     });
   });
 
   socket.on('disconnect', function() {
-    console.log('socket disconnected. socket.id=' + socket.id + ' . pid = ' + process.pid);
+    logger.info('socket disconnected. socket.id = ' + socket.id + ' , pid = ' + process.pid);
   });
 });
 
 io.on('disconnect', function(socket) {
-  console.log('Lost a socket. socket.id=' + socket.id + ' . pid = ' + process.pid);
+  logger.info('Lost a socket. socket.id = ' + socket.id + ' , pid = ' + process.pid);
 });
 
 // start the server

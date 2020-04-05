@@ -13,26 +13,38 @@ module.exports.sampleTransaction = async (req, res) => {
 }
 
 // sample controller
-module.exports.getCompanies = async (city) => {
+module.exports.getCompanies = async (lng, lat) => {
     try {
-        let result = await sampleModel.getCompanies(city);
-        console.log(result.rows)
+        let result = await sampleModel.getCompanies(lng, lat);
+        logger.info("getCompanies returned : " + result.rows.length + " rows")
         return result.rows;
         // res.status(200).json(result.rows);
     } catch (error) {
-        logger.error(`getTime error: ${error.message}`);
+        logger.error(`getCompanies error: ${error.message}`);
 
     }
 }
 
-module.exports.getInfractions = async (city) => {
+module.exports.getCity = async (lng, lat) => {
     try {
-        let result = await sampleModel.getInfractions(city);
-        // console.log(result.rows)
+        let result = await sampleModel.getCity(lng, lat);
+        logger.info("getCity returned : " + result.rows.length + " rows")
         return result.rows;
         // res.status(200).json(result.rows);
     } catch (error) {
-        logger.error(`getTime error: ${error.message}`);
+        logger.error(`getCity error: ${error.message}`);
+
+    }
+}
+
+module.exports.getInfractions = async (lng, lat) => {
+    try {
+        let result = await sampleModel.getInfractions(lng, lat);
+        logger.info("getInfractions returned : " + result.rows.length + " rows")
+        return result.rows;
+        // res.status(200).json(result.rows);
+    } catch (error) {
+        logger.error(`getInfractions error: ${error.message}`);
 
     }
 }

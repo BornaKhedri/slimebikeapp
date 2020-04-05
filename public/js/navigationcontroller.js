@@ -72,7 +72,23 @@ $(function () {
 
                 });
                 next_tab.tab('show');
-                enableQRCodeReader();
+
+                var agentOS = getMobileOperatingSystem();
+                if(agentOS != 'iOS') {
+                    enableQRCodeReader();
+                } else {
+                    $('#qrlead').text = "Optionally, please enter the vehicle's QR code"
+                    $('#video').remove();
+                    $('#result').after(
+                        $("<input/>")
+                            .attr("id", "id_tb")
+                            .attr("type", "textbox")
+                    )
+                    $('#id_tb').keyup(function(){
+                        $('#result').text($(this).val());
+                    });
+                }
+                
             }
             else if ($("input[type='radio']:checked").length && $("input[type='checkbox']:checked").length == 0) {
                 $('#classification_continue_warning').html('Please select a parking infraction from the list above before continuing');

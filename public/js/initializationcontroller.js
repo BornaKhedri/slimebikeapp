@@ -16,6 +16,33 @@ const constraints = window.constraints = {
 };
 const socket = io();
 
+// detect client OS -- https://stackoverflow.com/a/21742107/1328232
+/**
+ * Determine the mobile operating system.
+ * This function returns one of 'iOS', 'Android', 'Windows Phone', or 'unknown'.
+ *
+ * @returns {String}
+ */
+function getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  
+        // Windows Phone must come first because its UA also contains "Android"
+      if (/windows phone/i.test(userAgent)) {
+          return "Windows Phone";
+      }
+  
+      if (/android/i.test(userAgent)) {
+          return "Android";
+      }
+  
+      // iOS detection from: http://stackoverflow.com/a/9039885/177710
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+          return "iOS";
+      }
+  
+      return "unknown";
+  }
+
 // This disables the click on the navbar elements - 
 // navigation is purely handled by the back and continue buttons
 $(document).ready(function () {

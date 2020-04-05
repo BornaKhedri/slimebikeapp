@@ -14,17 +14,28 @@ const sampleController = require('./controllers/controller-sample');
 //create express app
 const app = express();
 
-var server = http.createServer( app)
+var server = http.createServer(app)
 
-var io = require('socket.io')(server);
+var io = require("socket.io")(server, {
+  handlePreflightRequest: (req, res) => {
+      const headers = {
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+          "Access-Control-Allow-Credentials": true
+      };
+      res.writeHead(200, headers);
+      res.end();
+  }
+});
 const router = express.Router();
 var publicPath = path.join(__dirname, 'public');
 var case_data = '';
 
 app.use(router); // tell the app this is the router we are using
-
+// const cors = require('cors');
+// app.use(cors());
 app.use(express.static(publicPath));
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   res.sendFile(path.join(publicPath + '/index.html'));
 });
 
@@ -37,27 +48,34 @@ app.post('/upload', upload.single('filepond'), (req, res, next) => {
   res.send([req.file.filename]);
 });
 
-io.on('connect', function(socket) {
+io.on('connect', function (socket) {
   // console.log("Connected to a client");
   logger.info(socket.client.conn.server.clientsCount + ' users connected');
   // change this to get the city from the geofence
-  socket.on('location_sent', function(data) {
+  socket.on('location_sent', function (data) {
     logger.info(`Location: ${data.lng}, ${data.lat}`);
 
-    sampleController.getCity(data.lng, data.lat).then(res => socket.emit('cityName', {
-      cityName: res
-    }));
-    sampleController.getInfractions(data.lng, data.lat).then(res => socket.emit('cityInfractions', {
-      infractions: res
-    }));
-    sampleController.getCompanies(data.lng, data.lat).then(res => socket.emit('cityCompanies', {
-      companies: res
-    }));
-
-
+    sampleController.getCity(data.lng, data.lat).then((res) => {
+      logger.verbose("Now emitting city");
+      socket.emit('cityName', {
+        cityName: res
+      })
+    });
+    sampleController.getInfractions(data.lng, data.lat).then((res) => {
+      logger.verbose("Now emitting infractions");
+      socket.emit('cityInfractions', {
+        infractions: res
+      })
+    });
+    sampleController.getCompanies(data.lng, data.lat).then((res) => {
+      logger.verbose("Now emitting companies");
+      socket.emit('cityCompanies', {
+        companies: res
+      })
+    });
   });
 
-  socket.on('delete_image', function(data) {
+  socket.on('delete_image', function (data) {
     // console.log(data);
     var filepath = path.join(__dirname, 'download', data.imageId);
     fs.unlink(filepath, (err) => {
@@ -66,7 +84,7 @@ io.on('connect', function(socket) {
     });
   });
 
-  socket.on('case_report', function(data) {
+  socket.on('case_report', function (data) {
     var filepath = path.join(__dirname, 'download', data.case_data.imageId);
     case_data = data.case_data;
     // console.log(data);
@@ -87,17 +105,17 @@ io.on('connect', function(socket) {
     });
   });
 
-  socket.on('disconnect', function() {
+  socket.on('disconnect', function () {
     logger.info('socket disconnected. socket.id = ' + socket.id + ' , pid = ' + process.pid);
   });
 });
 
-io.on('disconnect', function(socket) {
+io.on('disconnect', function (socket) {
   logger.info('Lost a socket. socket.id = ' + socket.id + ' , pid = ' + process.pid);
 });
 
 // start the server
-server.listen(config.port, config.server.host, function() {
+server.listen(config.port, config.server.host, function () {
   logger.info(`server listening on port: ${config.port}`);
 });
 //}

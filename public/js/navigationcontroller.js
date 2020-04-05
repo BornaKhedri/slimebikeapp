@@ -13,7 +13,7 @@ $(function () {
     $location_li = $('#li_location');
     $identification_li = $('#li_identification');
     // This function is called when continue button on the "classification" is clicked
-    $('#location_continue').click(function (e) {
+    $('#location_continue').click(async function (e) {
         e.preventDefault();
 
         // get an handle for the next tab (location -> classification)
@@ -22,24 +22,15 @@ $(function () {
         if (next_tab.length > 0) {
             if (latitude != "" && longitude != "") {
 
-                // make the location nav inactive, and 
-                $location_li.addClass('disabled');
-                $location_li.find('a').removeClass("navbar-active");
-                $location_li.find('a').addClass("donetext");
-                $location_li.find('a').removeClass("active");
-                // make the classification nav active
-                $classification_li.find('a').addClass("navbar-active");
-                $classification_li.removeClass("disabled");
-                $classification_li.find('a[data-toggle]').each(function () {
-                    $(this).attr("data-toggle", "tab");
-                });
 
                 window.performance.mark('before_getCity');
-                getCity()
+                await getCity();
                 window.performance.mark('after_getCity');
                 window.performance.measure('get_getCity_exec', 'before_getCity', 'after_getCity');
                 // show the next tab
                 // next_tab.tab('show');
+                // make the location nav inactive, and 
+
 
 
             }

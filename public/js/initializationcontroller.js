@@ -62,7 +62,7 @@ var populateInfractions = function(infractions) {
     });
 
     // getCompanies();
-
+    
 }
 
 var populateCompanies = function(companies) {
@@ -104,6 +104,17 @@ var populateCompanies = function(companies) {
         $('input:radio').not($chk).prop('checked', false);
 
         return false;
+    });
+
+    $('#li_location').addClass('disabled');
+    $('#li_location').find('a').removeClass("navbar-active");
+    $('#li_location').find('a').addClass("donetext");
+    $('#li_location').find('a').removeClass("active");
+    // make the classification nav active
+    $('#li_classification').find('a').addClass("navbar-active");
+    $('#li_classification').removeClass("disabled");
+    $('#li_classification').find('a[data-toggle]').each(function () {
+        $(this).attr("data-toggle", "tab");
     });
     $('a[href="#tab_classification"]').tab('show');
 }
@@ -170,7 +181,7 @@ var getCity = function () {
             window.performance.mark('after_getInfractions');
             window.performance.measure('get_getInfractions_exec', 'before_getInfractions', 'after_getInfractions');
             window.performance.mark('before_getCompanies');
-            await getCompanies()
+            await getCompanies();
             window.performance.mark('after_getCompanies');
             window.performance.measure('get_getCompanies_exec', 'before_getCompanies', 'after_getCompanies');
 

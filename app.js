@@ -17,17 +17,12 @@ const app = express();
 var server = http.createServer(app)
 
 var io = require("socket.io")(server, {
-  handlePreflightRequest: (req, res) => {
-      const headers = {
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-          "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
-          "Access-Control-Allow-Credentials": true
-      };
-      res.writeHead(200, headers);
-      res.end();
-  }
+  pingTimeout: 15000
 });
 // io.set('transports', ['xhr-polling']);
+// io.configure( function() {
+//   io.set('close timeout', 60*60); // 24h time out
+// });
 
 const router = express.Router();
 var publicPath = path.join(__dirname, 'public');

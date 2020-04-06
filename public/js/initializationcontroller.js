@@ -25,23 +25,23 @@ const socket = io();
  */
 function getMobileOperatingSystem() {
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  
-        // Windows Phone must come first because its UA also contains "Android"
-      if (/windows phone/i.test(userAgent)) {
-          return "Windows Phone";
-      }
-  
-      if (/android/i.test(userAgent)) {
-          return "Android";
-      }
-  
-      // iOS detection from: http://stackoverflow.com/a/9039885/177710
-      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-          return "iOS";
-      }
-  
-      return "unknown";
-  }
+
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+
+    return "unknown";
+}
 
 // This disables the click on the navbar elements - 
 // navigation is purely handled by the back and continue buttons
@@ -57,7 +57,7 @@ $('body').on('click', '.disabled', function (e) {
 });
 
 
-var populateInfractions = function(infractions) {
+var populateInfractions = function (infractions) {
     $('#infraction_list').empty();
     infractions.forEach((infraction) => {
         // create the infraction description checkbox element
@@ -73,7 +73,7 @@ var populateInfractions = function(infractions) {
             .append(infraction.infraction_description)
         $infraction_description.appendTo('#infraction_list');
 
-        
+
     });
 
     $('[data-toggle="buttons"] .btn').on('click', function () {
@@ -89,10 +89,24 @@ var populateInfractions = function(infractions) {
     });
 
     // getCompanies();
-    
+
 }
 
-var populateCompanies = function(companies) {
+var gotoClassification = function () {
+    $('#li_location').addClass('disabled');
+    $('#li_location').find('a').removeClass("navbar-active");
+    $('#li_location').find('a').addClass("donetext");
+    $('#li_location').find('a').removeClass("active");
+    // make the classification nav active
+    $('#li_classification').find('a').addClass("navbar-active");
+    $('#li_classification').removeClass("disabled");
+    $('#li_classification').find('a[data-toggle]').each(function () {
+        $(this).attr("data-toggle", "tab");
+    });
+    $('a[href="#tab_classification"]').tab('show');
+}
+
+var populateCompanies = function (companies) {
     $('#company_list').empty();
     if (companies.length > 0) {
         companies.forEach((company) => {
@@ -132,21 +146,11 @@ var populateCompanies = function(companies) {
 
         return false;
     });
+    gotoClassification();
 
-    $('#li_location').addClass('disabled');
-    $('#li_location').find('a').removeClass("navbar-active");
-    $('#li_location').find('a').addClass("donetext");
-    $('#li_location').find('a').removeClass("active");
-    // make the classification nav active
-    $('#li_classification').find('a').addClass("navbar-active");
-    $('#li_classification').removeClass("disabled");
-    $('#li_classification').find('a[data-toggle]').each(function () {
-        $(this).attr("data-toggle", "tab");
-    });
-    $('a[href="#tab_classification"]').tab('show');
 }
 
-var getCompanies = function() {
+var getCompanies = function () {
     socket.on('cityCompanies', function (data) {
         console.log(data);
         var companies = data.companies;
@@ -156,12 +160,14 @@ var getCompanies = function() {
             window.performance.mark('after_populateCompanies');
             window.performance.measure('get_populateCompanies_exec', 'before_populateCompanies', 'after_populateCompanies');
         } else {
-            $('#company_div').empty();
-            $('#company_div').append(
-                $('<p/>')
-                    .addClass('light-background text-danger')
-                    .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
-            )
+            // $('#company_div').empty();
+            // $('#company_div').append(
+            //     $('<p/>')
+            //         .addClass('light-background text-danger')
+            //         .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
+            // )
+            // gotoClassification();
+            if(!alert("Error: No companies found.")) window.location.href = "./html/error_noinfractions_company.html"; 
         }
     });
 }
@@ -176,14 +182,15 @@ var getInfractions = function () {
             window.performance.mark('after_populateInfractions');
             window.performance.measure('get_populateInfractions_exec', 'before_populateInfractions', 'after_populateInfractions');
         } else {
-            $('#infraction_div').removeClass('low-opacity');
-            $('#infraction_div').addClass('high-opacity');
-            $('#infraction_div').empty();
-            $('#infraction_div').append(
-                $('<p/>')
-                    .addClass('light-background text-danger')
-                    .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
-            )
+            // $('#infraction_div').removeClass('low-opacity');
+            // $('#infraction_div').addClass('high-opacity');
+            // $('#infraction_div').empty();
+            // $('#infraction_div').append(
+            //     $('<p/>')
+            //         .addClass('light-background text-danger')
+            //         .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
+            // )
+            if(!alert("Error: No infractions found.")) window.location.href = "./html/error_noinfractions_company.html"; 
         }
     });
 }
@@ -199,18 +206,26 @@ var getCity = function () {
         });
 
         socket.on('cityName', async function (data) {
-            city = data.cityName[0].cityname;
-            // DIsplay the city name on the UI
-            $('#city_name').empty().append('<p>' + city + '</p>');
-            // Get the companies and infractions for the city in question 
-            window.performance.mark('before_getInfractions');
-            await getInfractions();
-            window.performance.mark('after_getInfractions');
-            window.performance.measure('get_getInfractions_exec', 'before_getInfractions', 'after_getInfractions');
-            window.performance.mark('before_getCompanies');
-            await getCompanies();
-            window.performance.mark('after_getCompanies');
-            window.performance.measure('get_getCompanies_exec', 'before_getCompanies', 'after_getCompanies');
+
+            if (data.cityName.length == 1) {
+                city = data.cityName[0].cityname;
+                // DIsplay the city name on the UI
+                $('#city_name').empty().append('<p>' + city + '</p>');
+                // Get the companies and infractions for the city in question 
+                window.performance.mark('before_getInfractions');
+                await getInfractions();
+                window.performance.mark('after_getInfractions');
+                window.performance.measure('get_getInfractions_exec', 'before_getInfractions', 'after_getInfractions');
+                window.performance.mark('before_getCompanies');
+                await getCompanies();
+                window.performance.mark('after_getCompanies');
+                window.performance.measure('get_getCompanies_exec', 'before_getCompanies', 'after_getCompanies');
+            } else if (data.cityName.length > 1) {
+                if(!alert("Error: Multiple jurisdictions detected.")) window.location.href = "./html/error_multicity.html"; 
+            } else if (data.cityName.length == 0) {
+                if(!alert("Error: No jurisdictions detected.")) window.location.href = "./html/error_nocity.html"; 
+            }
+
 
         });
     }
@@ -247,6 +262,20 @@ let getLocation = new Promise(function (resolve, reject) {
 
     function error(err) {
         console.warn(`ERROR(${err.code}): ${err.message}`);
+        switch (err.code) {
+            case err.PERMISSION_DENIED:
+                if (!alert("User denied the request for Geolocation.")) window.location.href = "./html/error_gps.html";
+                break;
+            case err.POSITION_UNAVAILABLE:
+                if (!alert("Location information is unavailable.")) window.location.href = "./html/error_gpss.html";
+                break;
+            case err.TIMEOUT:
+                if (!alert("The request to get user location timed out.")) window.location.href = "./html/error_gps.html";
+                break;
+            case err.UNKNOWN_ERROR:
+                if (!alert("An unknown error occurred.")) window.location.href = "./html/error_gps.html";
+                break;
+        }
         // ipLookUp()
         resolve();
         // alert(`ERROR(${err.code}): ${err.message}`);
@@ -259,7 +288,8 @@ let getLocation = new Promise(function (resolve, reject) {
     } else {
         // geolocation is not supported
         // get your location some other way
-        console.log('geolocation is not enabled on this browser')
+        if (!alert("geolocation is not enabled on this browser")) window.location.href = "./html/error_gps.html";
+        // console.log('geolocation is not enabled on this browser')
         // alert('geolocation is not enabled on this browser')
         // ipLookUp()
     }
@@ -280,7 +310,7 @@ async function drawMap() {
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [longitude, latitude],
-        zoom: 13
+        zoom: 10
     });
 
     // create the popup

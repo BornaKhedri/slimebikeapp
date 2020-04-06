@@ -655,8 +655,8 @@ body {
 .marker {
     background-image: url('../images/wheel.svg');
     background-size: cover;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     cursor: pointer;
   }

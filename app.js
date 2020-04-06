@@ -27,6 +27,8 @@ var io = require("socket.io")(server, {
       res.end();
   }
 });
+// io.set('transports', ['xhr-polling']);
+
 const router = express.Router();
 var publicPath = path.join(__dirname, 'public');
 var case_data = '';
@@ -108,6 +110,10 @@ io.on('connect', function (socket) {
   socket.on('disconnect', function () {
     logger.info('socket disconnected. socket.id = ' + socket.id + ' , pid = ' + process.pid);
   });
+
+  socket.on('error', function (err) { 
+    logger.info("Socket.IO Error: " + err.stack); 
+ });
 });
 
 io.on('disconnect', function (socket) {

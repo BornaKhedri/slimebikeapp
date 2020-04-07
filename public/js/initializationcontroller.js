@@ -205,7 +205,7 @@ var getCity = function () {
             lat: latitude
         });
 
-        socket.on('cityName', async function (data) {
+        socket.on('cityName', function (data) {
 
             if (data.cityName.length == 1) {
                 city = data.cityName[0].cityname;
@@ -213,11 +213,50 @@ var getCity = function () {
                 $('#city_name').empty().append('<p>' + city + '</p>');
                 // Get the companies and infractions for the city in question 
                 window.performance.mark('before_getInfractions');
-                await getInfractions();
+                // getInfractions();
+                socket.on('cityInfractions', function (data) {
+                    console.log(data);
+                    var infractions = data.infractions;
+                    if (infractions.length > 0) {
+                        window.performance.mark('before_populateInfractions');
+                        populateInfractions(infractions);
+                        window.performance.mark('after_populateInfractions');
+                        window.performance.measure('get_populateInfractions_exec', 'before_populateInfractions', 'after_populateInfractions');
+                    } else {
+                        // $('#infraction_div').removeClass('low-opacity');
+                        // $('#infraction_div').addClass('high-opacity');
+                        // $('#infraction_div').empty();
+                        // $('#infraction_div').append(
+                        //     $('<p/>')
+                        //         .addClass('light-background text-danger')
+                        //         .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
+                        // )
+                        if(!alert("Error: No infractions found.")) window.location.href = "./html/error_noinfractions_company.html"; 
+                    }
+                });
                 window.performance.mark('after_getInfractions');
                 window.performance.measure('get_getInfractions_exec', 'before_getInfractions', 'after_getInfractions');
                 window.performance.mark('before_getCompanies');
-                await getCompanies();
+                // getCompanies();
+                socket.on('cityCompanies', function (data) {
+                    console.log(data);
+                    var companies = data.companies;
+                    if (companies.length > 0) {
+                        window.performance.mark('before_populateCompanies');
+                        populateCompanies(companies);
+                        window.performance.mark('after_populateCompanies');
+                        window.performance.measure('get_populateCompanies_exec', 'before_populateCompanies', 'after_populateCompanies');
+                    } else {
+                        // $('#company_div').empty();
+                        // $('#company_div').append(
+                        //     $('<p/>')
+                        //         .addClass('light-background text-danger')
+                        //         .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
+                        // )
+                        // gotoClassification();
+                        if(!alert("Error: No companies found.")) window.location.href = "./html/error_noinfractions_company.html"; 
+                    }
+                });
                 window.performance.mark('after_getCompanies');
                 window.performance.measure('get_getCompanies_exec', 'before_getCompanies', 'after_getCompanies');
             } else if (data.cityName.length > 1) {

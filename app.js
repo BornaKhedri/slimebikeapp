@@ -53,23 +53,39 @@ io.on('connect', function (socket) {
     logger.info(`Location: ${data.lng}, ${data.lat}`);
 
     sampleController.getCity(data.lng, data.lat).then((res) => {
+
+      sampleController.getInfractions(data.lng, data.lat).then((res) => {
+
+        sampleController.getCompanies(data.lng, data.lat).then((res) => {
+          logger.verbose("Now emitting companies");
+          socket.emit('cityCompanies', {
+            companies: res
+          })
+        });
+        
+        logger.verbose("Now emitting infractions");
+        socket.emit('cityInfractions', {
+          infractions: res
+        })
+      });
+
       logger.verbose("Now emitting city");
       socket.emit('cityName', {
         cityName: res
       })
     });
-    sampleController.getInfractions(data.lng, data.lat).then((res) => {
-      logger.verbose("Now emitting infractions");
-      socket.emit('cityInfractions', {
-        infractions: res
-      })
-    });
-    sampleController.getCompanies(data.lng, data.lat).then((res) => {
-      logger.verbose("Now emitting companies");
-      socket.emit('cityCompanies', {
-        companies: res
-      })
-    });
+    // sampleController.getInfractions(data.lng, data.lat).then((res) => {
+    //   logger.verbose("Now emitting infractions");
+    //   socket.emit('cityInfractions', {
+    //     infractions: res
+    //   })
+    // });
+    // sampleController.getCompanies(data.lng, data.lat).then((res) => {
+    //   logger.verbose("Now emitting companies");
+    //   socket.emit('cityCompanies', {
+    //     companies: res
+    //   })
+    // });
   });
 
   socket.on('delete_image', function (data) {

@@ -62,7 +62,7 @@ io.on('connect', function (socket) {
             companies: res
           })
         });
-        
+
         logger.verbose("Now emitting infractions");
         socket.emit('cityInfractions', {
           infractions: res

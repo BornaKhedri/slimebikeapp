@@ -24,7 +24,8 @@
     },
     "license": "MIT",
     "scripts": {
-        "start": "DEBUG=socket.io:* nodemon app.js"
+        "start": "DEBUG=socket.io:* nodemon app.js",
+        "test": "mocha"
     },
     "devDependencies": {
         "chai": "^4.2.0",

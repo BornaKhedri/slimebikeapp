@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -64,21 +65,28 @@
         <br />
         <br />
     </div>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <ul class="nav nav-tabs nav nav-pills navbar text-center justify-content-center text-body font-weight-bold"
-        id="nav_tabs" role="tablist">
-        <li class="nav-item disabled" id="li_location"><a
-                class="navbar-active active lighttext nav-link  font-weight-bold" href="#tab_location" role="tab"
-                data-toggle="tab">Location</a></li>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav nav-tabs nav navbar-expand-xs nav-pills navbar text-center justify-content-center text-body font-weight-bold"
+                id="nav_tabs" role="tablist">
+                <li class="nav-item disabled" id="li_location"><a
+                        class="navbar-active active lighttext nav-link  font-weight-bold" href="#tab_location"
+                        role="tab" data-toggle="tab">Location</a></li>
 
-        <li class="nav-item" id="li_classification"><a class="lighttext nav-link font-weight-bold"
-                href="#tab_classification" role="tab" data-toggle="">Classification</a>
-        </li>
+                <li class="nav-item" id="li_classification"><a class="lighttext nav-link font-weight-bold"
+                        href="#tab_classification" role="tab" data-toggle="">Classification</a>
+                </li>
 
-        <li class="nav-item disabled" id="li_identification"><a class="lighttext nav-link  font-weight-bold"
-                href="#tab_identification" role="tab" data-toggle="">Identification</a></li>
-    </ul>
-
+                <li class="nav-item disabled" id="li_identification"><a class="lighttext nav-link  font-weight-bold"
+                        href="#tab_identification" role="tab" data-toggle="">Identification</a></li>
+            </ul>
+        </div>
+    </nav>
     <div class="tab-content">
 
         <div class="tab-pane show active" role="tabpanel" id="tab_location">
@@ -135,7 +143,8 @@
                     <button type="button"
                         class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
                         id="classification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
-                    <button type="button" class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
+                    <button type="button"
+                        class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
                         id="classification_continue" style="visibility: hidden;">Continue &nbsp;<i
                             class="fas fa-chevron-right"></i></button>
                 </div>
@@ -144,11 +153,13 @@
 
         <div class="tab-pane" role="tabpanel" id="tab_identification">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
-                <h1 class="text-center" style="font-size: 20px;" id="qrlead"><br>Optionally, please scan the vehicle's QR code
+                <h1 class="text-center" style="font-size: 20px;" id="qrlead"><br>Optionally, please scan the vehicle's
+                    QR code
                 </h1>
 
                 <label>Vehicle ID:</label>
                 <pre><code id="result"></code></pre>
+                
                 <video id="video" class="d-flex align-items-center mx-auto" width="300" height="200"
                     style="border: 1px solid gray"></video>
                 <div class="d-flex">
@@ -177,4 +188,5 @@
             console.log(' ' + req.name + ' took ' + req.duration + 'ms');
         }</script>
 </body>
+
 </html>

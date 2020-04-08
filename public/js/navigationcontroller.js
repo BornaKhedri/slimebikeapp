@@ -77,9 +77,10 @@ $(function () {
                 if(agentOS != 'iOS') {
                     enableQRCodeReader();
                 } else {
-                    $('#qrlead').text = "Optionally, please enter the vehicle's QR code"
+
+                    $('#qrlead').html("Optionally, please enter the vehicle's QR code")
                     $('#video').remove();
-                    $('#result').after(
+                    $('#result').after($("<br/>"),
                         $("<input/>")
                             .attr("id", "id_tb")
                             .attr("type", "textbox")

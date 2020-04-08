@@ -37,9 +37,13 @@ module.exports.getCompanies = async (lng, lat) => {
 	join micromobility_company mc on mc.company_id = mt.company_id
 	join micromobility_services ms on mt.micromobilitytype_id = ms.micromobilitytype_id
 		where micromobilityservice_id IN (select micromobilityservice_id from micromobility_city_xref 
-                            where city_id = (select city_id from city_info where city = 
-                                (select cityname from wa_city_shape 
-                                    where st_within(ST_SetSRID(ST_MakePoint( $1, $2), 4326), geom))));`;
+                            where city_id = (select COALESCE (
+                                (select city_id from city_info where city = 
+                                    (select coalesce(
+                                        (select cityname from wa_city_shape 
+                                            where ST_Within(ST_SetSRID(ST_MakePoint($1, $2), 4326), geom)), 
+                                        'Generic'))), 
+                                (select city_id from city_info where city = 'Generic'))));`;
     let data = [lng, lat];
     try {
         result = await dbUtil.sqlToDB(sql, data);
@@ -50,7 +54,10 @@ module.exports.getCompanies = async (lng, lat) => {
 }
 
 module.exports.getCity = async (lng, lat) => {
-    let sql = `select cityname from wa_city_shape where st_within(ST_SetSRID(ST_MakePoint($1, $2), 4326), geom);`;
+    let sql = `select coalesce(
+                    (select cityname from wa_city_shape 
+                        where ST_Within(ST_SetSRID(ST_MakePoint($1, $2), 4326), geom)), 
+                    'Generic') as cityname;`;
     let data = [lng, lat];
     try {
         result = await dbUtil.sqlToDB(sql, data);
@@ -63,9 +70,13 @@ module.exports.getCity = async (lng, lat) => {
 module.exports.getInfractions = async (lng, lat) => {
     let sql = `select infraction_description, infractiontype_id from infraction_type 
     where infractiontype_id IN (select infractiontype_id from infraction_city_xref 
-        where city_id IN (select city_id from city_info where city = 
-            (select cityname from wa_city_shape 
-                where ST_Within(ST_SetSRID(ST_MakePoint($1, $2), 4326), geom))));`;
+        where city_id IN (select COALESCE (
+            (select city_id from city_info where city = 
+                (select coalesce(
+                    (select cityname from wa_city_shape 
+                        where ST_Within(ST_SetSRID(ST_MakePoint($1, $2), 4326), geom)), 
+                    'Generic'))), 
+            (select city_id from city_info where city = 'Generic'))));`;
     let data = [lng, lat];
     try {
         result = await dbUtil.sqlToDB(sql, data);

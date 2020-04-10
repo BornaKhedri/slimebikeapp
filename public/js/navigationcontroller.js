@@ -3,7 +3,8 @@
 // TODO: Ensure that clicking on the navbar does not allow going to the next stage 
 //          unless the page has been completely filled. One shortcut is make the 
 //          tab links in-active until they have been traversed. 
-
+// import Bowser from "bowser";
+const browser = bowser.getParser(window.navigator.userAgent);
 var infraction_ids = [];
 var micromobilityservice_id = '';
 
@@ -74,7 +75,10 @@ $(function () {
                 next_tab.tab('show');
 
                 var agentOS = getMobileOperatingSystem();
-                if(agentOS != 'iOS') {
+                console.log(agentOS)
+                console.log(browser.getBrowser()['name'])
+                // try for iOS chrome (agentOS == 'iOS' && browser.getBrowser()['name'] == 'Chrome') ||
+                if((agentOS == 'Android')) {
                     enableQRCodeReader();
                 } else {
 

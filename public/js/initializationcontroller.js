@@ -43,6 +43,8 @@ function getMobileOperatingSystem() {
     return "unknown";
 }
 
+
+
 // This disables the click on the navbar elements - 
 // navigation is purely handled by the back and continue buttons
 $(document).ready(function () {
@@ -167,7 +169,7 @@ var getCompanies = function () {
             //         .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
             // )
             // gotoClassification();
-            if(!alert("Error: No companies found.")) window.location.href = "./html/error_noinfractions_company.html"; 
+            if (!alert("Error: No companies found.")) window.location.href = "./html/error_noinfractions_company.html";
         }
     });
 }
@@ -190,7 +192,7 @@ var getInfractions = function () {
             //         .addClass('light-background text-danger')
             //         .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
             // )
-            if(!alert("Error: No infractions found.")) window.location.href = "./html/error_noinfractions_company.html"; 
+            if (!alert("Error: No infractions found.")) window.location.href = "./html/error_noinfractions_company.html";
         }
     });
 }
@@ -231,7 +233,7 @@ var getCity = function () {
                         //         .addClass('light-background text-danger')
                         //         .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
                         // )
-                        if(!alert("Error: No infractions found.")) window.location.href = "./html/error_noinfractions_company.html"; 
+                        if (!alert("Error: No infractions found.")) window.location.href = "./html/error_noinfractions_company.html";
                     }
                 });
                 window.performance.mark('after_getInfractions');
@@ -254,18 +256,16 @@ var getCity = function () {
                         //         .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
                         // )
                         // gotoClassification();
-                        if(!alert("Error: No companies found.")) window.location.href = "./html/error_noinfractions_company.html"; 
+                        if (!alert("Error: No companies found.")) window.location.href = "./html/error_noinfractions_company.html";
                     }
                 });
                 window.performance.mark('after_getCompanies');
                 window.performance.measure('get_getCompanies_exec', 'before_getCompanies', 'after_getCompanies');
             } else if (data.cityName.length > 1) {
-                if(!alert("Error: Multiple jurisdictions detected.")) window.location.href = "./html/error_multicity.html"; 
+                if (!alert("Error: Multiple jurisdictions detected.")) window.location.href = "./html/error_multicity.html";
             } else if (data.cityName.length == 0) {
-                if(!alert("Error: No jurisdictions detected.")) window.location.href = "./html/error_nocity.html"; 
+                if (!alert("Error: No jurisdictions detected.")) window.location.href = "./html/error_nocity.html";
             }
-
-
         });
     }
 }
@@ -347,13 +347,14 @@ async function drawMap() {
     // var coordinates = document.getElementById('coordinates');
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/mapbox/satellite-streets-v11/',
         center: [longitude, latitude],
-        zoom: 10
+        zoom: 12
     });
-
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
     // create the popup
-    var popup = new mapboxgl.Popup({ offset: 10, closeOnClick: false, closeButton: false }).setText(
+    var popup = new mapboxgl.Popup({ offset: 30, closeOnClick: false, closeButton: false }).setText(
         'Move the marker to wheel location.'
     );
 
@@ -379,6 +380,58 @@ async function drawMap() {
     }
 
     marker.on('dragend', onDragEnd);
+
+    // The 'building' layer in the mapbox-streets vector source contains building-height
+    // data from OpenStreetMap.
+    // map.on('load', function () {
+    //     // Insert the layer beneath any symbol layer.
+    //     var layers = map.getStyle().layers;
+
+    //     var labelLayerId;
+    //     for (var i = 0; i < layers.length; i++) {
+    //         if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+    //             labelLayerId = layers[i].id;
+    //             break;
+    //         }
+    //     }
+
+    //     map.addLayer(
+    //         {
+    //             'id': '3d-buildings',
+    //             'source': 'composite',
+    //             'source-layer': 'building',
+    //             'filter': ['==', 'extrude', 'true'],
+    //             'type': 'fill-extrusion',
+    //             'minzoom': 15,
+    //             'paint': {
+    //                 'fill-extrusion-color': '#aaa',
+
+    //                 // use an 'interpolate' expression to add a smooth transition effect to the
+    //                 // buildings as the user zooms in
+    //                 'fill-extrusion-height': [
+    //                     'interpolate',
+    //                     ['linear'],
+    //                     ['zoom'],
+    //                     15,
+    //                     0,
+    //                     15.05,
+    //                     ['get', 'height']
+    //                 ],
+    //                 'fill-extrusion-base': [
+    //                     'interpolate',
+    //                     ['linear'],
+    //                     ['zoom'],
+    //                     15,
+    //                     0,
+    //                     15.05,
+    //                     ['get', 'min_height']
+    //                 ],
+    //                 'fill-extrusion-opacity': 0.6
+    //             }
+    //         },
+    //         labelLayerId
+    //     );
+    // });
 }
 
 var enableQRCodeReader = function () {

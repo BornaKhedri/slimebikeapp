@@ -91,6 +91,7 @@ $(function () {
                     )
                     $('#id_tb').keyup(function(){
                         $('#result').text($(this).val());
+                        vehicle_id = result.textContent;
                     });
                 }
                 

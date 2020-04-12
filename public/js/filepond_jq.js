@@ -2,26 +2,30 @@ var imageId = '';
 var cont_btn_element = document.getElementById("classification_continue");
 
 FilePond.registerPlugin(
-
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
     // encodes the file as base64 data
     FilePondPluginFileEncode,
-
     // validates the size of the file
     FilePondPluginFileValidateSize,
     FilePondPluginFileValidateType, // validate type
-
-    // corrects mobile image orientation
-    FilePondPluginImageExifOrientation,
-
     // previews dropped images
-    FilePondPluginImagePreview
+    FilePondPluginImagePreview,
+    FilePondPluginImageResize,
+    FilePondPluginImageTransform
 );
 
 // Select the file input and use create() to turn it into a pondd
 FilePond.create(
     document.querySelector('input[type="file"]'), {
     acceptedFileTypes: ['image/*'],
-
+    allowImageExifOrientation: true,
+    imageCropAspectRatio: '1:1',
+    imageResizeTargetWidth: 300,
+    imageResizeTargetHeight: 300,
+    imageResizeMode: 'cover',
+    instantUpload: true,
+    imageTransformOutputQuality: 85,
     allowFileEncode: false,
     server: {
         process: {

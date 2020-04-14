@@ -34,14 +34,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <!-- <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> -->
-    <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
-    <script
-        src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
+    <!-- <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script> -->
     <script
         src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
     <script
+        src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
+    
+    <script
         src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.js"></script>
 
@@ -50,7 +51,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bowser@2.5.3/es5.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@0.15.2"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/exif-js"></script> -->
     <script src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
     <script type="text/javascript">window.performance.mark('end_head_load_js');
         window.performance.measure('head_js_load_time', 'end_head_load_css', 'end_head_load_js');</script>
@@ -94,7 +95,7 @@
 
         <div class="tab-pane show active" role="tabpanel" id="tab_location">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
-                <h1 class="text-center" style="font-size: 20px;"><br>Select the location of bike/scooter</h1>
+                <h5 class="text-center">Select the location of bike/scooter</h5>
                 <div id="map"></div>
                 <div class="d-flex">
                     <button type="button"
@@ -178,18 +179,10 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">window.performance.mark('end_body_load_html');
-        window.performance.measure('body_html_load_time', 'begin_body_load', 'end_body_load_html');</script>
     <script src="./js/initializationcontroller.js"></script>
     <script src="./js/filepond_jq.js"></script>
     <script src="./js/navigationcontroller.js"></script>
-    <script type="text/javascript">window.performance.mark('end_body_load_js');
-        window.performance.measure('body_js_load_time', 'end_body_load_html', 'end_body_load_js');
-        var items = window.performance.getEntriesByType('measure');
-        for (var i = 0; i < items.length; ++i) {
-            var req = items[i];
-            console.log(' ' + req.name + ' took ' + req.duration + 'ms');
-        }</script>
+
 </body>
 
 </html>

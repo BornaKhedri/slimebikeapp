@@ -2,15 +2,17 @@ var imageId = '';
 var cont_btn_element = document.getElementById("classification_continue");
 
 FilePond.registerPlugin(
+
+        // previews dropped images
+        FilePondPluginImagePreview,
     // corrects mobile image orientation
     FilePondPluginImageExifOrientation,
     // encodes the file as base64 data
-    FilePondPluginFileEncode,
+    // FilePondPluginFileEncode,
     // validates the size of the file
     FilePondPluginFileValidateSize,
     FilePondPluginFileValidateType, // validate type
-    // previews dropped images
-    FilePondPluginImagePreview,
+
     FilePondPluginImageResize,
     FilePondPluginImageTransform
 );
@@ -26,7 +28,7 @@ FilePond.create(
     imageResizeMode: 'cover',
     instantUpload: true,
     imageTransformOutputQuality: 85,
-    allowFileEncode: false,
+    // allowFileEncode: false,
     server: {
         process: {
             url: './upload',
@@ -64,7 +66,7 @@ FilePond.create(
         }
 
     },
-    labelIdle: `Please click to submit a picture`,
+    labelIdle: `<div class="darktext black-border" style="font-size: 1.2rem;"> <span> <i class="far fa-image fa-9x" style="font-size: 2rem;"></i> <bold> <br>Please click to submit a picture </bold></span> </div>`,
     allowRevert: true
 }
 );

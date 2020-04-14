@@ -139,4 +139,3 @@ $(function () {
         $('a[href="#tab_classification"]').tab('show');
     });
 });
-

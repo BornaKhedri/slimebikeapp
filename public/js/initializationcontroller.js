@@ -4,8 +4,12 @@
 var city = '';
 var latitude = '';
 var longitude = '';
+var geolatitude = '';
+var geolongitude = '';
 var gps_coords = false;
 var vehicle_id = '';
+var marker = '';
+
 const constraints = window.constraints = {
     audio: false,
     video: {
@@ -291,6 +295,8 @@ let getLocation = new Promise(function (resolve, reject) {
         console.log(`Latitude : ${crd.latitude}`);
         console.log(`Longitude: ${crd.longitude}`);
         console.log(`More or less ${crd.accuracy} meters.`);
+        geolatitude = crd.latitude;
+        geolongitude = crd.longitude;
         latitude = crd.latitude;
         longitude = crd.longitude;
         gps_coords = true;
@@ -335,12 +341,94 @@ let getLocation = new Promise(function (resolve, reject) {
 
 });
 
+// Original ES6 Class— https://github.com/tobinbradley/mapbox-gl-pitch-toggle-control
+// export default class PitchToggle {
+class PitchToggle {
+    constructor({ bearing = -20, pitch = 70, minpitchzoom = null }) {
+        this._bearing = bearing;
+        this._pitch = pitch;
+        this._minpitchzoom = minpitchzoom;
+    }
+
+    onAdd(map) {
+        this._map = map;
+        let _this = this;
+
+        this._btn = document.createElement("button");
+        this._btn.className = "mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-3d";
+        this._btn.type = "button";
+        this._btn["aria-label"] = "Toggle Pitch";
+        this._btn.onclick = function () {
+            if (map.getPitch() === 0) {
+                let options = { pitch: _this._pitch, bearing: _this._bearing };
+                if (_this._minpitchzoom && map.getZoom() > _this._minpitchzoom) {
+                    options.zoom = _this._minpitchzoom;
+                }
+                map.easeTo(options);
+                _this._btn.className =
+                    "mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-2d";
+            } else {
+                map.easeTo({ pitch: 0, bearing: 0 });
+                _this._btn.className =
+                    "mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-3d";
+            }
+        };
+
+        this._container = document.createElement("div");
+        this._container.className = "mapboxgl-ctrl-group mapboxgl-ctrl";
+        this._container.appendChild(this._btn);
+
+        return this._container;
+    }
+
+    onRemove() {
+        this._container.parentNode.removeChild(this._container);
+        this._map = undefined;
+    }
+}
+
+/* Idea from Stack Overflow https://stackoverflow.com/a/51683226  */
+class MapboxGLButtonControl {
+    constructor({
+        className = "",
+        title = "",
+        eventHandler = evtHndlr
+    }) {
+        this._className = className;
+        this._title = title;
+        this._eventHandler = eventHandler;
+    }
+
+    onAdd(map) {
+        this._btn = document.createElement("button");
+        this._btn.className = "mapboxgl-ctrl-icon" + " " + this._className;
+        this._btn.type = "button";
+        this._btn.title = this._title;
+        this._btn.onclick = this._eventHandler;
+
+        this._container = document.createElement("div");
+        this._container.className = "mapboxgl-ctrl-group mapboxgl-ctrl";
+        this._container.appendChild(this._btn);
+
+        return this._container;
+    }
+
+    onRemove() {
+        this._container.parentNode.removeChild(this._container);
+        this._map = undefined;
+    }
+}
+
+function reposition_marker() {
+    // alert("clicked")
+    marker.setLngLat([geolongitude, geolatitude]);
+}
+
 // Map
 async function drawMap() {
-    window.performance.mark('before_getLocation');
     let result = await getLocation;
-    window.performance.mark('after_getLocation');
-    window.performance.measure('get_getLocation_exec', 'before_getLocation', 'after_getLocation');
+
+
     // getAddress();
     console.log(latitude, longitude)
     mapboxgl.accessToken = 'pk.eyJ1IjoiY2hpbnRhbnAiLCJhIjoiY2ppYXU1anVuMThqazNwcDB2cGtneDdkYyJ9.TL6RTyRRFCbvJWyFa4P0Ow';
@@ -351,8 +439,19 @@ async function drawMap() {
         center: [longitude, latitude],
         zoom: 12
     });
+
+    /* Instantiate new controls with custom event handlers */
+    const ctrlPoint = new MapboxGLButtonControl({
+        className: "mapbox-gl-reposition_marker",
+        title: "Reposition Marker",
+        eventHandler: reposition_marker
+    });
+
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl());
+
+    map.addControl(new PitchToggle({ minpitchzoom: 11 }), "top-left");
+    map.addControl(ctrlPoint, "top-left");
     // create the popup
     var popup = new mapboxgl.Popup({ offset: 30, closeOnClick: false, closeButton: false }).setText(
         'Move the marker to wheel location.'
@@ -362,10 +461,10 @@ async function drawMap() {
     var el = document.createElement('div');
     el.className = 'marker';
 
-    var marker = new mapboxgl.Marker(el, {
+    marker = new mapboxgl.Marker(el, {
         draggable: true
     })
-        .setLngLat([longitude, latitude])
+        .setLngLat([geolongitude, geolatitude])
         .setPopup(popup)
         .addTo(map)
         .togglePopup();
@@ -381,57 +480,6 @@ async function drawMap() {
 
     marker.on('dragend', onDragEnd);
 
-    // The 'building' layer in the mapbox-streets vector source contains building-height
-    // data from OpenStreetMap.
-    // map.on('load', function () {
-    //     // Insert the layer beneath any symbol layer.
-    //     var layers = map.getStyle().layers;
-
-    //     var labelLayerId;
-    //     for (var i = 0; i < layers.length; i++) {
-    //         if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
-    //             labelLayerId = layers[i].id;
-    //             break;
-    //         }
-    //     }
-
-    //     map.addLayer(
-    //         {
-    //             'id': '3d-buildings',
-    //             'source': 'composite',
-    //             'source-layer': 'building',
-    //             'filter': ['==', 'extrude', 'true'],
-    //             'type': 'fill-extrusion',
-    //             'minzoom': 15,
-    //             'paint': {
-    //                 'fill-extrusion-color': '#aaa',
-
-    //                 // use an 'interpolate' expression to add a smooth transition effect to the
-    //                 // buildings as the user zooms in
-    //                 'fill-extrusion-height': [
-    //                     'interpolate',
-    //                     ['linear'],
-    //                     ['zoom'],
-    //                     15,
-    //                     0,
-    //                     15.05,
-    //                     ['get', 'height']
-    //                 ],
-    //                 'fill-extrusion-base': [
-    //                     'interpolate',
-    //                     ['linear'],
-    //                     ['zoom'],
-    //                     15,
-    //                     0,
-    //                     15.05,
-    //                     ['get', 'min_height']
-    //                 ],
-    //                 'fill-extrusion-opacity': 0.6
-    //             }
-    //         },
-    //         labelLayerId
-    //     );
-    // });
 }
 
 var enableQRCodeReader = function () {

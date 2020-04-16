@@ -1,50 +1,46 @@
-import React, { Component } from 'react'
+import React, { useState } from "react";
+// Import React FilePond
+import { FilePond, registerPlugin } from "react-filepond";
+// Import FilePond styles
+import "filepond/dist/filepond.min.css";
+// Import the Image EXIF Orientation and Image Preview plugins
+// Note: These need to be installed separately
+// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImageResize from "filepond-plugin-image-resize";
+import FilePondPluginImageTransform from "filepond-plugin-image-transform";
 
-class Classification extends Component {
-    render() {
-        return (
-            <div>
-                <div className="card">
-                    <div className="center">
-                        <div className="row" id="image_control">
-                            <div className="col-md-6 col-md-offset-3 center">
-                                <div className="btn-container">
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
-                                    <h1 className="imgupload"><i className="fa fa-file-image-o"></i></h1>
-                                    <p id="namefile">Only pics allowed! (jpg,jpeg,bmp,png)</p>
-                                    <button type="button" id="btnup" className="btn btn-primary btn-lg">Browse for your pic!</button>
-                                    <input type="file" accept="image/*" capture="environment" id="wheel_image" name="wheel_image" value="" />
-                                </div>
-                            </div>
-                        </div>
+// Register the plugins
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateSize,
+  FilePondPluginFileValidateType,
+  FilePondPluginImageResize,
+  FilePondPluginImageTransform
+);
 
-                        {/* <video id="player" controls autoplay className="card-img-top"></video>
-                    <button id="capture"
-                        className="btn btn-primary text-center d-flex align-items-center mx-auto">Capture</button> */}
-                        <canvas id="canvas"></canvas>
-                    </div>
-                    <div className="card-body">
-                        <p className="card-text">Select all parking infractions that apply</p>
+function Classification() {
+  const [image, setImage] = useState([]);
 
-                        <div className="" id="infraction_list">
-
-                        </div>
-                    </div>
-                    <div className="card-body">
-                        <p className="card-text">Choose the company</p>
-                        <div className="card-text" id="company_list">
-
-                        </div>
-                    </div>
-                    <br />
-
-                    <button type="button" className="btn btn-primary text-center d-flex align-items-center mx-auto" id="classification_continue">Continue</button>
-
-                </div>
-            </div>
-            
-        )
-    }
+  return (
+    <div>
+      <div className="App">
+        <FilePond
+          data-max-file-size="10MB" 
+          files={image}
+          allowMultiple={false}
+          onupdatefiles={setImage}
+          labelIdle='<div class="darktext black-border" style="font-size: 1.2rem;"> <span> <i class="far fa-image fa-9x" style="font-size: 2rem;"></i> <bold> <br>Please click to submit a picture </bold></span> </div>'
+        />
+      </div>
+    </div>
+  );
 }
 
-export default Classification
+export default Classification;

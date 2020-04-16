@@ -1,100 +1,68 @@
-import React, { Component } from 'react'
-import {
-    Route,
-    NavLink,
-    HashRouter
-} from "react-router-dom"
-import socketIOClient from "socket.io-client"
-import axios from 'axios'
-import Classification from './Classification'
-import Location from './Location'
-import Identification from './Identification'
+import React, { useState, useEffect } from "react";
+import { Route, NavLink, HashRouter } from "react-router-dom";
+import { usePosition } from "use-position";
+import socketIOClient from "socket.io-client";
+import Classification from "./Classification";
+import Location from "./Location";
+import Identification from "./Identification";
+
 var socket;
 
-class Main extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            response: false,
-            endpoint: ":3006", 
-            socket:'',
-            city: '', 
-            companies: [], 
-            infractions: []
-        };
-    socket = socketIOClient(this.state.endpoint)
-    this._populateCompanies = this._populateCompanies.bind(this);
-    this._populateInfractions = this._populateInfractions.bind(this);
+function Main() {
 
-    }
+    const { latitude, longitude, timestamp, accuracy, error } = usePosition(false);
+    const [lnglat, setLngLat] = useState([0.0, 0.0]);
 
-    componentDidMount() {
-        this.getAndEmitCity()
-     }
+    useEffect(() => {
+        if(!isNaN(parseFloat(longitude)) && !isNaN(parseFloat(latitude))) {
+            setLngLat([longitude, latitude])
+        }
+    }, [longitude, latitude])
 
-    getAndEmitCity = () => {
-        axios.get('https://ipapi.co/json/').then((response) => {
-            let data = response.data;
-            console.log(response.data);
-            this.setState({
-                city: data.city
-            })
-            if(this.state.city !== '') {
-                socket.emit('city_sensed', {
-                    'city': this.state.city
-                });
-            }
-
-            this.getCompaniesAndInfractions()
-
-        }).catch((error) => {
-            console.log(error);
-        });
+    console.log("In main", lnglat);
+    const updateLngLat = (event) => {
+        setLngLat(event.target.value);
     };
-    
-    _populateCompanies(data) {
-        var {companies} = data;
-        console.log(companies);
-        this.setState({
-            companies: companies
-        })
-    }
 
-    _populateInfractions(data) {
-        var {infractions} = data;
-        console.log(infractions);
-        this.setState({
-            infractions: infractions
-        })
-    }
-
-    getCompaniesAndInfractions = () => {
-        socket.on('cityCompanies', this._populateCompanies);
-        socket.on('cityInfractions', this._populateInfractions);
-    }
-
-    render() {
-        return (
-            <HashRouter>
-                <div>
-                    <div className='page-header'>
-                        <h1>Misplaced Wheels Reporter 1.0</h1>
-                    </div>
-                    <ul className="header">
-                        <li><NavLink exact to="/">Classification</NavLink></li>
-                        <li><NavLink to="/location">Location</NavLink></li>
-                        <li><NavLink to="/identification">Identification</NavLink></li>
-                    </ul>
-                    <div className="content">
-                        <Route exact path="/" component={Classification} infractions={this.state.infractions} companies={this.state.companies}/>
-                        <Route path="/location" component={Location} />
-                        <Route path="/identification" component={Identification} />
-
-                    </div>
-                </div>
-            </HashRouter>
-        );
-    }
+  return (
+    <HashRouter>
+      <div>
+        <div className="row">
+          <div className="col-xs-offset-2 col-xs-8">
+            <img
+              className="mx-auto d-block"
+              src="logo.svg"
+              alt="misplaced wheels logo"
+              id="logo"
+            />
+          </div>
+          <div className="d-flex align-items-end col-xs-2">
+            <div id="city_name"></div>
+          </div>
+          <br />
+          <br />
+        </div>
+        <ul className="header">
+          <li>
+            <NavLink exact to="/">
+              Location
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/classification">Classification</NavLink>
+          </li>
+          <li>
+            <NavLink to="/identification">Identification</NavLink>
+          </li>
+        </ul>
+        <div className="content">
+          <Route exact path="/" render={(props) => <Location {...props} lnglat={lnglat} updateLngLat={updateLngLat} />} />
+          <Route path="/classification" component={Classification} />
+          <Route path="/identification" component={Identification} />
+        </div>
+      </div>
+    </HashRouter>
+  );
 }
 
-export default Main
+export default Main;

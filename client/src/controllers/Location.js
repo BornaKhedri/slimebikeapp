@@ -16,21 +16,28 @@ var marker = "";
 var geolongitude = "";
 var geolatitude = "";
 
-function reposition_marker() {
-  // alert("clicked")
-  marker.setLngLat([geolongitude, geolatitude]);
-}
+
 
 function Location(props) {
 
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
-  const latitude = props.lnglat[1];
-  const longitude = props.lnglat[0];
+  var latitude = props.lnglat[1];
+  var longitude = props.lnglat[0];
  
-  console.log(latitude, longitude);
-  geolatitude = latitude;
-  geolongitude = longitude;
+  console.log("IN Location: ", latitude, longitude);
+
+  if(geolatitude === "" && geolongitude === "") {
+    geolatitude = latitude;
+    geolongitude = longitude;
+  }
+  
+  // bring the marker to the current GPS location
+  function reposition_marker() {
+    // alert("clicked")
+    marker.setLngLat([geolongitude, geolatitude]);
+    props.updateLngLat([geolongitude, geolatitude]);
+  }
 
   useEffect(() => {
     mapboxgl.accessToken =
@@ -86,6 +93,7 @@ function Location(props) {
         longitude = lngLat.lng;
         latitude = lngLat.lat;
         console.log(`New coordinates are: (${latitude}, ${longitude})`);
+        props.updateLngLat([longitude, latitude]);
       }
 
       marker.on("dragend", onDragEnd);

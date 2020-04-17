@@ -2,43 +2,37 @@ const config = require('./config');
 const path = require('path');
 const express = require('express');
 const logger = require('./utils/logger');
+var multer = require("multer");
 const bodyParser = require('body-parser');
+var cors = require('cors');
 var fs = require('fs')
 var http = require('http')
-
-/*var certOptions = {
-  key: fs.readFileSync(path.resolve('cert/server.key')),
-  cert: fs.readFileSync(path.resolve('cert/server.crt'))
-}*/
-
-// Certificate
-/*const privateKey = fs.readFileSync('./cert/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('./cert/cert.pem', 'utf8');
-const ca = fs.readFileSync('./cert/chain.pem', 'utf8');
-
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-  ca: ca
-};*/
+var upload = multer({ dest: "./download/" });
 
 //import controllers
 const sampleController = require('./controllers/controller-sample');
 
 //create express app
 const app = express();
-// var server = require('https').Server(app);
 
-/*var server = https.createServer(credentials, app)*/
-var server = http.createServer( app)
+var server = http.createServer(app)
 
-var io = require('socket.io')(server);
+var io = require("socket.io")(server, {
+  pingTimeout: 15000
+});
+// io.set('transports', ['xhr-polling']);
+// io.configure( function() {
+//   io.set('close timeout', 60*60); // 24h time out
+// });
+
 const router = express.Router();
+var case_data = '';
+
 var publicPath = path.join(__dirname, 'client/public');
 
 app.use(bodyParser.json());
 app.use(router); // tell the app this is the router we are using
-
+app.use(cors());
 app.use(express.static(publicPath));
 
 app.get('/', function(req, res) {
@@ -47,51 +41,105 @@ app.get('/', function(req, res) {
   // res.sendFile(path.join(publicPath + '/index.html'));
 });
 
-// app.get('/', (req, res) => res.send('Hello World!'))
+// Handle file upload and temp storage
+app.post('/upload', upload.single('filepond'), (req, res, next) => {
 
-io.on('connection', function(socket) {
-  console.log("Connected to a client");
-
-  socket.on('city_sensed', function(data) {
-    console.log("CIty:" + data.city);
-    sampleController.getCompanies(data.city).then(res => socket.emit('cityCompanies', {
-      companies: res
-    }));
-    sampleController.getInfractions(data.city).then(res => socket.emit('cityInfractions', {
-      infractions: res
-    }));
-
-  });
-
-  socket.on('case_report', function(data) {
-    // console.log(data);
-    sampleController.insertReport(data.case_data).then(res =>
-
-      console.log(res + " Inserted successfully")
-    )
-  });
-
-  socket.on('disconnect', function() {
-    console.log('socket disconnected. socket.id=' + socket.id + ' . pid = ' + process.pid);
-  });
+  logger.info("upload initiated");
+  // logger.info(req.file);
+  // send back the filename so that filepond knows the file has been transferred
+  res.send([req.file.filename]);
 });
 
-io.on('disconnect', function(socket) {
-  console.log('Lost a socket. socket.id=' + socket.id + ' . pid = ' + process.pid);
+io.on('connect', function (socket) {
+  // console.log("Connected to a client");
+  logger.info(socket.client.conn.server.clientsCount + ' users connected');
+  // change this to get the city from the geofence
+  socket.on('location_sent', function (data) {
+    logger.info(`Location: ${data.lng}, ${data.lat}`);
+
+    sampleController.getCity(data.lng, data.lat).then((res) => {
+
+      sampleController.getInfractions(data.lng, data.lat).then((res) => {
+
+        sampleController.getCompanies(data.lng, data.lat).then((res) => {
+          logger.verbose("Now emitting companies");
+          socket.emit('cityCompanies', {
+            companies: res
+          })
+        });
+
+        logger.verbose("Now emitting infractions");
+        socket.emit('cityInfractions', {
+          infractions: res
+        })
+      });
+
+      logger.verbose("Now emitting city");
+      socket.emit('cityName', {
+        cityName: res
+      })
+    });
+    // sampleController.getInfractions(data.lng, data.lat).then((res) => {
+    //   logger.verbose("Now emitting infractions");
+    //   socket.emit('cityInfractions', {
+    //     infractions: res
+    //   })
+    // });
+    // sampleController.getCompanies(data.lng, data.lat).then((res) => {
+    //   logger.verbose("Now emitting companies");
+    //   socket.emit('cityCompanies', {
+    //     companies: res
+    //   })
+    // });
+  });
+
+  socket.on('delete_image', function (data) {
+    // console.log(data);
+    var filepath = path.join(__dirname, 'download', data.imageId);
+    fs.unlink(filepath, (err) => {
+      if (err) throw err;
+      console.log(filepath + ' was deleted');
+    });
+  });
+
+  socket.on('case_report', function (data) {
+    var filepath = path.join(__dirname, 'download', data.case_data.imageId);
+    case_data = data.case_data;
+    // console.log(data);
+    //data.case_data.img = fs.readFileSync(filepath, 'base64');
+    // asynchronously read the image and then insert into database
+    fs.readFile(filepath, 'base64', (err, data) => {
+      if (err) throw err;
+      case_data.img = data;
+      // data.img = imageAsBase64;
+      sampleController.insertReport(case_data).then(res => {
+        logger.info(res + " Inserted successfully")
+        // delete the file locally after it has been inserted
+        fs.unlink(filepath, (err) => {
+          if (err) throw err;
+          logger.info(filepath + ' was deleted');
+        });
+      });
+    });
+  });
+
+  socket.on('disconnect', function () {
+    logger.info('socket disconnected. socket.id = ' + socket.id + ' , pid = ' + process.pid);
+  });
+
+  socket.on('error', function (err) { 
+    logger.info("Socket.IO Error: " + err.stack); 
+ });
+});
+
+io.on('disconnect', function (socket) {
+  logger.info('Lost a socket. socket.id = ' + socket.id + ' , pid = ' + process.pid);
 });
 
 // start the server
-server.listen(config.port,  function() {
+server.listen(config.port, config.server.host, function () {
   logger.info(`server listening on port: ${config.port}`);
 });
 //}
 
-// process.once('SIGHUP', function () {
-//   server.close(function () {
-//     process.kill(process.pid, 'SIGHUP')
-//   })
-// })
-
-process.on('SIGINT', () => { console.log("Bye bye!"); process.exit(); })
-
-// module.exports = server
+module.exports = server

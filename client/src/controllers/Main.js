@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import { usePosition } from "use-position";
-import socketIOClient from "socket.io-client";
+import useSocket from "use-socket.io-client";
 import Classification from "./Classification";
 import Location from "./Location";
 import Identification from "./Identification";
@@ -9,20 +9,36 @@ import Identification from "./Identification";
 var socket;
 
 function Main() {
+  //You can treat "useSocket" as "io"
+  const [socket] = useSocket("http://localhost:3002", {
+    //options
+    autoConnect: false,
+  });
 
-    const { latitude, longitude, timestamp, accuracy, error } = usePosition(false);
-    const [lnglat, setLngLat] = useState([0.0, 0.0]);
+  //connect socket
+  socket.connect();
 
-    useEffect(() => {
-        if(!isNaN(parseFloat(longitude)) && !isNaN(parseFloat(latitude))) {
-            setLngLat([longitude, latitude])
-        }
-    }, [longitude, latitude])
+  const { latitude, longitude, timestamp, accuracy, error } = usePosition(
+    false
+  );
+  const [lnglat, setLngLat] = useState(["", ""]);
+  const [city, setCity] = useState("");
 
-    console.log("In main", lnglat);
-    const updateLngLat = (event) => {
-        setLngLat(event.target.value);
-    };
+  useEffect(() => {
+    console.log("useEffect called with ", longitude, latitude);
+    if (!isNaN(parseFloat(longitude)) && !isNaN(parseFloat(latitude))) {
+      setLngLat([longitude, latitude]);
+    }
+  }, [longitude, latitude]);
+
+  console.log("In main", lnglat);
+  const updateLngLat = (event) => {
+    setLngLat(event);
+  };
+  
+  const updateCity = (event) => {
+    setCity(event);
+  }
 
   return (
     <HashRouter>
@@ -37,7 +53,7 @@ function Main() {
             />
           </div>
           <div className="d-flex align-items-end col-xs-2">
-            <div id="city_name"></div>
+            <div id="city_name">{city}</div>
           </div>
           <br />
           <br />
@@ -56,8 +72,23 @@ function Main() {
           </li>
         </ul>
         <div className="content">
-          <Route exact path="/" render={(props) => <Location {...props} lnglat={lnglat} updateLngLat={updateLngLat} />} />
-          <Route path="/classification" component={Classification} />
+          <Route
+            exact
+            path="/"
+            render={(props) => (
+              <Location
+                {...props}
+                lnglat={lnglat}
+                updateLngLat={updateLngLat}
+              />
+            )}
+          />
+          <Route
+            path="/classification"
+            render={(props) => (
+              <Classification {...props} lnglat={lnglat} socket={socket} updateCity={updateCity} />
+            )}
+          />
           <Route path="/identification" component={Identification} />
         </div>
       </div>

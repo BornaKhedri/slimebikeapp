@@ -105,3 +105,43 @@
 .full-opacity {
     opacity: 1;
 }
+
+.back-button{
+  background-color: #f18f01 !important;
+}
+
+.light-background {
+  background-color: #dfdede !important;
+}
+
+.blue-background {
+  background-color: #2e86ab;
+}
+
+.dark-border {
+  border-width: 3px;
+  border-color: #373f51;
+
+}
+
+.darktext {
+  color: #000000 !important;
+}
+
+
+.lighttext {
+  color: #dfdede !important;
+}
+
+.donetext {
+  color: #f18f01 !important;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+input[type="radio"] {
+  display: none;
+}
+

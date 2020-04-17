@@ -19,3 +19,4 @@ node_modules/
 cert/
 *.key
 *.crt
+download/

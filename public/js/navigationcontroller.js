@@ -7,6 +7,7 @@
 const browser = bowser.getParser(window.navigator.userAgent);
 var infraction_ids = [];
 var micromobilityservice_id = '';
+var tb_exists = false;
 
 $(function () {
     var $tabs = $('#nav_tabs li');
@@ -22,18 +23,10 @@ $(function () {
 
         if (next_tab.length > 0) {
             if (latitude != "" && longitude != "") {
-
-
                 window.performance.mark('before_getCity');
                 await getCity();
                 window.performance.mark('after_getCity');
                 window.performance.measure('get_getCity_exec', 'before_getCity', 'after_getCity');
-                // show the next tab
-                // next_tab.tab('show');
-                // make the location nav inactive, and 
-
-
-
             }
         }
         else {
@@ -81,14 +74,17 @@ $(function () {
                 if((agentOS == 'Android')) {
                     enableQRCodeReader();
                 } else {
+                    if(!tb_exists) {
+                        $('#qrlead').html("Optionally, please enter the vehicle's QR code")
+                        $('#video').remove();
+                        $('#result').after($("<br/>"),
+                            $("<input/>")
+                                .attr("id", "id_tb")
+                                .attr("type", "textbox")
+                        )
+                        tb_exists = true;
 
-                    $('#qrlead').html("Optionally, please enter the vehicle's QR code")
-                    $('#video').remove();
-                    $('#result').after($("<br/>"),
-                        $("<input/>")
-                            .attr("id", "id_tb")
-                            .attr("type", "textbox")
-                    )
+                    }
                     $('#id_tb').keyup(function(){
                         $('#result').text($(this).val());
                         vehicle_id = result.textContent;

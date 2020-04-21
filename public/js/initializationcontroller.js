@@ -10,6 +10,8 @@ var gps_coords = false;
 var vehicle_id = "";
 var marker = "";
 var map = "";
+var resetButton = false;
+var videoExists = true;
 
 const constraints = (window.constraints = {
   audio: false,
@@ -323,16 +325,16 @@ function handleGPSError(err) {
 }
 
 function getApproxLocation() {
-    fetch('https://ipapi.co/json/')
-    .then(function(response) {
-      response.json().then(jsonData => {
+  fetch("https://ipapi.co/json/")
+    .then(function (response) {
+      response.json().then((jsonData) => {
         console.log(jsonData);
         latitude = jsonData.latitude;
         longitude = jsonData.longitude;
       });
     })
-    .catch(function(error) {
-      console.log(error)
+    .catch(function (error) {
+      console.log(error);
     });
 }
 
@@ -366,7 +368,7 @@ let getLocation = new Promise(function (resolve, reject) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
 
     // handleGPSError(err);
-    
+
     // ipLookUp()
     resolve();
     // alert(`ERROR(${err.code}): ${err.message}`);
@@ -464,17 +466,17 @@ function reposition_marker() {
   // alert("clicked")
   marker.setLngLat([geolongitude, geolatitude]);
   map.flyTo({
-      center: [geolongitude, geolatitude]
+    center: [geolongitude, geolatitude],
   });
-  latitude = geolatitude
-  longitude = geolongitude
+  latitude = geolatitude;
+  longitude = geolongitude;
 }
 
 // Map
 async function drawMap() {
   let result = await getLocation;
-  if(isNaN(parseFloat(latitude)) && isNaN(parseFloat(longitude))) {
-    const response = await Promise.resolve($.get('https://ipapi.co/json/'));
+  if (isNaN(parseFloat(latitude)) && isNaN(parseFloat(longitude))) {
+    const response = await Promise.resolve($.get("https://ipapi.co/json/"));
     geolatitude = response.latitude;
     geolongitude = response.longitude;
     latitude = geolatitude;
@@ -534,6 +536,21 @@ async function drawMap() {
   marker.on("dragend", onDragEnd);
 }
 
+function resetButtonClickListener() {
+  $("#result").text("")
+  $("#reset_btn").remove();
+  $("#result").after($('<video/>')
+  .attr({
+    id: "video",
+    width: "300", 
+    height: "200", 
+    })
+    .addClass("d-flex align-items-center mx-auto"))
+  videoExists = true;
+  enableQRCodeReader();
+  resetButton = false;
+}
+
 var enableQRCodeReader = function () {
   window.performance.mark("start_qrcodeLoad");
   let selectedDeviceId;
@@ -550,7 +567,21 @@ var enableQRCodeReader = function () {
           console.log(result);
           document.getElementById("result").textContent = vehicle_id;
           codeReader.stopContinuousDecode();
-          $("#video").remove();
+          if(videoExists) {
+            $("#video").remove();
+            videoExists = false;
+          }
+          if (!resetButton) {
+            $("#result").append(
+              $("<input/>").attr({
+                type: "button",
+                id: "reset_btn",
+                value: "Reset",
+                onclick: "resetButtonClickListener()",
+              })
+            );
+            resetButton = true;
+          }
         }
         if (err && !(err instanceof ZXing.NotFoundException)) {
           console.error(err);

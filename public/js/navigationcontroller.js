@@ -71,7 +71,7 @@ $(function () {
                 console.log(agentOS)
                 console.log(browser.getBrowser()['name'])
                 // try for iOS chrome (agentOS == 'iOS' && browser.getBrowser()['name'] == 'Chrome') ||
-                if((agentOS == 'Android')) {
+                if((agentOS == 'Android') || ((agentOS == 'iOS') && browser.getBrowser()['name'] == 'Safari')) {
                     enableQRCodeReader();
                 } else {
                     if(!tb_exists) {

@@ -7,6 +7,16 @@
     <meta name="Description"
         content="A website to report misplaced wheels - report misparked shared bikes and scooters.">
     <title>Misplaced Wheels</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164240099-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-164240099-1');
+    </script>
+
     <script type="text/javascript">window.performance.mark('begin_head_load');</script>
     <link rel="icon" type="image/png" href="./icon/favicon.ico">
     <!-- CSS -->
@@ -21,7 +31,7 @@
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
         rel="stylesheet">
     <!-- Local - custom -->
-    
+
     <script type="text/javascript">window.performance.mark('end_head_load_css');
         window.performance.measure('head_css_load_time', 'begin_head_load', 'end_head_load_css');</script>
     <!-- Javascript -->
@@ -50,17 +60,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bowser@2.5.3/es5.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
-    <link
-    rel="stylesheet"
-    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
-    type="text/css"
-    />
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
+        type="text/css" />
     <!-- <script src="https://cdn.jsdelivr.net/npm/exif-js"></script> -->
     <script src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
     <script type="text/javascript">window.performance.mark('end_head_load_js');
         window.performance.measure('head_js_load_time', 'end_head_load_css', 'end_head_load_js');</script>
-        <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
@@ -170,9 +179,8 @@
 
                 <label>Vehicle ID:</label>
                 <pre><code id="result"></code></pre>
-                
-                <video id="video" class="d-flex align-items-center mx-auto" 
-                    style=""></video>
+
+                <video id="video" class="d-flex align-items-center mx-auto" style=""></video>
                 <div class="d-flex">
                     <button type="button"
                         class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"

@@ -118,6 +118,7 @@ $(function () {
         });
 
         $('a[href="#tab_location"]').tab('show');
+        map.resize();
     });
 
     $('#identification_back').click(function (e) {

@@ -12,6 +12,7 @@
     <!-- CSS -->
     <!-- Remote - vendor -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -20,7 +21,7 @@
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
         rel="stylesheet">
     <!-- Local - custom -->
-    <link rel="stylesheet" href="./css/style.css">
+    
     <script type="text/javascript">window.performance.mark('end_head_load_css');
         window.performance.measure('head_css_load_time', 'begin_head_load', 'end_head_load_css');</script>
     <!-- Javascript -->
@@ -49,10 +50,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bowser@2.5.3/es5.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
+    type="text/css"
+    />
     <!-- <script src="https://cdn.jsdelivr.net/npm/exif-js"></script> -->
     <script src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
     <script type="text/javascript">window.performance.mark('end_head_load_js');
         window.performance.measure('head_js_load_time', 'end_head_load_css', 'end_head_load_js');</script>
+        <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
@@ -149,6 +157,7 @@
                         class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
                         id="classification_continue" style="visibility: hidden;">Continue &nbsp;<i
                             class="fas fa-chevron-right"></i></button>
+
                 </div>
             </div>
         </div>
@@ -162,8 +171,8 @@
                 <label>Vehicle ID:</label>
                 <pre><code id="result"></code></pre>
                 
-                <video id="video" class="d-flex align-items-center mx-auto" width="300" height="200"
-                    style="border: 1px solid gray"></video>
+                <video id="video" class="d-flex align-items-center mx-auto" 
+                    style=""></video>
                 <div class="d-flex">
                     <button type="button"
                         class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"

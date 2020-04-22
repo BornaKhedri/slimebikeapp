@@ -8,7 +8,8 @@ var geolatitude = "";
 var geolongitude = "";
 var gps_coords = false;
 var vehicle_id = "";
-var marker = "";
+var vehicle_marker = "";
+var geocode_marker = "";
 var map = "";
 var resetButton = false;
 var videoExists = true;
@@ -462,14 +463,18 @@ class MapboxGLButtonControl {
   }
 }
 
-function reposition_marker() {
+function reposition_marker(
+  temp,
+  markerlng = geolongitude,
+  markerlat = geolatitude
+) {
   // alert("clicked")
-  marker.setLngLat([geolongitude, geolatitude]);
+  vehicle_marker.setLngLat([parseFloat(markerlng), parseFloat(markerlat)]);
   map.flyTo({
-    center: [geolongitude, geolatitude],
+    center: [parseFloat(markerlng), parseFloat(markerlat)],
   });
-  latitude = geolatitude;
-  longitude = geolongitude;
+  latitude = parseFloat(markerlat);
+  longitude = parseFloat(markerlng);
 }
 
 // Map
@@ -491,10 +496,26 @@ async function drawMap() {
     container: "map",
     style: "mapbox://styles/mapbox/satellite-streets-v11/",
     center: [geolongitude, geolatitude],
-    zoom: 12,
+    zoom: gps_coords ? 18 : 10,
   });
 
   /* Instantiate new controls with custom event handlers */
+  // geocoder is a separate service with its own pricing scheme
+  var mapGeocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl,
+    marker: false,
+  });
+
+  map.addControl(mapGeocoder);
+
+  mapGeocoder.on("result", (e) => {
+    // alert("result selected");
+
+    reposition_marker(this, e.result.center[0], e.result.center[1]);
+    // mapGeocoder.getProximity().latitude
+  });
+
   const ctrlPoint = new MapboxGLButtonControl({
     className: "mapbox-gl-reposition_marker",
     title: "Reposition Marker",
@@ -504,7 +525,10 @@ async function drawMap() {
   // Add zoom and rotation controls to the map.
   map.addControl(new mapboxgl.NavigationControl());
 
-  map.addControl(new PitchToggle({ minpitchzoom: 11 }), "top-left");
+  map.addControl(
+    new PitchToggle({ minpitchzoom: gps_coords ? 18 : 10 }),
+    "top-left"
+  );
   map.addControl(ctrlPoint, "top-left");
   // create the popup
   var popup = new mapboxgl.Popup({
@@ -517,7 +541,7 @@ async function drawMap() {
   var el = document.createElement("div");
   el.className = "marker";
 
-  marker = new mapboxgl.Marker(el, {
+  vehicle_marker = new mapboxgl.Marker(el, {
     draggable: true,
   })
     .setLngLat([geolongitude, geolatitude])
@@ -526,26 +550,26 @@ async function drawMap() {
     .togglePopup();
 
   function onDragEnd() {
-    var lngLat = marker.getLngLat();
+    var lngLat = vehicle_marker.getLngLat();
     // Set the new lat, lng based on the post drag location
     longitude = lngLat.lng;
     latitude = lngLat.lat;
     console.log(`New coordinates are: (${latitude}, ${longitude})`);
   }
 
-  marker.on("dragend", onDragEnd);
+  vehicle_marker.on("dragend", onDragEnd);
 }
 
 function resetButtonClickListener() {
-  $("#result").text("")
+  $("#result").text("");
   $("#reset_btn").remove();
-  $("#result").after($('<video/>')
-  .attr({
-    id: "video",
-    width: "300", 
-    height: "200", 
-    })
-    .addClass("d-flex align-items-center mx-auto"))
+  $("#result").after(
+    $("<video/>")
+      .attr({
+        id: "video",
+      })
+      .addClass("d-flex align-items-center mx-auto")
+  );
   videoExists = true;
   enableQRCodeReader();
   resetButton = false;
@@ -567,7 +591,7 @@ var enableQRCodeReader = function () {
           console.log(result);
           document.getElementById("result").textContent = vehicle_id;
           codeReader.stopContinuousDecode();
-          if(videoExists) {
+          if (videoExists) {
             $("#video").remove();
             videoExists = false;
           }

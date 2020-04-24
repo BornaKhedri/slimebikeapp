@@ -479,6 +479,7 @@ function reposition_marker(
 
 // Map
 async function drawMap() {
+  
   let result = await getLocation;
   if (isNaN(parseFloat(latitude)) && isNaN(parseFloat(longitude))) {
     const response = await Promise.resolve($.get("https://ipapi.co/json/"));

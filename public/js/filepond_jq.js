@@ -1,5 +1,5 @@
 var imageId = '';
-var cont_btn_element = document.getElementById("classification_continue");
+var cont_btn_element = $("#classification_continue");
 
 FilePond.registerPlugin(
 
@@ -36,7 +36,8 @@ FilePond.create(
                 console.log("file successfully uploaded with id: " + response)
                 imageId = JSON.parse(response)[0];
                 // show the classification continue button
-                cont_btn_element.style.visibility = 'visible';
+                cont_btn_element.prop('disabled', false);
+                cont_btn_element.html("Continue &nbsp; <i class='fas fa-chevron-right'></i>")
             }
         },
         revert: (uniqueFileId, load, error) => {
@@ -73,6 +74,7 @@ FilePond.create(
 
 document.addEventListener('FilePond:loaded', e => {
     console.log('FilePond ready for use', e.detail);
+    cont_btn_element.prop("disabled", true);
 });
 
 const pond = document.querySelector('.filepond--root');

@@ -9,15 +9,21 @@
       left: 0;
     }
   } */
-
-  @media only screen and (orientation:landscape) {
-    #turn{ display:block; }
-    #container{ display:none; }
-  }
-  @media only screen and (orientation:portrait) {
+  @media only screen {
     #turn{ display:none; }
     #container{ display:block; }
   }
+  @media only screen and (orientation:landscape) and (max-height: 479px) {
+    #turn{ display:block; }
+    #container{ display:none; }
+  }
+  @media only screen and (orientation:portrait) and (max-height: 479px) {
+    #turn{ display:none; }
+    #container{ display:block; }
+  }
+
+
+
 
   /* @media only screen and (orientation:landscape){
     body {
@@ -188,6 +194,7 @@ label .form-check-input.is-invalid .abc-radio:before {
 
 .back-button{
     background-color: #f18f01 !important;
+    margin: 0px;
 }
 
 .light-background {
@@ -241,6 +248,7 @@ label .form-check-input.is-invalid .abc-radio:before {
 
 .btn-continue {
     background-color: #A23B72 !important;
+    margin: 0px !important;
 }
 
 .low-opacity {

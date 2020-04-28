@@ -42,13 +42,16 @@ FilePond.create(
         },
         revert: (uniqueFileId, load, error) => {
             console.log("reverting: " + uniqueFileId);
+
+            cont_btn_element.prop('disabled', true);
+            cont_btn_element.html('Continue on image upload &nbsp;<i class="fas fa-chevron-right">')
             // trigger deletion on the server
             socket.emit('delete_image', {
                 imageId: imageId
             });
             imageId = '';
 
-            cont_btn_element.style.visibility = 'hidden';
+            // cont_btn_element.style.visibility = 'hidden';
             // Can call the error method if something is wrong, should exit after
             error('oh my goodness');
 

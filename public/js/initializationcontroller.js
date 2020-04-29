@@ -155,61 +155,6 @@ var populateCompanies = function (companies) {
   gotoClassification();
 };
 
-var getCompanies = function () {
-  socket.on("cityCompanies", function (data) {
-    console.log(data);
-    var companies = data.companies;
-    if (companies.length > 0) {
-      window.performance.mark("before_populateCompanies");
-      populateCompanies(companies);
-      window.performance.mark("after_populateCompanies");
-      window.performance.measure(
-        "get_populateCompanies_exec",
-        "before_populateCompanies",
-        "after_populateCompanies"
-      );
-    } else {
-      // $('#company_div').empty();
-      // $('#company_div').append(
-      //     $('<p/>')
-      //         .addClass('light-background text-danger')
-      //         .html('No companies found in this region. Maybe allow GPS location access and refresh page.')
-      // )
-      // gotoClassification();
-      if (!alert("Error: No companies found."))
-        window.location.href = "./html/error_noinfractions_company.html";
-    }
-  });
-};
-
-var getInfractions = function () {
-  socket.on("cityInfractions", function (data) {
-    console.log(data);
-    var infractions = data.infractions;
-    if (infractions.length > 0) {
-      window.performance.mark("before_populateInfractions");
-      populateInfractions(infractions);
-      window.performance.mark("after_populateInfractions");
-      window.performance.measure(
-        "get_populateInfractions_exec",
-        "before_populateInfractions",
-        "after_populateInfractions"
-      );
-    } else {
-      // $('#infraction_div').removeClass('low-opacity');
-      // $('#infraction_div').addClass('high-opacity');
-      // $('#infraction_div').empty();
-      // $('#infraction_div').append(
-      //     $('<p/>')
-      //         .addClass('light-background text-danger')
-      //         .html('No infractions found in this region. Maybe allow GPS location access and refresh page.')
-      // )
-      if (!alert("Error: No infractions found."))
-        window.location.href = "./html/error_noinfractions_company.html";
-    }
-  });
-};
-
 // Get the city in which this app is opened
 // TODO: change this to work in non-city jusrisdictions like
 //         unincorporated King County and UW
@@ -226,7 +171,7 @@ var getCity = function () {
         // DIsplay the city name on the UI
         $("#city_name")
           .empty()
-          .append("<p>" + city + "</p>");
+          .append("<p id='city'>" + city + "</p>");
         // Get the companies and infractions for the city in question
         window.performance.mark("before_getInfractions");
         // getInfractions();
@@ -293,6 +238,10 @@ var getCity = function () {
           "before_getCompanies",
           "after_getCompanies"
         );
+
+        socket.on('mm_detected', function(data) {
+          $('#city').append("(" + data.data + ")");
+        });
       } else if (data.cityName.length > 1) {
         if (!alert("Error: Multiple jurisdictions detected."))
           window.location.href = "./html/error_multicity.html";

@@ -64,6 +64,8 @@ app.post('/upload', upload.single('filepond'), (req, res, next) => {
   var socketId = JSON.parse(req.body['filepond'])['socketId']
   imgpath = path.join(__dirname, req.file.path)
 
+  if (socketId && imgpath) {
+  // send request to python server for object detection
   zeroRPCclient.invoke("object_detection", imgpath, function(error, res, more) {
   
     console.log(res)
@@ -77,6 +79,8 @@ app.post('/upload', upload.single('filepond'), (req, res, next) => {
     }
   
   });
+  }
+
 
 });
 

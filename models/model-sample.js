@@ -68,7 +68,7 @@ module.exports.getCity = async (lng, lat) => {
 }
 
 module.exports.getInfractions = async (lng, lat) => {
-    let sql = `select infraction_description, infractiontype_id from infraction_type 
+    let sql = `select infraction_description, infractiontype_id, infraction_severity from infraction_type 
     where infractiontype_id IN (select infractiontype_id from infraction_city_xref 
         where city_id IN (select COALESCE (
             (select city_id from city_info where city = 
@@ -76,7 +76,7 @@ module.exports.getInfractions = async (lng, lat) => {
                     (select cityname from wa_city_shape 
                         where ST_Within(ST_SetSRID(ST_MakePoint($1, $2), 4326), geom)), 
                     'Generic'))), 
-            (select city_id from city_info where city = 'Generic'))));`;
+            (select city_id from city_info where city = 'Generic')))) order by infraction_severity DESC;`;
     let data = [lng, lat];
     try {
         result = await dbUtil.sqlToDB(sql, data);

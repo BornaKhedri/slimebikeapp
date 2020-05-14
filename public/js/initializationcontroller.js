@@ -13,6 +13,7 @@ var geocode_marker = "";
 var map = "";
 var resetButton = false;
 var videoExists = true;
+const TOP_INFRACTION_COUNT = 7;
 
 const constraints = (window.constraints = {
   audio: false,
@@ -65,8 +66,10 @@ $("body").on("click", ".disabled", function (e) {
 });
 
 var populateInfractions = function (infractions) {
+  var top_infractions = infractions.slice(0, TOP_INFRACTION_COUNT);
+
   $("#infraction_list").empty();
-  infractions.forEach((infraction) => {
+  top_infractions.forEach((infraction) => {
     // create the infraction description checkbox element
     $infraction_description = $("<label/>")
       .addClass("btn btn-block active light-background darktext")
@@ -80,6 +83,13 @@ var populateInfractions = function (infractions) {
       .append(infraction.infraction_description);
     $infraction_description.appendTo("#infraction_list");
   });
+
+  if (length(infractions) > TOP_INFRACTION_COUNT) {
+    var more_infractions = infractions.slice(TOP_INFRACTION_COUNT, length(infractions))
+    more_infractions.forEach((infraction) => {
+
+    });
+  }
 
   $('[data-toggle="buttons"] .btn').on("click", function () {
     // toggle style

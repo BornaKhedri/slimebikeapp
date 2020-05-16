@@ -23,6 +23,7 @@ $(function () {
 
         if (next_tab.length > 0) {
             if (latitude != "" && longitude != "") {
+                window.location.hash  = "classification";
                 window.performance.mark('before_getCity');
                 await getCity();
                 window.performance.mark('after_getCity');
@@ -44,7 +45,7 @@ $(function () {
             if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length) {
                 // Atleast one of the checkbox is clicked and radio buttons are clicked
                 $('#classification_continue_warning').html('');
-
+                window.location.hash  = "identification";
                 $classification_li.addClass('disabled');
                 $classification_li.find('a').removeClass("navbar-active");
                 $classification_li.find('a').addClass("donetext");
@@ -107,6 +108,7 @@ $(function () {
 
     $('#classification_back').click(function (e) {
         e.preventDefault();
+        window.location.hash  = "location";
         $classification_li.addClass('disabled');
         $classification_li.find('a').removeClass("navbar-active");
         $classification_li.find('a').addClass("donetext");
@@ -123,6 +125,7 @@ $(function () {
 
     $('#identification_back').click(function (e) {
         e.preventDefault();
+        window.location.hash  = "classification";
         $identification_li.addClass('disabled');
         $identification_li.find('a').removeClass("navbar-active");
         $identification_li.find('a').addClass("donetext");

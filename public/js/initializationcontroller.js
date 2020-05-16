@@ -13,7 +13,7 @@ var geocode_marker = "";
 var map = "";
 var resetButton = false;
 var videoExists = true;
-const TOP_INFRACTION_COUNT = 7;
+const TOP_INFRACTION_COUNT = 8;
 
 const constraints = (window.constraints = {
   audio: false,
@@ -83,13 +83,46 @@ var populateInfractions = function (infractions) {
       .append(infraction.infraction_description);
     $infraction_description.appendTo("#infraction_list");
   });
-
-  if (length(infractions) > TOP_INFRACTION_COUNT) {
-    var more_infractions = infractions.slice(TOP_INFRACTION_COUNT, length(infractions))
+  // in case the infraction count is greater than 8, show a more button
+  if (infractions.length > TOP_INFRACTION_COUNT) {
+    var more_infractions = infractions.slice(TOP_INFRACTION_COUNT, infractions.length)
+    if ($('button#morebtn').length == 0) {
+      $('<button type="button" class="btn btn-block active light-background darktext" id="morebtn">  More &nbsp; <i class="fas fa-chevron-down"></i></button>').appendTo('#infraction_list');
+      // $('<input type="button" id="morebtn" class="btn btn-block active light-background darktext" value="More"/>').appendTo('#infraction_list');
+    }
+  }
+  // when the more button is clicked delete it and add the remaining infractions 
+  // and associate the click event
+  $('button#morebtn').on("click", function() {
+    console.log("more button clicked");
+    $(this).remove();
     more_infractions.forEach((infraction) => {
+      $infraction_description = $("<label/>")
+      .addClass("btn btn-block active light-background darktext moreinfractions")
+      .append(
+        $("<input/>")
+          .attr("id", "infraction_" + infraction.infractiontype_id)
+          .attr("type", "checkbox")
+          .attr("name", "infraction_" + infraction.infractiontype_id)
+          .attr("autocomplete", "off")
+      )
+      .append(infraction.infraction_description);
+      $infraction_description.appendTo("#infraction_list");
 
     });
-  }
+
+    $('[data-toggle="buttons"] .btn').filter('.moreinfractions').on("click", function () {
+      // toggle style
+      // $(this).removeClass('light-background');
+      $(this).toggleClass("blue-background light-background active");
+  
+      // toggle checkbox
+      var $chk = $(this).find("[type=checkbox]");
+      $chk.prop("checked", !$chk.prop("checked"));
+  
+      return false;
+    });
+  });
 
   $('[data-toggle="buttons"] .btn').on("click", function () {
     // toggle style
@@ -489,7 +522,7 @@ function reposition_marker(
 
 // Map
 async function drawMap() {
-  
+
   let result = await getLocation;
   if (isNaN(parseFloat(latitude)) && isNaN(parseFloat(longitude))) {
     const response = await Promise.resolve($.get("https://ipapi.co/json/"));

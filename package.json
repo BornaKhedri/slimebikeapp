@@ -6,6 +6,7 @@
     "main": "app.js",
     "browser": "./dist/index.html",
     "dependencies": {
+        "aws-sdk": "^2.678.0",
         "babel": "^6.23.0",
         "body-parser": "^1.19.0",
         "cors": "^2.8.5",
@@ -14,10 +15,13 @@
         "express": "^4.17.1",
         "jest": "^25.3.0",
         "jsdoc": "^3.6.4",
+        "lru-cache": "^5.1.1",
         "multer": "^1.4.2",
         "nodemon": "^2.0.2",
         "parcel": "^1.12.4",
         "pg": "^7.11.0",
+        "requestretry": "^4.1.0",
+        "sns-validator": "^0.3.4",
         "socket.io": "^2.3.0",
         "winston": "3.1.0",
         "winston-daily-rotate-file": "^4.4.2"
@@ -31,7 +35,7 @@
     },
     "license": "MIT",
     "scripts": {
-        "start": "nodemon app.js", 
+        "start": "nodemon app.js",
         "deploy": "pm2 start app.js"
     },
     "devDependencies": {

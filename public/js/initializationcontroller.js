@@ -269,7 +269,7 @@ var getCity = function () {
         // DIsplay the city name on the UI
         $("#city_name")
           .empty()
-          .append("<p>" + city + "</p>");
+          .append("<p id='city'>" + city + "</p>");
         // Get the companies and infractions for the city in question
         window.performance.mark("before_getInfractions");
         // getInfractions();
@@ -336,6 +336,12 @@ var getCity = function () {
           "before_getCompanies",
           "after_getCompanies"
         );
+        
+        // Update the city paragraph with count of micromobility detected
+        socket.on('mm_detected', function(data) {
+          $('#city').append("(" + data.data + ")");
+        });
+
       } else if (data.cityName.length > 1) {
         if (!alert("Error: Multiple jurisdictions detected."))
           window.location.href = "./html/error_multicity.html";

@@ -23,12 +23,15 @@ FilePond.create(
     acceptedFileTypes: ['image/*'],
     allowImageExifOrientation: true,
     imageCropAspectRatio: '1:1',
-    imageResizeTargetWidth: 300,
-    imageResizeTargetHeight: 300,
+    imageResizeTargetWidth: 600,
+    imageResizeTargetHeight: 600,
     imageResizeUpscale: false,
     imageResizeMode: 'cover',
     instantUpload: true,
     imageTransformOutputQuality: 85,
+    fileMetadataObject: {
+        'socketId': socket.id
+    },
     // allowFileEncode: false,
     server: {
         process: {
@@ -51,7 +54,9 @@ FilePond.create(
                 imageId: imageId
             });
             imageId = '';
-
+            $("#city_name")
+                .empty()
+                .append("<p id='city'>" + city + "</p>");
             // cont_btn_element.style.visibility = 'hidden';
             // Can call the error method if something is wrong, should exit after
             error('oh my goodness');
@@ -88,6 +93,7 @@ pond.addEventListener('FilePond:addfile', e => {
     //     image: e.detail.file.getFileEncodeBase64String()
     // });
     console.log('File added', e.detail);
+    e.detail.file.setMetadata("socketId", socket.id);
     $('#infraction_div').removeClass('low-opacity');
     $('#infraction_div').addClass('high-opacity');
     $('#company_div').removeClass('low-opacity');

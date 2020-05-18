@@ -15,7 +15,16 @@ config = {
     }, 
     server: {
         host: process.env.SERVER_HOST
-    }    
+    }, 
+    s3: {
+        bucketName: process.env.S3_BUCKET, 
+        prefixName: process.env.S3_PREFIX
+    }, 
+    sns: {
+        topicARN: process.env.SNS_ARN, 
+        protocol: process.env.SNS_PROTOCOL
+    }
+
 }
 
 module.exports = config;

@@ -9,94 +9,19 @@ var http = require('http')
 var upload = multer({ dest: "./download/" });
 // Load the AWS SDK for Node.js
 var AWS = require('aws-sdk');
-const crypto = require('crypto');
-const requestretry = require('requestretry');
-const LRU = require('lru-cache');
+var aws_lambda = new AWS.Lambda({
+  region: 'us-west-2',
+  apiVersion: '2015-03-31'
+});
 
-function fieldsForSignature(type) {
-  if (type === 'SubscriptionConfirmation' || type === 'UnsubscribeConfirmation') {
-    return ['Message', 'MessageId', 'SubscribeURL', 'Timestamp', 'Token', 'TopicArn', 'Type'];
-  } else if (type === 'Notification') {
-    return ['Message', 'MessageId', 'Subject', 'Timestamp', 'TopicArn', 'Type'];
-  } else {
-    return [];
-  }
-}
-
-const CERT_CACHE = new LRU({ max: 5000, maxAge: 1000 * 60 });
-
-function fetchCert(certUrl, cb) {
-  const cachedCertificate = CERT_CACHE.get(certUrl);
-  if (cachedCertificate !== undefined) {
-    cb(null, cachedCertificate);
-  } else {
-    requestretry({
-      method: 'GET',
-      url: certUrl,
-      maxAttempts: 3,
-      retryDelay: 100,
-      timeout: 3000
-    }, (err, res, certificate) => {
-      if (err) {
-        cb(err);
-      } else {
-        if (res.statusCode === 200) {
-          CERT_CACHE.set(certUrl, certificate);
-          cb(null, certificate);
-        } else {
-          cb(new Error(`expected 200 status code, received: ${res.statusCode}`));
-        }
-      }
-    });
-  }
-}
-
-const CERT_URL_PATTERN = /^https:\/\/sns\.[a-zA-Z0-9-]{3,}\.amazonaws\.com(\.cn)?\/SimpleNotificationService-[a-zA-Z0-9]{32}\.pem$/;
-
-function validate(message, cb) {
-  if (!('SignatureVersion' in message && 'SigningCertURL' in message && 'Type' in message && 'Signature' in message)) {
-    console.log('missing field');
-    cb(null, false);
-  } else if (message.SignatureVersion !== '1') {
-    console.log('invalid SignatureVersion');
-    cb(null, false);
-  } else if (!CERT_URL_PATTERN.test(message.SigningCertURL)) {
-    console.log('invalid certificate URL');
-    cb(null, false);
-  } else {
-    fetchCert(message.SigningCertURL, (err, certificate) => {
-      if (err) {
-        cb(err);
-      } else {
-        // TODO verifiy signature (insert next code block here)
-        const verify = crypto.createVerify('sha1WithRSAEncryption');
-        fieldsForSignature(message.Type).forEach(key => {
-          if (key in message) {
-            verify.write(`${key}\n${message[key]}\n`);
-          }
-        });
-        verify.end();
-        const result = verify.verify(certificate, message.Signature, 'base64');
-        cb(null, result);
-      }
-    });
-  }
-}
-
-
+// var rekognition = new AWS.Rekognition({
+//   region: 'us-west-2',
+//   apiVersion: '2016-06-27'
+// });
 
 //import controllers
 const sampleController = require('./controllers/controller-sample');
 const s3Controller = require('./controllers/controller-s3');
-
-const sns_params = {
-  TopicArn: config.sns.topicARN, 
-  Protocol: config.sns.protocol, 
-  Endpoint: 'https://misplacedwheels.com',
-  ReturnSubscriptionArn: true
-}
-// Create promise and SNS service object
-var sns = new AWS.SNS({ apiVersion: '2010-03-31', region: 'us-west-2' });
 
 //create express app
 const app = express();
@@ -119,6 +44,10 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(publicPath + '/index.html'));
 });
 
+var lambda_params = {
+  FunctionName: 'cp84_slimebike_bsd_node',
+  Payload: ''
+}
 // Handle file upload and temp storage
 app.post('/upload', upload.single('filepond'), (req, res, next) => {
 
@@ -130,19 +59,83 @@ app.post('/upload', upload.single('filepond'), (req, res, next) => {
   // upload to AWS S3, a successful upload will initiate ML in cloud using Lambda function
   var fileType = 'images';
   var filePath = path.join(__dirname, 'download', req.file.filename);
+  console.log(filePath)
+  // fs.readFile(filePath, 'base64', (err, data) => {
+  //   if (err) throw err;
+  //   var img_string = data;
+
+  //   var buffer = Buffer.from(data).toString('base64');
+  //   console.log("Buffer generated");
+  //   // console.log(buffer)
+  //   // now that we have things in the right type, send it to rekognition
+  //   rekognition.detectLabels({
+  //     Image: {
+  //       Bytes: buffer
+  //     }
+  //   }).promise()
+  //     .then((res) => {
+
+  //       // print out the labels that rekognition sent back
+  //       console.log("within rekog")
+  //       console.log(res);
+
+  //     });
+  //   // try {
+  //   //   lambda_params.Payload = "this is a test"; //img_string;
+  //   //   // console.log(lambda_params)
+  //   //   const result = await (aws_lambda.invoke(lambda_params).promise());
+
+  //   //   console.log('Success!');
+  //   //   console.log(result);
+  //   // } 
+  //   // catch (error) {
+  //   //   console.log("error in aws lambda - " + error)
+  //   // }
+  //   // lambda_params.Payload = JSON.stringify(img_string);
+  //   // // console.log(lambda_params);
+  //   // aws_lambda.invoke(lambda_params, function(err, data) {
+  //   //   if (err) console.log(err, err.stack); // an error occurred
+  //   //   else {
+  //   //     console.log('Success!');
+  //   //     console.log(data);           // successful response
+  //   //   }    
+  //   // });
+
+  // });
   s3Controller.uploadToS3(fileType, filePath).then((res) => {
     logger.verbose("uploaded image to S3: " + res.Location);
+    lambda_params.Payload = JSON.stringify(res.Location);
 
-    sns.subscribe(sns_params, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("SNS message recd.")
-        console.log(data);
-        // res.send(data);
+    aws_lambda.invoke(lambda_params, function (err, data) {
+      if (err) console.log(err, err.stack); // an error occurred
+      else {
+        console.log('Success!');
+        console.log(data);           // successful response
       }
     });
+    // sns.subscribe(sns_params, (err, data) => {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log("SNS message recd.")
+    //     console.log(data);
+
+    //     // Request options
+    //     var params = {
+    //       Token: data.ResponseMetadata.RequestId, /* required */
+    //       TopicArn: config.sns.topicARN
+    //     };
+
+    //     sns.confirmSubscription(params, function (err, data) {
+    //       if (err) console.log(err, err.stack); // an error occurred
+    //       else console.log(data);           // successful response
+    //     });
+    //     // res.send(data);
+    //   }
+    // });
   });
+
+
 
 });
 

@@ -94,10 +94,19 @@ $(function () {
                 
             }
             else if ($("input[type='radio']:checked").length && $("input[type='checkbox']:checked").length == 0) {
+                $('html,body').animate({
+                    scrollTop: $("#classification_continue_warning").offset().top
+                 });
                 $('#classification_continue_warning').html('Please select a parking infraction from the list above before continuing');
             } else if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length == 0) {
+                $('html,body').animate({
+                    scrollTop: $("#classification_continue_warning").offset().top
+                 });
                 $('#classification_continue_warning').html('Please select a company from the list above before continuing');
             } else {
+                $('html,body').animate({
+                    scrollTop: $("#classification_continue_warning").offset().top
+                 });
                 $('#classification_continue_warning').html('Please select a company and an infraction from the list above before continuing');
             }
         }

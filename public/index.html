@@ -37,7 +37,7 @@
     <!-- To support Android -->
     <link rel="icon" sizes="192×192" href="./icon/favicon.ico">
     <link rel="icon" sizes="128×128" href="./icon/favicon.ico">
-    
+
     <!-- CSS -->
     <!-- Remote - vendor -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
@@ -96,7 +96,7 @@
     <script type="text/javascript">window.performance.mark('begin_body_load');</script>
 
 
-    <div class="row">
+    <div class="row logodiv">
         <div class="col-xs-offset-2 col-xs-6">
             <img class="mx-auto d-block" src="./images/logo.svg" alt="misplaced wheels logo" id="logo" />
         </div>
@@ -132,88 +132,89 @@
 
         <div class="tab-pane show active" role="tabpanel" id="tab_location">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
-                <h5 class="text-center">Select the location of bike/scooter</h5>
-                <div id="map"></div>
-                <div class="d-flex">
-                    <button type="button"
-                        class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
-                        id="location_continue">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
+                <div class="content">
+                    <h5 class="text-center">Select the location of bike/scooter</h5>
+                    <div id="map"></div>
+                </div>
+                <div class="footer">
+                    <div class="d-flex">
+                        <button type="button"
+                            class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
+                            id="location_continue">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane" role="tabpanel" id="tab_classification">
             <div class="container-fluid">
-                <!-- <div class="card choose_file h-20 d-inline-block">
-                    <div class="container h-80">
-                        <div class="row justify-content-center ">
-                            <i class="fas fa-camera fa-7x"></i>
-                            <button type="button" style="opacity: 0;"></button>
-                            <input capture="environment" id="wheel_image" name="wheel_image" value="" type="file"
-                                accept="image/*" />
-
-                            <canvas id="canvas"></canvas>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- We'll transform this input into a pond -->
-                <input type="file" class="filepond" name="filepond" data-max-file-size="10MB" data-max-files="1">
-                <div class="card-body low-opacity" id="infraction_div">
-                    <p class="card-text">Select all parking infractions that apply:</p>
-                    <div class="row">
-                        <div class="col-sm-4 col-xs-12">
-                            <div data-toggle="buttons" id="infraction_list">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body low-opacity" id="company_div">
-                    <p class="card-text">Please select the wheel type:</p>
-                    <div class="card-text">
+                <div class="content">
+                    <!-- We'll transform this input into a pond -->
+                    <input type="file" class="filepond" name="filepond" data-max-file-size="10MB" data-max-files="1">
+                    <div class="card-body low-opacity" id="infraction_div">
+                        <p class="card-text">Select all parking infractions that apply:</p>
                         <div class="row">
                             <div class="col-sm-4 col-xs-12">
-                                <div data-toggle="radiobuttons" id="company_list">
-
+                                <div data-toggle="buttons" id="infraction_list">
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <p id="classification_continue_warning" class="text-danger d-flex justify-content-around"> &nbsp;
-                </p>
-                <div class="d-flex">
-                    <button type="button"
-                        class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
-                        id="classification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
-                    <button type="button"
-                        class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
-                        id="classification_continue" disabled>Continue on image upload &nbsp;<i
-                            class="fas fa-chevron-right"></i></button>
+                    <div class="card-body low-opacity" id="company_div">
+                        <p class="card-text">Please select the wheel type:</p>
+                        <div class="card-text">
+                            <div class="row">
+                                <div class="col-sm-4 col-xs-12">
+                                    <div data-toggle="radiobuttons" id="company_list">
 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="classification_continue_warning" class="text-danger d-flex justify-content-around"> &nbsp;
+                    </p>
+                </div>
+                <div class="footer">
+                    <div class="d-flex">
+                        <button type="button"
+                            class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
+                            id="classification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
+                        <button type="button"
+                            class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
+                            id="classification_continue" disabled>Continue on image upload &nbsp;<i
+                                class="fas fa-chevron-right"></i></button>
+
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane" role="tabpanel" id="tab_identification">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
-                <h1 class="text-center" style="font-size: 20px;" id="qrlead"><br>Optionally, please scan the
-                    vehicle's
-                    QR code
-                </h1>
+                <div class="content">
 
-                <label>Vehicle ID:</label>
-                <pre><code id="result"></code></pre>
+                    <h1 class="text-center" style="font-size: 20px;" id="qrlead"><br>Optionally, please scan the
+                        vehicle's
+                        QR code
+                    </h1>
 
-                <video id="video" class="d-flex align-items-center mx-auto" style=""></video>
-                <div class="d-flex">
-                    <button type="button"
-                        class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
-                        id="identification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
-                    <button type="button"
-                        class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
-                        id="identification_continue" onclick="socketSubmit();">Submit &nbsp;<i
-                            class="fas fa-check"></i></button>
+                    <label>Vehicle ID:</label>
+                    <pre><code id="result"></code></pre>
 
+                    <video id="video" class="d-flex align-items-center mx-auto" style=""></video>
+                </div>
+                <div class="footer">
+                    <div class="d-flex">
+                        <button type="button"
+                            class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
+                            id="identification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
+                        <button type="button"
+                            class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
+                            id="identification_continue" onclick="socketSubmit();">Submit &nbsp;<i
+                                class="fas fa-check"></i></button>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -222,7 +223,7 @@
     <div id="turn">
         <h4>Please rotate your device!</h4>
     </div>
-
+    
 
     <script src="./js/initializationcontroller.js"></script>
     <script src="./js/filepond_jq.js"></script>

@@ -684,6 +684,7 @@ var socketSubmit = function () {
       micromobilityservice_id: micromobilityservice_id,
       vehicle_id: vehicle_id,
       city: city,
+      notes: $("#notes").val()
     },
   });
   window.performance.mark("end_socketSubmit");

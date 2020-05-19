@@ -91,9 +91,9 @@ module.exports.insertReport = async (report) => {
     let client = await dbUtil.getTransaction();
     // todo: fix the insert query to use 'data' to prevent SQL injection
     let sql = `with mispark_report as (insert into misparking_report (micromobilityservice_id, report_datetime, 
-        report_location, report_image, report_uid, city_id) values ($1, 
+        report_location, report_image, report_uid, notes, city_id) values ($1, 
                     $2, ST_SetSRID(ST_MakePoint($3, $4), 4326), $5, 
-                    $6, (select city_id from city_info where city = $7)) returning mispark_id)
+                    $6, $7, (select city_id from city_info where city = $8)) returning mispark_id)
                         insert into misparking_report_infraction_xref (infractiontype_id, mispark_id) 
                             values `;
     
@@ -101,7 +101,7 @@ module.exports.insertReport = async (report) => {
     let values_infraction_ids = '';
     let datai = [];
     for(let i = 0; i < report.infraction_ids.length; i++) {
-        var j = '$' + (8 + i); //dynamically generate the parameterized query placeholder
+        var j = '$' + (9 + i); //dynamically generate the parameterized query placeholder
         datai.push(parseInt(report.infraction_ids[i]));
         values_infraction_ids = values_infraction_ids + `(${j}, (select mispark_id from mispark_report)), `;
     }
@@ -110,7 +110,7 @@ module.exports.insertReport = async (report) => {
 
     sql = sql + values_infraction_ids;
     
-    let data = [parseInt(report.micromobilityservice_id), datetime, report.location[0], report.location[1], report.img, report.vehicle_id, report.city];
+    let data = [parseInt(report.micromobilityservice_id), datetime, report.location[0], report.location[1], report.img, report.vehicle_id, report.notes, report.city];
     data = data.concat(datai);
     // console.log(datai);
     // console.log(data);

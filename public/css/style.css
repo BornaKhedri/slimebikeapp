@@ -231,6 +231,10 @@ label .form-check-input.is-invalid .abc-radio:before {
     background-color: #2e86ab;
 }
 
+.green-background {
+    background-color: #2C6E49;
+}
+
 .dark-border {
     border-width: 3px;
     border-color: #373f51;

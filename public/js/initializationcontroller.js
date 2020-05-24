@@ -179,7 +179,7 @@ var populateCompanies = function (companies) {
         .append(
           $("<input/>")
             .attr("id", "company_" + company.micromobilityservice_id)
-            .attr("type", "radio")
+            .attr("type", "checkbox")
             .attr("name", "company_" + company.micromobilityservice_id)
             .attr("autocomplete", "off")
         )
@@ -196,16 +196,17 @@ var populateCompanies = function (companies) {
     });
   } else {
   }
-  $('[data-toggle="radiobuttons"] .btn').on("click", function () {
+  $('[data-toggle="companybuttons"] .btn').on("click", function () {
     // toggle style
     // $(this).removeClass('light-background');
-    $(this).addClass("dark-border");
-    $(this).siblings().removeClass("dark-border");
+    // $(this).addClass("dark-border");
+    // $(this).siblings().removeClass("dark-border");
+    $(this).toggleClass("dark-border")
     // $('[data-toggle="radiobuttons"]').find(label)
     // toggle checkbox
-    var $chk = $(this).find("input:radio");
-    $chk.prop("checked", true);
-    $("input:radio").not($chk).prop("checked", false);
+    var $chk = $(this).find("input:checkbox");
+    $chk.prop("checked", !$chk.prop("checked"));
+    // $("input:radio").not($chk).prop("checked", false);
 
     return false;
   });
@@ -695,7 +696,7 @@ var socketSubmit = function () {
       imageId: imageId,
       location: [longitude, latitude],
       infraction_ids: infraction_ids,
-      micromobilityservice_id: micromobilityservice_id,
+      micromobilityservice_ids: micromobilityservice_ids,
       vehicle_id: vehicle_id,
       city: city,
       notes: $("#notes").val()

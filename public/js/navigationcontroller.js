@@ -6,7 +6,7 @@
 // import Bowser from "bowser";
 const browser = bowser.getParser(window.navigator.userAgent);
 var infraction_ids = [];
-var micromobilityservice_id = '';
+var micromobilityservice_ids = [];
 var tb_exists = false;
 
 $(function () {
@@ -40,9 +40,11 @@ $(function () {
         // reset the infraction ids array, as it gets refilled when we continue
         infraction_ids = []
         var next_tab = $('a[href="#tab_identification"]');
+        var $infractions = $( "input[name*='infraction']:checked");
+        var $companies = $("input[name*='company']:checked");
 
         if (next_tab.length > 0) {
-            if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length) {
+            if ($infractions.length > 0 && $companies.length) {
                 // Atleast one of the checkbox is clicked and radio buttons are clicked
                 $('#classification_continue_warning').html('');
                 window.location.hash  = "identification";
@@ -63,7 +65,8 @@ $(function () {
                 });
 
                 $('#company_list input:checked').each(function () {
-                    micromobilityservice_id = ($(this)[0].id).substring(8)
+                    var micromobilityservice_id = ($(this)[0].id).substring(8)
+                    micromobilityservice_ids.push(micromobilityservice_id);
 
                 });
                 next_tab.tab('show');
@@ -93,12 +96,12 @@ $(function () {
                 }
                 
             }
-            else if ($("input[type='radio']:checked").length && $("input[type='checkbox']:checked").length == 0) {
+            else if ($companies.length && $infractions.length == 0) {
                 $('html,body').animate({
                     scrollTop: $("#classification_continue_warning").offset().top
                  });
                 $('#classification_continue_warning').html('Please select a parking infraction from the list above before continuing');
-            } else if ($("input[type='checkbox']:checked").length > 0 && $("input[type='radio']:checked").length == 0) {
+            } else if ($infractions.length > 0 && $companies.length == 0) {
                 $('html,body').animate({
                     scrollTop: $("#classification_continue_warning").offset().top
                  });

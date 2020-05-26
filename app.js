@@ -10,6 +10,7 @@ var upload = multer({ dest: "./download/" });
 
 //import controllers
 const sampleController = require('./controllers/controller-sample');
+const emailController = require('./controllers/controller-email');
 
 //create express app
 const app = express();
@@ -108,12 +109,23 @@ io.on('connect', function (socket) {
       case_data.img = data;
       // data.img = imageAsBase64;
       sampleController.insertReport(case_data).then(res => {
-        logger.info(res + " Inserted successfully")
-        // delete the file locally after it has been inserted
-        fs.unlink(filepath, (err) => {
-          if (err) throw err;
-          logger.info(filepath + ' was deleted');
-        });
+        logger.info(JSON.stringify(res) + " Inserted successfully")
+        if (res) {
+          var mispark_id = res[0].mispark_id;
+          // send email to the company
+          ids = emailController.sendEmail(case_data, mispark_id)
+          .then(res => {
+
+          });
+          
+          // delete the file locally after it has been inserted
+          fs.unlink(filepath, (err) => {
+            if (err) throw err;
+            logger.info(filepath + ' was deleted');
+          });
+        }
+
+
       });
     });
   });
@@ -122,9 +134,9 @@ io.on('connect', function (socket) {
     logger.info('socket disconnected. socket.id = ' + socket.id + ' , pid = ' + process.pid);
   });
 
-  socket.on('error', function (err) { 
-    logger.info("Socket.IO Error: " + err.stack); 
- });
+  socket.on('error', function (err) {
+    logger.info("Socket.IO Error: " + err.stack);
+  });
 });
 
 io.on('disconnect', function (socket) {

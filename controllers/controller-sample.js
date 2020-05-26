@@ -16,11 +16,11 @@ module.exports.sampleTransaction = async (req, res) => {
 module.exports.getCompanies = async (lng, lat) => {
     try {
         let result = await sampleModel.getCompanies(lng, lat);
-        logger.info("getCompanies returned : " + result.rows.length + " rows")
+        logger.info("getCompanies in controller returned: " + result.rows.length + " rows")
         return result.rows;
         // res.status(200).json(result.rows);
     } catch (error) {
-        logger.error(`getCompanies error: ${error.message}`);
+        logger.error(`getCompanies error in controller: ${error.message}`);
 
     }
 }
@@ -28,11 +28,11 @@ module.exports.getCompanies = async (lng, lat) => {
 module.exports.getCity = async (lng, lat) => {
     try {
         let result = await sampleModel.getCity(lng, lat);
-        logger.info("getCity returned : " + result.rows.length + " rows")
+        logger.info("getCity in controller returned : " + result.rows.length + " rows")
         return result.rows;
         // res.status(200).json(result.rows);
     } catch (error) {
-        logger.error(`getCity error: ${error.message}`);
+        logger.error(`getCity error in controller: ${error.message}`);
 
     }
 }
@@ -44,7 +44,7 @@ module.exports.getInfractions = async (lng, lat) => {
         return result.rows;
         // res.status(200).json(result.rows);
     } catch (error) {
-        logger.error(`getInfractions error: ${error.message}`);
+        logger.error(`getInfractions error in controller: ${error.message}`);
 
     }
 }
@@ -53,10 +53,10 @@ module.exports.insertReport = async (report) => {
     try {
         let result = await sampleModel.insertReport(report);
         // console.log(result)
-        return result;
+        return result.rows;
         // res.status(200).json(result.rows);
     } catch (error) {
-        logger.error(`insertReport error: ${error.message}`);
+        logger.error(`insertReport error in controller: ${error.message}`);
 
     }
 }

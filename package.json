@@ -6,6 +6,7 @@
     "main": "app.js",
     "browser": "./dist/index.html",
     "dependencies": {
+        "0x": "^4.9.1",
         "aws-sdk": "^2.683.0",
         "babel": "^6.23.0",
         "body-parser": "^1.19.0",

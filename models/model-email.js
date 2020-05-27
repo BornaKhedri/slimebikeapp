@@ -7,13 +7,17 @@ const dbUtil = require('../utils/dbUtil')
  * @return 
  */
 module.exports.getEmails = async (ms_ids, city) => {
+    // if the city does not have a city_id, then consider it 'Generic'
     let get_email_sql = `select micromobility_city_contact_email email 
-    from micromobility_city_xref 
-    where micromobilityservice_id = ANY($1) 
-        and city_id = 
-                (select city_id 
-                    from city_info 
-                    where city = $2);`;
+                            from micromobility_city_xref 
+                            where micromobilityservice_id = ANY($1) 
+                                and city_id = 
+                                (select coalesce ((select city_id 
+                                                    from city_info 
+                                                    where city = $2), 
+                                                  (select city_id 
+                                                    from city_info 
+                                                    where city = 'Generic')));`;
     let get_email_data = [ms_ids, city];
 
     try {

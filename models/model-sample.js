@@ -49,6 +49,7 @@ module.exports.getCompanies = async (lng, lat) => {
         result = await dbUtil.sqlToDB(sql, data);
         return result;
     } catch (error) {
+        logger.error(`getCompanies error in model: ${error.message}`);
         throw new Error(error.message);
     }
 }
@@ -63,6 +64,7 @@ module.exports.getCity = async (lng, lat) => {
         result = await dbUtil.sqlToDB(sql, data);
         return result;
     } catch (error) {
+        logger.error(`getCity error in model: ${error.message}`);
         throw new Error(error.message);
     }
 }
@@ -82,6 +84,7 @@ module.exports.getInfractions = async (lng, lat) => {
         result = await dbUtil.sqlToDB(sql, data);
         return result;
     } catch (error) {
+        logger.error(`getInfractions error in model: ${error.message}`);
         throw new Error(error.message);
     }
 }
@@ -108,19 +111,19 @@ module.exports.insertReport = async (report) => {
     // Trim the last commna (,) as the insert tuples needs to end with comma
     values_infraction_ids = values_infraction_ids.slice(0, -2);
 
-    sql = sql + values_infraction_ids;
+    sql = sql + values_infraction_ids + " returning mispark_id;";
     
     let data = [report.micromobilityservice_ids.map(Number), datetime, report.location[0], report.location[1], report.img, report.vehicle_id, report.notes, report.city];
     data = data.concat(datai);
     // console.log(datai);
     // console.log(data);
     try {
-        await dbUtil.sqlExecSingleRow(client, sql, data);
+        result = await dbUtil.sqlExecSingleRow(client, sql, data);
         // result = await dbUtil.sqlToDB(sql, data);
         await dbUtil.commit(client);
-        return transactionSuccess;
+        return result;
     } catch (error) {
-        logger.error(`sampleTransactionModel error: ${error.message}`);
+        logger.error(`insertReport error in model: ${error.message}`);
         await dbUtil.rollback(client);
         throw new Error(error.message);
     }

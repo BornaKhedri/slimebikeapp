@@ -37,8 +37,9 @@ $(function () {
     // This function is called when continue button on the "location" is clicked
     $('#classification_continue').click(function (e) {
         e.preventDefault();
-        // reset the infraction ids array, as it gets refilled when we continue
+        // reset the infraction ids array as well as ms_ids, as it gets refilled when we continue
         infraction_ids = []
+        micromobilityservice_ids = [];
         var next_tab = $('a[href="#tab_identification"]');
         var $infractions = $( "input[name*='infraction']:checked");
         var $companies = $("input[name*='company']:checked");

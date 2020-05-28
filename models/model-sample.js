@@ -96,7 +96,7 @@ module.exports.insertReport = async (report) => {
     let sql = `with mispark_report as (insert into misparking_report (micromobilityservice_ids, report_datetime, 
         report_location, report_image, report_uid, notes, city_id) values ($1, 
                     $2, ST_SetSRID(ST_MakePoint($3, $4), 4326), $5, 
-                    $6, $7, (select city_id from city_info where city = $8)) returning mispark_id)
+                    $6, $7, (select coalesce ((select city_id from city_info where city = $8), (select city_id from city_info where city = 'Generic')))) returning mispark_id)
                         insert into misparking_report_infraction_xref (infractiontype_id, mispark_id) 
                             values `;
     

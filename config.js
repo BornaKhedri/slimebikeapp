@@ -1,9 +1,11 @@
 require('dotenv').config()
+var AWS = require('aws-sdk')
+var SES = new AWS.SES({ apiVersion: '2010-12-01', region: 'us-west-2' });
 
 config = {
     serviceName: process.env.SERVICENAME || 'boilerplate node express postgress app',
     port: process.env.PORT || 3000,
-    loggerLevel: process.env.LOGGERLEVEL || 'verbose',
+    loggerLevel: process.env.LOGGERLEVEL || 'info',
     db: {
         user: process.env.DB_USER || '',
         database: process.env.DB || '',
@@ -15,6 +17,12 @@ config = {
     }, 
     server: {
         host: process.env.SERVER_HOST
+    }, 
+    email: {
+        transport: SES, 
+        from: 'admin@misplacedwheels.com', 
+        subject: 'Misplaced Wheels Report',
+        attachmentName: 'reportimage.png'
     }    
 }
 

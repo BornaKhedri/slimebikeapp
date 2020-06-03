@@ -11,6 +11,7 @@ var upload = multer({ dest: "./download/" });
 //import controllers
 const sampleController = require('./controllers/controller-sample');
 const emailController = require('./controllers/controller-email');
+const geocoderController = require('./controllers/controller-geocoder');
 
 //create express app
 const app = express();

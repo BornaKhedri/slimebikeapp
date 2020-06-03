@@ -21,6 +21,7 @@ FilePond.registerPlugin(
 FilePond.create(
     document.querySelector('input[type="file"]'), {
     acceptedFileTypes: ['image/*'],
+    minFileSize: '100KB',
     allowImageExifOrientation: true,
     imageCropAspectRatio: '1:1',
     imageResizeTargetWidth: 300,

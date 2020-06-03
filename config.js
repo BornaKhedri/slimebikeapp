@@ -23,7 +23,11 @@ config = {
         from: 'admin@misplacedwheels.com', 
         subject: 'Misplaced Wheels Report',
         attachmentName: 'reportimage.png'
-    }    
+    }, 
+    geocoder: {
+        provider: 'here', 
+        apiKey: process.env.HERE_API_KEY
+    }   
 }
 
 module.exports = config;

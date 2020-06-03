@@ -40,6 +40,7 @@ $(function () {
         // reset the infraction ids & ms_ids array, as it gets refilled when we continue
         infraction_ids = []
         micromobilityservice_ids = []
+
         var next_tab = $('a[href="#tab_identification"]');
         var $infractions = $( "input[name*='infraction']:checked");
         var $companies = $("input[name*='company']:checked");

@@ -27,7 +27,12 @@ config = {
     geocoder: {
         provider: 'here', 
         apiKey: process.env.HERE_API_KEY
-    }   
+    }, 
+    cloudwatch: {
+        logGroupName: process.env.CLOUDWATCH_GROUP_NAME,
+        logStreamName: process.env.CLOUDWATCH_STREAM_NAME,
+        region: process.env.AWS_REGION
+    }
 }
 
 module.exports = config;

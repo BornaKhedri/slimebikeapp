@@ -1,9 +1,11 @@
 require('dotenv').config()
+var AWS = require('aws-sdk')
+var SES = new AWS.SES({ apiVersion: '2010-12-01', region: 'us-west-2' });
 
 config = {
     serviceName: process.env.SERVICENAME || 'boilerplate node express postgress app',
     port: process.env.PORT || 3000,
-    loggerLevel: process.env.LOGGERLEVEL || 'verbose',
+    loggerLevel: process.env.LOGGERLEVEL || 'info',
     db: {
         user: process.env.DB_USER || '',
         database: process.env.DB || '',
@@ -16,15 +18,21 @@ config = {
     server: {
         host: process.env.SERVER_HOST
     }, 
-    s3: {
-        bucketName: process.env.S3_BUCKET, 
-        prefixName: process.env.S3_PREFIX
+    email: {
+        transport: SES, 
+        from: 'admin@misplacedwheels.com', 
+        subject: 'Misplaced Wheels Report',
+        attachmentName: 'reportimage.png'
     }, 
-    sns: {
-        topicARN: process.env.SNS_ARN, 
-        protocol: process.env.SNS_PROTOCOL
+    geocoder: {
+        provider: 'here', 
+        apiKey: process.env.HERE_API_KEY
+    }, 
+    cloudwatch: {
+        logGroupName: process.env.CLOUDWATCH_GROUP_NAME,
+        logStreamName: process.env.CLOUDWATCH_STREAM_NAME,
+        region: process.env.AWS_REGION
     }
-
 }
 
 module.exports = config;

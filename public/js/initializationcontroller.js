@@ -65,6 +65,40 @@ $("body").on("click", ".disabled", function (e) {
   return false;
 });
 
+var infractionColoring = function () {
+  // toggle style
+  // $(this).removeClass('light-background');
+  var $chk = $(this).find("[type=checkbox]");
+  if ($chk[0].nextSibling.textContent == "No issue") {
+    // make the "No issue" button green and checked
+    $(this).toggleClass("green-background light-background active");
+    $chk.prop("checked", !$chk.prop("checked"));
+    // un-check and un-color all the others
+    $('[data-toggle="buttons"] .blue-background').find("[type=checkbox]").prop("checked", false);
+    $('[data-toggle="buttons"] .blue-background').toggleClass("blue-background light-background active");
+  } else {
+    $(this).toggleClass("blue-background light-background active");
+
+    // toggle checkbox
+
+    $chk.prop("checked", !$chk.prop("checked"));
+    if ($('[data-toggle="buttons"] .btn')
+      .filter(":contains('No issue')")
+      .find("[type=checkbox]")
+      .prop("checked") == true) {
+      // remove the No-issue checked and styling
+      $('[data-toggle="buttons"] .btn')
+        .filter(":contains('No issue')")
+        .find("[type=checkbox]")
+        .prop("checked", false);
+      $('[data-toggle="buttons"] .btn')
+        .filter(":contains('No issue')")
+        .toggleClass("green-background light-background active");
+    }
+  }
+  return false;
+}
+
 var populateInfractions = function (infractions) {
   var top_infractions = infractions.slice(0, TOP_INFRACTION_COUNT);
 
@@ -93,48 +127,28 @@ var populateInfractions = function (infractions) {
   }
   // when the more button is clicked delete it and add the remaining infractions 
   // and associate the click event
-  $('button#morebtn').on("click", function() {
+  $('button#morebtn').on("click", function () {
     console.log("more button clicked");
     $(this).remove();
     more_infractions.forEach((infraction) => {
       $infraction_description = $("<label/>")
-      .addClass("btn btn-block active light-background darktext moreinfractions")
-      .append(
-        $("<input/>")
-          .attr("id", "infraction_" + infraction.infractiontype_id)
-          .attr("type", "checkbox")
-          .attr("name", "infraction_" + infraction.infractiontype_id)
-          .attr("autocomplete", "off")
-      )
-      .append(infraction.infraction_description);
+        .addClass("btn btn-block active light-background darktext moreinfractions")
+        .append(
+          $("<input/>")
+            .attr("id", "infraction_" + infraction.infractiontype_id)
+            .attr("type", "checkbox")
+            .attr("name", "infraction_" + infraction.infractiontype_id)
+            .attr("autocomplete", "off")
+        )
+        .append(infraction.infraction_description);
       $infraction_description.appendTo("#infraction_list");
 
     });
 
-    $('[data-toggle="buttons"] .btn').filter('.moreinfractions').on("click", function () {
-      // toggle style
-      // $(this).removeClass('light-background');
-      $(this).toggleClass("blue-background light-background active");
-  
-      // toggle checkbox
-      var $chk = $(this).find("[type=checkbox]");
-      $chk.prop("checked", !$chk.prop("checked"));
-  
-      return false;
-    });
+    $('[data-toggle="buttons"] .btn').filter('.moreinfractions').on("click", infractionColoring);
   });
 
-  $('[data-toggle="buttons"] .btn').on("click", function () {
-    // toggle style
-    // $(this).removeClass('light-background');
-    $(this).toggleClass("blue-background light-background active");
-
-    // toggle checkbox
-    var $chk = $(this).find("[type=checkbox]");
-    $chk.prop("checked", !$chk.prop("checked"));
-
-    return false;
-  });
+  $('[data-toggle="buttons"] .btn').on("click", infractionColoring);
 
   // getCompanies();
 };
@@ -165,7 +179,7 @@ var populateCompanies = function (companies) {
         .append(
           $("<input/>")
             .attr("id", "company_" + company.micromobilityservice_id)
-            .attr("type", "radio")
+            .attr("type", "checkbox")
             .attr("name", "company_" + company.micromobilityservice_id)
             .attr("autocomplete", "off")
         )
@@ -182,16 +196,17 @@ var populateCompanies = function (companies) {
     });
   } else {
   }
-  $('[data-toggle="radiobuttons"] .btn').on("click", function () {
+  $('[data-toggle="companybuttons"] .btn').on("click", function () {
     // toggle style
     // $(this).removeClass('light-background');
-    $(this).addClass("dark-border");
-    $(this).siblings().removeClass("dark-border");
+    // $(this).addClass("dark-border");
+    // $(this).siblings().removeClass("dark-border");
+    $(this).toggleClass("dark-border")
     // $('[data-toggle="radiobuttons"]').find(label)
     // toggle checkbox
-    var $chk = $(this).find("input:radio");
-    $chk.prop("checked", true);
-    $("input:radio").not($chk).prop("checked", false);
+    var $chk = $(this).find("input:checkbox");
+    $chk.prop("checked", !$chk.prop("checked"));
+    // $("input:radio").not($chk).prop("checked", false);
 
     return false;
   });
@@ -687,9 +702,10 @@ var socketSubmit = function () {
       imageId: imageId,
       location: [longitude, latitude],
       infraction_ids: infraction_ids,
-      micromobilityservice_id: micromobilityservice_id,
+      micromobilityservice_ids: micromobilityservice_ids,
       vehicle_id: vehicle_id,
       city: city,
+      notes: $("#notes").val()
     },
   });
   window.performance.mark("end_socketSubmit");

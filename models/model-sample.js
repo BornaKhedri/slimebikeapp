@@ -49,6 +49,7 @@ module.exports.getCompanies = async (lng, lat) => {
         result = await dbUtil.sqlToDB(sql, data);
         return result;
     } catch (error) {
+        logger.error(`getCompanies error in model: ${error.message}`);
         throw new Error(error.message);
     }
 }
@@ -63,6 +64,7 @@ module.exports.getCity = async (lng, lat) => {
         result = await dbUtil.sqlToDB(sql, data);
         return result;
     } catch (error) {
+        logger.error(`getCity error in model: ${error.message}`);
         throw new Error(error.message);
     }
 }
@@ -82,18 +84,19 @@ module.exports.getInfractions = async (lng, lat) => {
         result = await dbUtil.sqlToDB(sql, data);
         return result;
     } catch (error) {
+        logger.error(`getInfractions error in model: ${error.message}`);
         throw new Error(error.message);
     }
 }
 
 module.exports.insertReport = async (report) => {
-    let datetime = new Date().toISOString();
+    let datetime = new Date();
     let client = await dbUtil.getTransaction();
     // todo: fix the insert query to use 'data' to prevent SQL injection
-    let sql = `with mispark_report as (insert into misparking_report (micromobilityservice_id, report_datetime, 
-        report_location, report_image, report_uid, city_id) values ($1, 
+    let sql = `with mispark_report as (insert into misparking_report (micromobilityservice_ids, report_datetime, 
+        report_location, report_image, report_uid, notes, city_id) values ($1, 
                     $2, ST_SetSRID(ST_MakePoint($3, $4), 4326), $5, 
-                    $6, (select city_id from city_info where city = $7)) returning mispark_id)
+                    $6, $7, (select coalesce ((select city_id from city_info where city = $8), (select city_id from city_info where city = 'Generic')))) returning mispark_id)
                         insert into misparking_report_infraction_xref (infractiontype_id, mispark_id) 
                             values `;
     
@@ -101,26 +104,26 @@ module.exports.insertReport = async (report) => {
     let values_infraction_ids = '';
     let datai = [];
     for(let i = 0; i < report.infraction_ids.length; i++) {
-        var j = '$' + (8 + i); //dynamically generate the parameterized query placeholder
+        var j = '$' + (9 + i); //dynamically generate the parameterized query placeholder
         datai.push(parseInt(report.infraction_ids[i]));
         values_infraction_ids = values_infraction_ids + `(${j}, (select mispark_id from mispark_report)), `;
     }
     // Trim the last commna (,) as the insert tuples needs to end with comma
     values_infraction_ids = values_infraction_ids.slice(0, -2);
 
-    sql = sql + values_infraction_ids;
+    sql = sql + values_infraction_ids + " returning mispark_id;";
     
-    let data = [parseInt(report.micromobilityservice_id), datetime, report.location[0], report.location[1], report.img, report.vehicle_id, report.city];
+    let data = [report.micromobilityservice_ids.map(Number), datetime, report.location[0], report.location[1], report.img, report.vehicle_id, report.notes, report.city];
     data = data.concat(datai);
     // console.log(datai);
     // console.log(data);
     try {
-        await dbUtil.sqlExecSingleRow(client, sql, data);
+        result = await dbUtil.sqlExecSingleRow(client, sql, data);
         // result = await dbUtil.sqlToDB(sql, data);
         await dbUtil.commit(client);
-        return transactionSuccess;
+        return result;
     } catch (error) {
-        logger.error(`sampleTransactionModel error: ${error.message}`);
+        logger.error(`insertReport error in model: ${error.message}`);
         await dbUtil.rollback(client);
         throw new Error(error.message);
     }

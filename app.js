@@ -1,10 +1,13 @@
 const config = require('./config');
 const path = require('path');
 const express = require('express');
+const request = require('request');
+const axios = require('axios');
+var apigClientFactory = require('aws-api-gateway-client').default;
 const logger = require('./utils/logger');
 var multer = require("multer");
+const fs = require('fs');
 // const bodyParser = require('body-parser');
-var fs = require('fs')
 var http = require('http')
 var upload = multer({ dest: "./download/" });
 // Load the AWS SDK for Node.js
@@ -14,15 +17,39 @@ var aws_lambda = new AWS.Lambda({
   apiVersion: '2015-03-31'
 });
 
-// var rekognition = new AWS.Rekognition({
-//   region: 'us-west-2',
-//   apiVersion: '2016-06-27'
-// });
+/**
+ * Executes a shell command and return it as a Promise.
+ * @param cmd {string}
+ * @return {Promise<string>}
+ */
+function execShellCommand(cmd) {
+  const exec = require('child_process').exec;
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.warn(error);
+      }
+      resolve(stdout ? stdout : stderr);
+    });
+  });
+}
+
+var postData = {
+  body: ''
+};
+
+let axiosConfig = {
+  headers: {
+    'Content-Type': 'text/plain',
+    "Access-Control-Allow-Origin": "*",
+  }
+};
 
 //import controllers
 const sampleController = require('./controllers/controller-sample');
-const s3Controller = require('./controllers/controller-s3');
-
+const emailController = require('./controllers/controller-email');
+// const geocoderController = require('./controllers/controller-geocoder');
+const healthcheckController = require('./controllers/controller-healthcheck');
 //create express app
 const app = express();
 
@@ -44,22 +71,29 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(publicPath + '/index.html'));
 });
 
-var lambda_params = {
-  FunctionName: 'cp84_slimebike_bsd_node',
-  Payload: ''
-}
+router.get('/healthcheck', healthcheckController.healthcheck);
+
 // Handle file upload and temp storage
-app.post('/upload', upload.single('filepond'), (req, res, next) => {
+app.post('/upload', upload.single('filepond'), async (req, res, next) => {
 
   logger.info("upload initiated");
   // logger.info(req.file);
   // send back the filename so that filepond knows the file has been transferred
   res.send([req.file.filename]);
 
-  // upload to AWS S3, a successful upload will initiate ML in cloud using Lambda function
-  var fileType = 'images';
   var filePath = path.join(__dirname, 'download', req.file.filename);
   console.log(filePath)
+
+  try {
+    var cmd = 'curl --location --request POST "https://lk8uexgj0c.execute-api.us-west-2.amazonaws.com/Prod/detectbikes" \
+    --header "Content-Type: text/plain" \
+    --data-binary @"' + filePath + '"';
+    const response = await execShellCommand(cmd);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+
 
 });
 
@@ -95,7 +129,6 @@ io.on('connect', function (socket) {
   });
 
   socket.on('delete_image', function (data) {
-    // console.log(data);
     var filepath = path.join(__dirname, 'download', data.imageId);
     fs.unlink(filepath, (err) => {
       if (err) throw err;
@@ -106,20 +139,28 @@ io.on('connect', function (socket) {
   socket.on('case_report', function (data) {
     var filepath = path.join(__dirname, 'download', data.case_data.imageId);
     case_data = data.case_data;
-    // console.log(data);
-    //data.case_data.img = fs.readFileSync(filepath, 'base64');
+
     // asynchronously read the image and then insert into database
     fs.readFile(filepath, 'base64', (err, data) => {
       if (err) throw err;
       case_data.img = data;
       // data.img = imageAsBase64;
       sampleController.insertReport(case_data).then(res => {
-        logger.info(res + " Inserted successfully")
-        // delete the file locally after it has been inserted
-        fs.unlink(filepath, (err) => {
-          if (err) throw err;
-          logger.info(filepath + ' was deleted');
-        });
+        logger.info(JSON.stringify(res) + " Inserted successfully")
+        if (res) {
+          var mispark_id = res[0].mispark_id;
+          // send email to the company
+          ids = emailController.sendEmail(case_data, mispark_id)
+            .then(res => {
+
+            });
+
+          // delete the file locally after it has been inserted
+          fs.unlink(filepath, (err) => {
+            if (err) throw err;
+            logger.info(filepath + ' was deleted');
+          });
+        }
       });
     });
   });
@@ -139,8 +180,17 @@ io.on('disconnect', function (socket) {
 
 // start the server
 server.listen(config.port, config.server.host, function () {
+  logger.info(`NODE_ENV: ${app.get('env')}`);
   logger.info(`server listening on port: ${config.port}`);
 });
-//}
+
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught exception', err)
+  throw err
+})
+
+process.on('unhandledRejection', (err) => {
+  logger.error('unhandled rejection', err)
+})
 
 module.exports = server

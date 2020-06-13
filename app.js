@@ -50,6 +50,7 @@ const sampleController = require('./controllers/controller-sample');
 const emailController = require('./controllers/controller-email');
 // const geocoderController = require('./controllers/controller-geocoder');
 const healthcheckController = require('./controllers/controller-healthcheck');
+const mlController = require('./controllers/controller-ml');
 //create express app
 const app = express();
 
@@ -84,16 +85,9 @@ app.post('/upload', upload.single('filepond'), async (req, res, next) => {
   var filePath = path.join(__dirname, 'download', req.file.filename);
   console.log(filePath)
 
-  try {
-    var cmd = 'curl --location --request POST "https://lk8uexgj0c.execute-api.us-west-2.amazonaws.com/Prod/detectbikes" \
-    --header "Content-Type: text/plain" \
-    --data-binary @"' + filePath + '"';
-    const response = await execShellCommand(cmd);
-    console.log(response);
-  } catch (error) {
-    console.log(error);
-  }
-
+  mlController.detectbikeshare(filePath).then((res) => {
+    // do something with the ml response 
+  });
 
 });
 

@@ -32,6 +32,10 @@ config = {
         logGroupName: process.env.CLOUDWATCH_GROUP_NAME,
         logStreamName: process.env.CLOUDWATCH_STREAM_NAME,
         region: process.env.AWS_REGION
+    }, 
+    mlApi: {
+        url: process.env.ML_APIGATEWAY_URL, 
+        path: 'Prod/detectbikes'
     }
 }
 

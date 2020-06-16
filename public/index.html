@@ -40,15 +40,19 @@
 
     <!-- CSS -->
     <!-- Remote - vendor -->
-    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" media="print"
+        onload="this.media='all'" />
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet"
+        media="print" onload="this.media='all'">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"
+        media="print" onload="this.media='all'">
     <!-- Filepond stylesheet -->
-    <link href="https://unpkg.com/filepond@4.13.5/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond@4.13.5/dist/filepond.css" rel="stylesheet" media="print"
+        onload="this.media='all'">
     <link href="https://unpkg.com/filepond-plugin-image-preview@4.6.2/dist/filepond-plugin-image-preview.css"
-        rel="stylesheet">
+        rel="stylesheet" media="print" onload="this.media='all'">
     <!-- Local - custom -->
 
     <script type="text/javascript">window.performance.mark('end_head_load_css');
@@ -58,38 +62,40 @@
     <!-- Remote - vendor -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <!-- <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> -->
     <!-- <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script> -->
-    <script
+    <script defer
         src="https://unpkg.com/filepond-plugin-file-validate-size@2.2.1/dist/filepond-plugin-file-validate-size.js"></script>
     <script
         src="https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.8/dist/filepond-plugin-image-exif-orientation.js"></script>
-    <script
+    <script defer
         src="https://unpkg.com/filepond-plugin-file-validate-type@1.2.5/dist/filepond-plugin-file-validate-type.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-preview@4.6.2/dist/filepond-plugin-image-preview.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-resize@2.0.6/dist/filepond-plugin-image-resize.js"></script>
-    <script
+    <script defer
+        src="https://unpkg.com/filepond-plugin-image-preview@4.6.2/dist/filepond-plugin-image-preview.js"></script>
+    <script defer
+        src="https://unpkg.com/filepond-plugin-image-resize@2.0.6/dist/filepond-plugin-image-resize.js"></script>
+    <script defer
         src="https://unpkg.com/filepond-plugin-image-transform@3.7.3/dist/filepond-plugin-image-transform.js"></script>
-    <script src="https://unpkg.com/filepond@4.13.5/dist/filepond.min.js"></script>
+    <script defer src="https://unpkg.com/filepond@4.13.5/dist/filepond.min.js"></script>
     <!-- <script src="https://peterolson.github.io/BigInteger.js/BigInteger.min.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/bowser@2.5.3/es5.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/@zxing/library@0.17.0/umd/index.min.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-    <script
+    <script defer src="https://cdn.jsdelivr.net/npm/bowser@2.5.3/es5.min.js"></script>
+    <script defer type="text/javascript" src="https://unpkg.com/@zxing/library@0.17.0/umd/index.min.js"></script>
+    <script defer src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <script defer
         src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
-    <link rel="stylesheet"
+    <link defer rel="stylesheet"
         href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
         type="text/css" />
     <!-- <script src="https://cdn.jsdelivr.net/npm/exif-js"></script> -->
-    <script src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
+    <script defer src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
     <script type="text/javascript">window.performance.mark('end_head_load_js');
         window.performance.measure('head_js_load_time', 'end_head_load_css', 'end_head_load_js');</script>
-    <link rel="stylesheet" href="./css/style.css">
+    <link defer rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
@@ -150,7 +156,7 @@
             <div class="container-fluid">
                 <div class="content">
                     <!-- We'll transform this input into a pond -->
-                    <input type="file" class="filepond" name="filepond" data-max-file-size="10MB" data-max-file-size="100KB" data-max-files="1">
+                    <input type="file" class="filepond" name="filepond" data-max-file-size="10MB" data-max-files="1">
                     <div class="card-body low-opacity" id="infraction_div">
                         <p class="card-text">Select all parking infractions that apply:</p>
                         <div class="row">
@@ -202,7 +208,7 @@
                     <label>Vehicle ID:</label>
                     <pre><code id="result"></code></pre>
 
-                    <video id="video" class="d-flex align-items-center mx-auto" ></video>
+                    <video id="video" class="d-flex align-items-center mx-auto"></video>
                     <br>
                     <label>Notes:</label>
                     <br>
@@ -227,11 +233,11 @@
     <div id="turn">
         <h4>Please rotate your device!</h4>
     </div>
-    
 
-    <script src="./js/initializationcontroller.js"></script>
-    <script src="./js/filepond_jq.js"></script>
-    <script src="./js/navigationcontroller.js"></script>
+
+    <script defer src="./js/initializationcontroller.js"></script>
+    <script defer src="./js/filepond_jq.js"></script>
+    <script defer src="./js/navigationcontroller.js"></script>
 
 </body>
 

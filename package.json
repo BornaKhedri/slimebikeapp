@@ -39,7 +39,8 @@
     "license": "MIT",
     "scripts": {
         "start": "nodemon app.js",
-        "deploy": "pm2 start app.js"
+        "deploy": "pm2 start app.js",
+        "critical": "node critical.js"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
@@ -49,6 +50,7 @@
         "babel-cli": "^6.26.0",
         "chai": "^4.2.0",
         "chai-http": "^4.3.0",
+        "critical": "^2.0.1",
         "grunt": "^1.0.4",
         "grunt-browser-sync": "^2.2.0",
         "grunt-contrib-watch": "^1.1.0",

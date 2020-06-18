@@ -9,7 +9,618 @@
         content="A website to report misplaced wheels - report misparked shared bikes and scooters.">
     <title>Misplaced Wheels</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164240099-1"></script>
+    <style>
+        .fas {
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            display: inline-block;
+            font-style: normal;
+            font-variant: normal;
+            text-rendering: auto;
+            line-height: 1
+        }
+
+        .fa-check:before {
+            content: "\f00c"
+        }
+
+        .fa-chevron-left:before {
+            content: "\f053"
+        }
+
+        .fa-chevron-right:before {
+            content: "\f054"
+        }
+
+        :root {
+            --blue: #007bff;
+            --indigo: #6610f2;
+            --purple: #6f42c1;
+            --pink: #e83e8c;
+            --red: #dc3545;
+            --orange: #fd7e14;
+            --yellow: #ffc107;
+            --green: #28a745;
+            --teal: #20c997;
+            --cyan: #17a2b8;
+            --white: #fff;
+            --gray: #6c757d;
+            --gray-dark: #343a40;
+            --primary: #007bff;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --info: #17a2b8;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --breakpoint-xs: 0;
+            --breakpoint-sm: 576px;
+            --breakpoint-md: 768px;
+            --breakpoint-lg: 992px;
+            --breakpoint-xl: 1200px;
+            --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+        }
+
+        *,
+        ::after,
+        ::before {
+            box-sizing: border-box
+        }
+
+        html {
+            font-family: sans-serif;
+            line-height: 1.15;
+            -webkit-text-size-adjust: 100%
+        }
+
+        nav {
+            display: block
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: left;
+            background-color: #fff
+        }
+
+        h1,
+        h4,
+        h5 {
+            margin-top: 0;
+            margin-bottom: .5rem
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 1rem
+        }
+
+        ul {
+            margin-top: 0;
+            margin-bottom: 1rem
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            background-color: transparent
+        }
+
+        code,
+        pre {
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 1em
+        }
+
+        pre {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            overflow: auto
+        }
+
+        img {
+            vertical-align: middle;
+            border-style: none
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: .5rem
+        }
+
+        button {
+            border-radius: 0
+        }
+
+        button,
+        input,
+        textarea {
+            margin: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit
+        }
+
+        button,
+        input {
+            overflow: visible
+        }
+
+        button {
+            text-transform: none
+        }
+
+        [type=button],
+        button {
+            -webkit-appearance: button
+        }
+
+        [type=button]::-moz-focus-inner,
+        button::-moz-focus-inner {
+            padding: 0;
+            border-style: none
+        }
+
+        textarea {
+            overflow: auto;
+            resize: vertical
+        }
+
+        ::-webkit-file-upload-button {
+            font: inherit;
+            -webkit-appearance: button
+        }
+
+        h1,
+        h4,
+        h5 {
+            margin-bottom: .5rem;
+            font-weight: 500;
+            line-height: 1.2
+        }
+
+        h1 {
+            font-size: 2.5rem
+        }
+
+        h4 {
+            font-size: 1.5rem
+        }
+
+        h5 {
+            font-size: 1.25rem
+        }
+
+        code {
+            font-size: 87.5%;
+            color: #e83e8c;
+            word-wrap: break-word
+        }
+
+        pre {
+            display: block;
+            font-size: 87.5%;
+            color: #212529
+        }
+
+        pre code {
+            font-size: inherit;
+            color: inherit;
+            word-break: normal
+        }
+
+        .container {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto
+        }
+
+        .container-fluid {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto
+        }
+
+        @media (min-width:576px) {
+            .container {
+                max-width: 540px
+            }
+        }
+
+        @media (min-width:768px) {
+            .container {
+                max-width: 720px
+            }
+        }
+
+        @media (min-width:992px) {
+            .container {
+                max-width: 960px
+            }
+        }
+
+        @media (min-width:1200px) {
+            .container {
+                max-width: 1140px
+            }
+        }
+
+        .row {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px
+        }
+
+        .col-sm-4 {
+            position: relative;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px
+        }
+
+        @media (min-width:576px) {
+            .col-sm-4 {
+                -ms-flex: 0 0 33.333333%;
+                flex: 0 0 33.333333%;
+                max-width: 33.333333%
+            }
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            color: #212529;
+            text-align: center;
+            vertical-align: middle;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem
+        }
+
+        .btn:disabled {
+            opacity: .65
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%
+        }
+
+        .btn-block+.btn-block {
+            margin-top: .5rem
+        }
+
+        .collapse:not(.show) {
+            display: none
+        }
+
+        .nav {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            padding-left: 0;
+            margin-bottom: 0;
+            list-style: none
+        }
+
+        .nav-link {
+            display: block;
+            padding: .5rem 1rem
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid #dee2e6
+        }
+
+        .nav-tabs .nav-item {
+            margin-bottom: -1px
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #495057;
+            background-color: #fff;
+            border-color: #dee2e6 #dee2e6 #fff
+        }
+
+        .nav-pills .nav-link {
+            border-radius: .25rem
+        }
+
+        .nav-pills .nav-link.active {
+            color: #fff;
+            background-color: #007bff
+        }
+
+        .tab-content>.tab-pane {
+            display: none
+        }
+
+        .tab-content>.active {
+            display: block
+        }
+
+        .navbar {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            padding: .5rem 1rem
+        }
+
+        .navbar-collapse {
+            -ms-flex-preferred-size: 100%;
+            flex-basis: 100%;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            -ms-flex-align: center;
+            align-items: center
+        }
+
+        .navbar-toggler {
+            padding: .25rem .75rem;
+            font-size: 1.25rem;
+            line-height: 1;
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: .25rem
+        }
+
+        .navbar-toggler-icon {
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            vertical-align: middle;
+            content: "";
+            background: center center no-repeat;
+            background-size: 100% 100%
+        }
+
+        @media (min-width:576px) {
+            .navbar-expand-sm {
+                -ms-flex-flow: row nowrap;
+                flex-flow: row nowrap;
+                -ms-flex-pack: start;
+                justify-content: flex-start
+            }
+
+            .navbar-expand-sm .navbar-collapse {
+                display: -ms-flexbox !important;
+                display: flex !important;
+                -ms-flex-preferred-size: auto;
+                flex-basis: auto
+            }
+
+            .navbar-expand-sm .navbar-toggler {
+                display: none
+            }
+        }
+
+        .navbar-light .navbar-toggler {
+            color: rgba(0, 0, 0, .5);
+            border-color: rgba(0, 0, 0, .1)
+        }
+
+        .navbar-light .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.5)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e")
+        }
+
+        .card-body {
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            min-height: 1px;
+            padding: 1.25rem
+        }
+
+        .card-text:last-child {
+            margin-bottom: 0
+        }
+
+        .bg-light {
+            background-color: #f8f9fa !important
+        }
+
+        .d-block {
+            display: block !important
+        }
+
+        .d-flex {
+            display: -ms-flexbox !important;
+            display: flex !important
+        }
+
+        .flex-fill {
+            -ms-flex: 1 1 auto !important;
+            flex: 1 1 auto !important
+        }
+
+        .justify-content-center {
+            -ms-flex-pack: center !important;
+            justify-content: center !important
+        }
+
+        .justify-content-around {
+            -ms-flex-pack: distribute !important;
+            justify-content: space-around !important
+        }
+
+        .align-items-end {
+            -ms-flex-align: end !important;
+            align-items: flex-end !important
+        }
+
+        .align-items-center {
+            -ms-flex-align: center !important;
+            align-items: center !important
+        }
+
+        .mx-auto {
+            margin-right: auto !important
+        }
+
+        .mx-auto {
+            margin-left: auto !important
+        }
+
+        .text-center {
+            text-align: center !important
+        }
+
+        .font-weight-bold {
+            font-weight: 700 !important
+        }
+
+        .text-danger {
+            color: #dc3545 !important
+        }
+
+        .text-body {
+            color: #212529 !important
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        @media only screen {
+            #turn {
+                display: none
+            }
+
+            #container {
+                display: block
+            }
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-bottom: 0;
+            width: 100%;
+            height: 80% !important
+        }
+
+        .content {
+            padding-bottom: 60px
+        }
+
+        .footer {
+            width: 100%;
+            height: 60px;
+            position: fixed;
+            padding-bottom: 50px;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-color: #fff
+        }
+
+        .logodiv {
+            margin-right: 0;
+            margin-left: 0
+        }
+
+        .navbar {
+            flex-grow: 0
+        }
+
+        #map {
+            flex-grow: 1;
+            position: relative;
+            top: 0;
+            bottom: 0;
+            width: '100%';
+            height: 60vh
+        }
+
+        .container {
+            background-color: #fff;
+            margin-top: 10px
+        }
+
+        .darktext {
+            color: #000 !important
+        }
+
+        .lighttext {
+            color: #dfdede !important
+        }
+
+        #logo {
+            padding-left: 30px;
+            max-width: 100%;
+            height: auto
+        }
+
+        .navbar-active {
+            background-color: #373f51 !important
+        }
+
+        .back-button {
+            background-color: #f18f01 !important;
+            margin: 0
+        }
+
+        .btn-continue {
+            background-color: #a23b72 !important;
+            margin: 0 !important
+        }
+
+        .low-opacity {
+            opacity: .3
+        }
+
+        .btn:disabled,
+        .btn[disabled] {
+            background-color: #606060 !important;
+            color: #000 !important;
+            opacity: 1
+        }
+
+        #tab_classification {
+            margin-bottom: 30px
+        }
+
+        #video {
+            width: 100% !important;
+            height: 25vh !important;
+            border: 5px solid gray
+        }
+
+        #map {
+            background: url(images/loader.svg) center center no-repeat
+        }
+    </style>
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-164240099-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -41,13 +652,11 @@
     <!-- CSS -->
     <!-- Remote - vendor -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" media="print"
-        onload="this.media='all'" />
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet"
-        media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"
-        media="print" onload="this.media='all'">
+        onload="this.media='all'">
+    <!-- <link href="https://api.mapbox.com/mapbox-assembly/v0.24.0/assembly.min.css" rel="stylesheet"> -->
+    <!-- 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" media="print" onload="this.media='all'"> -->
     <!-- Filepond stylesheet -->
     <link href="https://unpkg.com/filepond@4.13.5/dist/filepond.css" rel="stylesheet" media="print"
         onload="this.media='all'">
@@ -62,40 +671,41 @@
     <!-- Remote - vendor -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    <script defer="" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <!-- <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> -->
     <!-- <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script> -->
-    <script defer
+    <script defer=""
         src="https://unpkg.com/filepond-plugin-file-validate-size@2.2.1/dist/filepond-plugin-file-validate-size.js"></script>
-    <script
+    <script defer=""
         src="https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.8/dist/filepond-plugin-image-exif-orientation.js"></script>
-    <script defer
+    <script defer=""
         src="https://unpkg.com/filepond-plugin-file-validate-type@1.2.5/dist/filepond-plugin-file-validate-type.js"></script>
-    <script defer
+    <script defer=""
         src="https://unpkg.com/filepond-plugin-image-preview@4.6.2/dist/filepond-plugin-image-preview.js"></script>
-    <script defer
+    <script defer=""
         src="https://unpkg.com/filepond-plugin-image-resize@2.0.6/dist/filepond-plugin-image-resize.js"></script>
-    <script defer
+    <script defer=""
         src="https://unpkg.com/filepond-plugin-image-transform@3.7.3/dist/filepond-plugin-image-transform.js"></script>
-    <script defer src="https://unpkg.com/filepond@4.13.5/dist/filepond.min.js"></script>
+    <script defer="" src="https://unpkg.com/filepond@4.13.5/dist/filepond.min.js"></script>
     <!-- <script src="https://peterolson.github.io/BigInteger.js/BigInteger.min.js"></script> -->
-    <script defer src="https://cdn.jsdelivr.net/npm/bowser@2.5.3/es5.min.js"></script>
-    <script defer type="text/javascript" src="https://unpkg.com/@zxing/library@0.17.0/umd/index.min.js"></script>
-    <script defer src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-    <script defer
+    <script defer="" src="https://cdn.jsdelivr.net/npm/bowser@2.5.3/es5.min.js"></script>
+    <script defer="" type="text/javascript" src="https://unpkg.com/@zxing/library@0.17.0/umd/index.min.js"></script>
+    <!-- <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.24.0/assembly.js"></script> -->
+    <script defer="" src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <script defer=""
         src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
-    <link defer rel="stylesheet"
+    <link defer="" rel="stylesheet"
         href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
-        type="text/css" />
+        type="text/css" media="print" onload="this.media='all'">
     <!-- <script src="https://cdn.jsdelivr.net/npm/exif-js"></script> -->
-    <script defer src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
+    <script defer="" src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
     <script type="text/javascript">window.performance.mark('end_head_load_js');
         window.performance.measure('head_js_load_time', 'end_head_load_css', 'end_head_load_js');</script>
-    <link defer rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style.css" media="print" onload="this.media='all'">
 </head>
 
 <body>
@@ -139,14 +749,16 @@
         <div class="tab-pane show active" role="tabpanel" id="tab_location">
             <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
                 <div class="content">
-                    <h5 class="text-center">Select the location of bike/scooter</h5>
+                    <h5 class="text-center" id="map_heading">Select the location of bike/scooter</h5>
+
                     <div id="map"></div>
+
                 </div>
                 <div class="footer">
                     <div class="d-flex">
                         <button type="button"
                             class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
-                            id="location_continue">Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
+                            id="location_continue" disabled>Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -238,6 +850,41 @@
     <script defer src="./js/initializationcontroller.js"></script>
     <script defer src="./js/filepond_jq.js"></script>
     <script defer src="./js/navigationcontroller.js"></script>
+
+
+    <noscript>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet"></noscript>
+
+
+    <noscript>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css"
+            rel="stylesheet"></noscript>
+
+
+    <noscript>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        </noscript>
+
+
+    <noscript>
+        <link href="https://unpkg.com/filepond@4.13.5/dist/filepond.css" rel="stylesheet" media="print"
+            onload="this.media='all'"></noscript>
+
+
+    <noscript>
+        <link href="https://unpkg.com/filepond-plugin-image-preview@4.6.2/dist/filepond-plugin-image-preview.css"
+            rel="stylesheet"></noscript>
+
+
+    <noscript>
+        <link defer="" rel="stylesheet"
+            href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
+            type="text/css"></noscript>
+
+
+    <noscript>
+        <link rel="stylesheet" href="./css/style.css"></noscript>
 
 </body>
 

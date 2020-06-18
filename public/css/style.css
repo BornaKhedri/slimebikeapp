@@ -354,3 +354,5 @@ body {
   .mapboxgl-ctrl-geocoder {
       width: 80px !important;
   }
+
+  #map {background: transparent url(../images/loader.svg) no-repeat center center;}

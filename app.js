@@ -31,7 +31,7 @@ app.use(router); // tell the app this is the router we are using
 // app.use(cors());
 app.use(express.static(publicPath));
 app.get('/', function (req, res) {
-  res.sendFile(path.join(publicPath + '/index.html'));
+  res.sendFile(path.join(publicPath + '/index-critical.html'));
 });
 
 router.get('/healthcheck', healthcheckController.healthcheck);

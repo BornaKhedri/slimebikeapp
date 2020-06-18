@@ -25,6 +25,9 @@ const constraints = (window.constraints = {
 });
 const socket = io();
 
+const loc_btn_cont = $("#location_continue");
+loc_btn_cont.prop("disabled", true);
+
 // detect client OS -- https://stackoverflow.com/a/21742107/1328232
 /**
  * Determine the mobile operating system.
@@ -402,7 +405,7 @@ function getApproxLocation() {
 let getLocation = new Promise(function (resolve, reject) {
   var options = {
     enableHighAccuracy: true,
-    timeout: 5000,
+    timeout: 3500,
     maximumAge: 0,
   };
 
@@ -558,6 +561,10 @@ async function drawMap() {
     zoom: gps_coords ? 18 : 10,
   });
 
+  map.on('load', () => {
+    console.log("map loaded");
+    loc_btn_cont.prop('disabled', false);
+  });
   /* Instantiate new controls with custom event handlers */
   // geocoder is a separate service with its own pricing scheme
   var mapGeocoder = new MapboxGeocoder({

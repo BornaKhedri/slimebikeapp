@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+    <meta name="Description"
+        content="A website to report misplaced wheels - report misparked shared bikes and scooters.">
+    <title>Misplaced Wheels</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164240099-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-164240099-1');
+    </script>
+
+    <script type="text/javascript">window.performance.mark('begin_head_load');</script>
+    <link rel="icon" type="image/png" href="./icon/favicon.ico">
+
+    <!-- To support old sizes -->
+    <link rel="apple-touch-icon" sizes="57x57" href="./icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="72x72" href="./icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="114x114" href="./icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="144x144" href="./icon/favicon.ico">
+
+    <!-- To support new sizes -->
+    <link rel="apple-touch-icon" sizes="60×60" href="./icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="76×76" href="./icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="120×120" href="./icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="152×152" href="./icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180×180" href="./icon/favicon.ico">
+
+    <!-- To support Android -->
+    <link rel="icon" sizes="192×192" href="./icon/favicon.ico">
+    <link rel="icon" sizes="128×128" href="./icon/favicon.ico">
+
+    <!-- CSS -->
+    <!-- Remote - vendor -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+    <!-- <link href="https://api.mapbox.com/mapbox-assembly/v0.24.0/assembly.min.css" rel="stylesheet"> -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Filepond stylesheet -->
+    <link href="https://unpkg.com/filepond@4.13.5/dist/filepond.css" rel="stylesheet" media="print"
+        onload="this.media='all'">
+    <link href="https://unpkg.com/filepond-plugin-image-preview@4.6.2/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet">
+    <!-- Local - custom -->
+
+    <script type="text/javascript">window.performance.mark('end_head_load_css');
+        window.performance.measure('head_css_load_time', 'begin_head_load', 'end_head_load_css');</script>
+    <!-- Javascript -->
+    <!-- Local - vendor -->
+    <!-- Remote - vendor -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+    <!-- <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> -->
+    <!-- <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script> -->
+    <script defer
+        src="https://unpkg.com/filepond-plugin-file-validate-size@2.2.1/dist/filepond-plugin-file-validate-size.js"></script>
+    <script defer
+        src="https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.8/dist/filepond-plugin-image-exif-orientation.js"></script>
+    <script defer
+        src="https://unpkg.com/filepond-plugin-file-validate-type@1.2.5/dist/filepond-plugin-file-validate-type.js"></script>
+    <script defer
+        src="https://unpkg.com/filepond-plugin-image-preview@4.6.2/dist/filepond-plugin-image-preview.js"></script>
+    <script defer
+        src="https://unpkg.com/filepond-plugin-image-resize@2.0.6/dist/filepond-plugin-image-resize.js"></script>
+    <script defer
+        src="https://unpkg.com/filepond-plugin-image-transform@3.7.3/dist/filepond-plugin-image-transform.js"></script>
+    <script defer src="https://unpkg.com/filepond@4.13.5/dist/filepond.min.js"></script>
+    <!-- <script src="https://peterolson.github.io/BigInteger.js/BigInteger.min.js"></script> -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bowser@2.5.3/es5.min.js"></script>
+    <script defer type="text/javascript" src="https://unpkg.com/@zxing/library@0.17.0/umd/index.min.js"></script>
+    <!-- <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.24.0/assembly.js"></script> -->
+    <script defer src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <script defer
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+    <link defer rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
+        type="text/css" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/exif-js"></script> -->
+    <script defer src="https://kit.fontawesome.com/5fb01d0cce.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">window.performance.mark('end_head_load_js');
+        window.performance.measure('head_js_load_time', 'end_head_load_css', 'end_head_load_js');</script>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <script type="text/javascript">window.performance.mark('begin_body_load');</script>
+
+
+    <div class="row logodiv">
+        <div class="col-xs-offset-2 col-xs-6">
+            <img class="mx-auto d-block" src="./images/logo.svg" alt="misplaced wheels logo" id="logo" />
+        </div>
+        <div class="d-flex align-items-end col-xs-2">
+            <div id="city_name"></div>
+        </div>
+        <br />
+        <br />
+    </div>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav nav-tabs nav navbar-expand-xs nav-pills navbar text-center justify-content-center text-body font-weight-bold"
+                id="nav_tabs" role="tablist">
+                <li class="nav-item disabled" id="li_location"><a
+                        class="navbar-active active lighttext nav-link  font-weight-bold" href="#tab_location"
+                        role="tab" data-toggle="tab">Location</a></li>
+
+                <li class="nav-item" id="li_classification"><a class="lighttext nav-link font-weight-bold"
+                        href="#tab_classification" role="tab" data-toggle="">Classification</a>
+                </li>
+
+                <li class="nav-item disabled" id="li_identification"><a class="lighttext nav-link  font-weight-bold"
+                        href="#tab_identification" role="tab" data-toggle="">Identification</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="tab-content" id="container">
+        <!-- Location Tab - Map etc.-->
+        <div class="tab-pane show active" role="tabpanel" id="tab_location">
+            <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
+                <div class="content">
+                    <h5 class="text-center" id="map_heading">Select the location of bike/scooter</h5>
+
+                    <div id="map"></div>
+
+                </div>
+                <div class="footer">
+                    <div class="d-flex">
+                        <button type="button"
+                            class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
+                            id="location_continue" disabled>Continue &nbsp;<i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Classification Tab - Image, infractions and companies -->
+        <div class="tab-pane" role="tabpanel" id="tab_classification">
+            <div class="container-fluid">
+                <div class="content">
+                    <!-- We'll transform this input into a pond -->
+                    <input type="file" class="filepond" name="filepond" data-max-file-size="10MB" data-max-files="1">
+                    <div class="card-body low-opacity" id="infraction_div">
+                        <p class="card-text">Select all parking infractions that apply:</p>
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-12">
+                                <div data-toggle="buttons" id="infraction_list">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body low-opacity" id="company_div">
+                        <p class="card-text">Please select the wheel type:</p>
+                        <div class="card-text">
+                            <div class="row">
+                                <div class="col-sm-4 col-xs-12">
+                                    <div data-toggle="companybuttons" id="company_list">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="classification_continue_warning" class="text-danger d-flex justify-content-around"> &nbsp;
+                    </p>
+                </div>
+                <div class="footer">
+                    <div class="d-flex">
+                        <button type="button"
+                            class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
+                            id="classification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
+                        <button type="button"
+                            class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
+                            id="classification_continue" disabled>Continue on image upload &nbsp;<i
+                                class="fas fa-chevron-right"></i></button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Identification Tab - QRCode, notes and other optional stuff-->
+        <div class="tab-pane" role="tabpanel" id="tab_identification">
+            <div class="container" style="width: device-width; max-width: 400px; background-color: #ffffff;">
+                <div class="content">
+
+                    <h1 class="text-center" style="font-size: 20px;" id="qrlead"><br>Optionally, please scan the
+                        vehicle's
+                        QR code
+                    </h1>
+
+                    <label>Vehicle ID:</label>
+                    <pre><code id="result"></code></pre>
+
+                    <video id="video" class="d-flex align-items-center mx-auto"></video>
+                    <br>
+                    <label>Notes:</label>
+                    <br>
+                    <textarea rows="3" id="notes" placeholder="Name, Vehicle ID, etc. comma-separated"></textarea>
+                </div>
+                <div class="footer">
+                    <div class="d-flex">
+                        <button type="button"
+                            class="btn btn-block text-center d-flex  align-items-center mx-auto back-button darktext flex-fill"
+                            id="identification_back"> <i class="fas fa-chevron-left"></i> &nbsp; Back</button>
+                        <button type="button"
+                            class="btn btn-block text-center d-flex align-items-center mx-auto  btn-continue darktext flex-fill"
+                            id="identification_continue" onclick="socketSubmit();">Submit &nbsp;<i
+                                class="fas fa-check"></i></button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="turn">
+        <h4>Please rotate your device!</h4>
+    </div>
+
+
+    <script defer src="./js/initializationcontroller.js"></script>
+    <script defer src="./js/filepond_jq.js"></script>
+    <script defer src="./js/navigationcontroller.js"></script>
+
+</body>
+
+</html>

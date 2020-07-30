@@ -7,10 +7,10 @@ The database contains geo-tagged (associated with a city/jurisdiction) informati
 parking infractions. The database also contains the submitted reports. 
 
 #### About this documentation 
-This documentation was generated using dbdocs.io using the DBML script located in the "./docs/dbdocs" directory of the MisplacedWheels repository. The portal is password protected. To update the documentation, update the DBML and then run "dbdocs build <DBML filename>".
+This documentation was generated using dbdocs.io using the DBML script located in the "./docs/dbdocs" directory of the MisplacedWheels repository. The portal is password protected. To update the documentation, update the DBML and then run "dbdocs build {DBML filename}".
 
 #### Migrate using Flyway
-The database uses "flyway" for applying the migrations. The migrations are located in the "./migrations" directory. To apply the migrations use "flyway -configFiles=<CONFIG_FILE_LOCATION> migrate", or specifying the parameters on the CLI, like so: "-url=jdbc:postgresql://${MAIN_HOST}:${MAIN_PORT}/${MAIN_DB} -schemas=public -user=${MAIN_USER} -password=${MAIN_PWD} -locations=filesystem<MIGRATION_FOLDER_PATH> migrate", where MAIN_HOST is database hostname or IP address, MAIN_PORT is the database port, MAIN_DB is the name of the database, MAIN_USER is the database username with appropriate rights, and MAIN_PWD is the database password. 
+The database uses "flyway" for applying the migrations. The migrations are located in the "./migrations" directory. To apply the migrations use "flyway -configFiles={CONFIG_FILE_LOCATION} migrate", or specifying the parameters on the CLI, like so: "flyway -url=jdbc:postgresql://${MAIN_HOST}:${MAIN_PORT}/${MAIN_DB} -schemas=public -user=${MAIN_USER} -password=${MAIN_PWD} -locations=filesystem:{MIGRATION_FOLDER_PATH} migrate", where MAIN_HOST is database hostname or IP address, MAIN_PORT is the database port, MAIN_DB is the name of the database, MAIN_USER is the database username with appropriate rights, and MAIN_PWD is the database password. 
 
 All schema related database changes must be applied using schema. Data changes maybe applied using Flyway if possible. 
 
@@ -20,7 +20,7 @@ Following steps are needed currently to add a new city:
   - Add the cities to the city_info table. 
   - Add infractions to infraction_type table. 
   - Add relevant entries to infraction_city_xrtef table including the "No issue" entry.
-  - Add geom, and cityname to city_shape table. (This step happens out of flyway, for now)
+  - Add geom, and cityname to wa_city_shape table. (This step happens out of flyway, for now)
   - Add company name, if new, to the micromobility_company table. 
   - Add entries in the micromobility_type table, if new. Take an image of the micromobility_type like jump ebike or lime escooter, and crop square and resize to 80px by 80px. Then convert to base64 and save the string in the DB.
   - Add entries in the micromobility_services for these micromobility_types.
@@ -52,20 +52,13 @@ Table "city_info" {
    The cities is the umbrella term for all agencies including cities, universities, private campuses etc.'
 }
 
-Table "city_shape" {
+Table "wa_city_shape" {
   "id" integer [pk, increment]
   "geom" "geometry(MultiPolygon, 4326)"
-  "objectid" integer
-  "juris" "character varying(2)"
-  "se_anno_ca" "character varying(1)"
   "cityname" "character varying(16)"
-  "gis_area" "character varying(1)"
-  "gis_length" "character varying(1)"
-  "shape_leng" numeric
-  "shape_area" numeric
 
   note: 'This table contains the shapefiles for the "cities" (refer table `city_info` for description). 
-  Only the coilumns `id` (auto-generated) and `geom` are important.'
+  Only the columns `id` (auto-generated) `geom` and cityname are important.'
 }
 
 Table "flyway_schema_history" {

@@ -1,15 +1,6 @@
-# skeleton of a node.js / express / postgres app
+### Slimebike App 
 
-## create table in your Postgres DB: 
-create table test
-(testcolumn varchar(20));
+* To run the app - `npm run start`. 
+* First test in dev, then in staging and then in production.
+* Merge master in staging and verify it works and then just `git pull` on production. 
 
-## Set the following ENV VARs for your DB Connections:
-export DB_USER=''  DB='' DB_PASS='' DB_HOST='' DB_PORT='' DB_MAX_CLIENTS='' DB_IDLE_TIMEOUT_MS=''
-
-## Run locally
-http://localhost:3000/healthcheck and root return healthcheck
-
-http://localhost:3000/servertime - returns servertime
-
-http://localhost:3000/transaction - deletes then inserts into your DB using a transaction

@@ -1,0 +1,67 @@
+version: '3'
+services:
+  postgres-misplacedwheels:
+    build: ./db
+    ports:
+      - '${PG_PORT_EXPOSED}:${DB_PORT}'
+    deploy:
+      resources:
+        limits:
+          memory: 300m
+        reservations:
+          memory: 100m
+    networks:
+      - misplacedwheelsnet
+    environment:
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_DB=$DB
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+        - '-q'
+        - '-d'
+        - '${DB}'
+        - '-U'
+        - '${DB_USER}'
+      interval: 5s
+      timeout: 1s
+      retries: 2
+  flyway:
+    image: flyway/flyway
+    command: '-url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB} -schemas=public -user=${DB_USER} -password=${DB_PASS} migrate'
+    volumes:
+      - './db/migrations:/flyway/sql'
+    depends_on:
+      - postgres-misplacedwheels
+    networks:
+      - misplacedwheelsnet
+  misplacedwheels-app:
+    build: ./app
+    depends_on:
+      - postgres-misplacedwheels
+    ports:
+      - '${PORT}:${PORT}'
+    networks:
+      - misplacedwheelsnet
+    environment:
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+      - DB=$DB
+      - MAPBOX_ACCESS_TOKEN=$MAPBOX_ACCESS_TOKEN
+      - PORT=$PORT
+      - NODE_ENV=$NODE_ENV
+      - CLOUDWATCH_GROUP_NAME=$CLOUDWATCH_GROUP_NAME
+      - CLOUDWATCH_STREAM_NAME=$CLOUDWATCH_STREAM_NAME
+      - AWS_REGION=$AWS_REGION
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=$PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+    command:
+      - nodemon
+      - app.js
+networks:
+  misplacedwheelsnet: null

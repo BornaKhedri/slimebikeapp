@@ -5,7 +5,7 @@ var SES = new AWS.SES({ apiVersion: '2010-12-01', region: 'us-west-2' });
 config = {
     serviceName: process.env.SERVICENAME || 'boilerplate node express postgress app',
     port: process.env.PORT || 3000,
-    loggerLevel: process.env.LOGGERLEVEL || 'info',
+    loggerLevel: process.env.LOGGERLEVEL || 'debug',
     db: {
         user: process.env.DB_USER || '',
         database: process.env.DB || '',

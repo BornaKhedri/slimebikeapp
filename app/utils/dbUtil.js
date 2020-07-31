@@ -7,19 +7,48 @@ const pgconfig = {
     database: config.db.database,
     password: config.db.password,
     host: config.db.host,
-    port: config.db.port,   
+    port: config.db.port,
     max: config.db.max,
     idleTimeoutMillis: config.db.idleTimeoutMillis
 }
 
+console.log(pgconfig);
+
 const pool = new pg.Pool(pgconfig);
 
+console.log(pool)
 // logger.info(`DB Connection Settings: ${JSON.stringify(pgconfig)}`);
 
 pool.on('error', function (err, client) {
     logger.error(`idle client error, ${err.message} | ${err.stack}`);
 });
 
+// pool.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+//     if (error) throw error;
+//     console.log('The solution is: ', results[0].solution);
+// });
+
+test_connection = async () => {
+    console.log("testing DB connection");
+    const client = await pool.connect()
+    try {
+        sql = 'SELECT 1 + 1 AS solution';
+        data = [];
+        let result = await client.query(sql, data);
+        return result;
+    }     catch (error) {
+        throw new Error(error.message);
+    }
+    
+    finally {
+        // Make sure to release the client before any error handling,
+        // just in case the error handling itself throws an error.
+        client.release()
+    }  
+
+}
+
+// test_connection();
 /* 
  * Single Query to Postgres
  * @param sql: the query for store data
@@ -78,7 +107,7 @@ module.exports.sqlExecSingleRow = async (client, sql, data) => {
 module.exports.sqlExecMultipleRows = async (client, sql, data) => {
     logger.debug(`inside sqlExecMultipleRows()`);
     if (data.length !== 0) {
-        for(let item of data) {
+        for (let item of data) {
             try {
                 logger.debug(`sqlExecMultipleRows() item: ${item}`);
                 logger.debug(`sqlExecMultipleRows() sql: ${sql}`);

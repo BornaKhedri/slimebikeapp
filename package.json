@@ -39,7 +39,7 @@
     "license": "MIT",
     "scripts": {
         "start": "nodemon app.js",
-        "deploy": "pm2 start app.js",
+        "deploy": "pm2 start app.js --name 'app-staging'",
         "critical": "node critical.js"
     },
     "devDependencies": {
